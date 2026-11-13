@@ -1,7 +1,7 @@
 [ADMIN KEUANGAN & BACKOFFICE]                      [ADMIN VERIFIKATOR & PENGUJI]
           │                                                  │
 [MONITORING PEMBAYARAN FORMULIR]                   [1. VERIFIKASI BERKAS PERSYARATAN]
-(Status Pakasir via Webhook QRIS Dinamis)          (Cek NISN, KK, Akta, Pas Foto, KTP Ortu, 4 Rapor dlm 1 layar)
+(Status Midtrans via Webhook QRIS Dinamis)          (Cek NISN, KK, Akta, Pas Foto, KTP Ortu, 4 Rapor dlm 1 layar)
 Pendaftar belum bayar menerima pengingat           Dua kolom verifikasi dengan viewer berkas terintegrasi.
 setiap Senin sampai gelombang ditutup.                       │
 Saat kuota tercapai, tagihan formulir pending                ├─────────────────────────────┐

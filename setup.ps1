@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     PTDARRAHMAN — One-Command Project Setup (Windows PowerShell)
 
@@ -164,8 +164,8 @@ function Setup-EnvFiles([string]$AppEnvMode) {
         if ([string]::IsNullOrWhiteSpace($jwt) -or $jwt -like "*ganti_dengan*") {
             $needApi = $true
         }
-        $pakasir = Get-EnvValue $apiEnv "PAKASIR_WEBHOOK_SECRET"
-        if ($null -eq $pakasir) {
+        $midtrans = Get-EnvValue $apiEnv "MIDTRANS_SERVER_KEY"
+        if ($null -eq $midtrans) {
             $needApi = $true
         }
     }

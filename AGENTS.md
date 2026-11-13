@@ -54,7 +54,7 @@ Pendaftar melewati tahapan pendaftaran secara berurutan dan terstruktur, yang **
 | # | Tahap | Aksi Kunci | Endpoint Terkait |
 |---|---|---|---|
 | 1 | **Pendaftaran Akun (6 Bagian)** | Identitas Santri, Data Ortu/Wali Lengkap, Kontak, Domisili, Kuesioner Kesehatan (10 soal), Pernyataan | `POST /ppdb/register` |
-| 2 | **Bayar Formulir (Pakasir v2)** | QRIS dinamis → kuota berkurang atomik → kuitansi resmi ber-HMAC terbit | `POST /payment/create-qris` |
+| 2 | **Bayar Formulir (Midtrans)** | QRIS dinamis → kuota berkurang atomik → kuitansi resmi ber-HMAC terbit | `POST /payment/create-qris` |
 | 3 | **Upload Dokumen** | NISN, KK, Akte, Pas Foto, KTP Orang Tua/Wali, 4 Rapor Terakhir (diverifikasi panitia di backoffice) | `POST /ppdb/documents/upload` |
 | 4 | **Ujian Seleksi (Akademik, Psikologi, Tahfidz)** | Akses ujian seleksi terpadu CBT & Tahfidz sesuai jadwal batch yang ditentukan otomatis | `POST /cbt/verify-access/{schedule_id}`, `POST /cbt/finish/{schedule_id}`, `GET /selection/applicants/me/sessions` |
 | 5 | **Wawancara Terpadu (Santri & Ortu)** | Wawancara terpadu calon santri dan orang tua/wali dalam satu jadwal bersamaan | `GET /selection/applicants/me/sessions` |
@@ -167,7 +167,7 @@ Router (src/modules/ atau src/routers/)
 | **Router** | `src/modules/` | Validasi request (Pydantic), otorisasi, panggil service, format response |
 | **Service** | `src/services/` | Logika bisnis, orkestrasi antar-repository, transaksi DB |
 | **Repository** | `src/repositories/` | Query database, tidak boleh ada logika bisnis |
-| **Core** | `src/core/` | Klien eksternal: `pakasir.py`, `cloudinary.py`, `scheduler.py`, `security.py`, `events.py` |
+| **Core** | `src/core/` | Klien eksternal: `midtrans.py`, `cloudinary.py`, `scheduler.py`, `security.py`, `events.py` |
 | **Models** | `src/models/` | Definisi SQLAlchemy ORM |
 | **Schemas** | `src/modules/*/schemas.py` | Pydantic request/response schema |
 
@@ -251,9 +251,8 @@ Page Component (src/pages/)
 ### Payment (Formulir)
 | Method | Path | Keterangan |
 |---|---|---|
-| `POST` | `/payment/create-qris` | Buat invoice formulir, generate QRIS Pakasir |
-| `POST` | `/payment/webhook` | Terima webhook Pakasir v2 |
-| `POST` | `/payment/webhook/pak-kasir` | Endpoint webhook 1 Pintu Pakasir |
+| `POST` | `/payment/create-qris` | Buat invoice formulir, generate QRIS Midtrans |
+| `POST` | `/payment/webhook` | Terima webhook notifikasi resmi Midtrans |
 | `GET` | `/payment/receipt/{id}` | Kuitansi pembayaran formulir (internal/user) |
 | `GET` | `/payment/public-receipt/{id}` | Kuitansi publik (verifikasi QR HMAC) |
 
@@ -292,13 +291,13 @@ Page Component (src/pages/)
 
 ## Integrasi External
 
-### 💳 Pakasir API v2
-- **File:** `apps/api/src/core/pakasir.py` & `src/services/payment_service.py`
-- **QRIS Dinamis:** Pembayaran formulir men-generate QRIS baru dengan batas waktu kedaluwarsa.
-- **Webhook 1 Pintu:** `POST /payment/webhook` dan `POST /payment/webhook/pak-kasir`
-  - Validasi header `X-Secret`
-  - Pencocokan nominal
-  - Idempotency check — mencegah duplikasi saldo/kuota
+### 💳 Midtrans Payment Gateway
+- **File:** `apps/api/src/core/midtrans.py` & `src/services/payment_service.py`
+- **QRIS Dinamis:** Pembayaran formulir men-generate QRIS baru dengan batas waktu kedaluwarsa via Midtrans Core API.
+- **Webhook Notifikasi:** `POST /payment/webhook`
+  - Validasi signature key SHA-512 resmi Midtrans
+  - Pencocokan nominal tagihan internal
+  - Idempotency check & distributed locking — mencegah duplikasi saldo/kuota
 - **Kuitansi:** Pembayaran formulir yang terkonfirmasi menerbitkan kuitansi bertanda tangan HMAC.
 
 ### 🖼️ Cloudinary
@@ -366,7 +365,7 @@ Sistem menerapkan format cetak dan ekspor resmi A4 baku (`apps/ppdb/src/utils/ex
 | Skrip & Tooling | `scripts/README.md` | Sinkronisasi Windows-WSL, normalisasi LF, tooling debug |
 | Skrip Setup Otomatis (Linux/macOS) | `setup.sh` | One-command setup (`./setup.sh docker` & `./setup.sh local`) |
 | Skrip Setup Otomatis (Windows PS) | `setup.ps1` | One-command setup (`.\setup.ps1 docker` & `.\setup.ps1 local`) |
-| Panduan Agent API | `apps/api/AGENTS.md` | Arsitektur backend (FastAPI, Alembic, Pakasir v2, Repositories) |
+| Panduan Agent API | `apps/api/AGENTS.md` | Arsitektur backend (FastAPI, Alembic, Midtrans, Repositories) |
 | Panduan Agent PPDB | `apps/ppdb/AGENTS.md` | Arsitektur frontend PPDB (rute tahapan mandiri & backoffice) |
 | Panduan Agent Superadmin | `apps/superadmin/AGENTS.md` | Arsitektur panel Superadmin |
 | Panduan Agent Company Profile | `apps/companyprofile/AGENTS.md` | Arsitektur portal Company Profile & auth cookies |

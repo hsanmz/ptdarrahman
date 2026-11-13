@@ -8,7 +8,7 @@ Selamat datang di direktori dokumentasi teknis dan operasional **Pesantren Tahfi
 
 | Dokumen | Lokasi | Fokus Utama |
 |---|---|---|
-| **System Design & Monorepo** | [`../README.md`](../README.md) | **Rancangan Sistem Teknis (System Design)**: Arsitektur monorepo, topologi Docker, request lifecycle, auth cookies HTTP-only, alur pendaftar tuntas pada penandatanganan LoA, payment gateway Pakasir v2, WhatsApp BullMQ, dan skema database relasional. |
+| **System Design & Monorepo** | [`../README.md`](../README.md) | **Rancangan Sistem Teknis (System Design)**: Arsitektur monorepo, topologi Docker, request lifecycle, auth cookies HTTP-only, alur pendaftar tuntas pada penandatanganan LoA, payment gateway Midtrans, WhatsApp BullMQ, dan skema database relasional. |
 | **Sistem Desain Visual & UI/UX** | [`../DESIGN.md`](../DESIGN.md) | **Desain Antarmuka (UI/UX Design System)**: Filosofi visual Islami & digital, token warna (Ivory, Obsidian, Emerald, Gold), tipografi (Playfair Display, Inter, Amiri), elevasi & bayangan, animasi `.ease-brand-pill`, komponen shared `@repo/ui`, dan standar cetak A4 baku. |
 | **Panduan AI Agent** | [`../AGENTS.md`](../AGENTS.md) | Aturan pengkodean AI agent, batasan arsitektur, konvensi repository, dan penjaga integritas bisnis. |
 | **Skrip Setup Otomatis** | [`../setup.sh`](../setup.sh) | Inisialisasi cepat monorepo satu perintah (`./setup.sh docker` & `./setup.sh local`). |
@@ -44,7 +44,7 @@ Selamat datang di direktori dokumentasi teknis dan operasional **Pesantren Tahfi
 
 ## 🏛️ Panduan Agent per Aplikasi
 
-- [**apps/api/AGENTS.md**](../apps/api/AGENTS.md): Panduan backend Core API (FastAPI, SQLAlchemy 2.0, Alembic, Pakasir v2, Repositories).
+- [**apps/api/AGENTS.md**](../apps/api/AGENTS.md): Panduan backend Core API (FastAPI, SQLAlchemy 2.0, Alembic, Midtrans, Repositories).
 - [**apps/ppdb/AGENTS.md**](../apps/ppdb/AGENTS.md): Panduan portal pendaftar mandiri dan backoffice admin PPDB (React 19 + Vite 8).
 - [**apps/superadmin/AGENTS.md**](../apps/superadmin/AGENTS.md): Panduan panel Superadmin (RBAC, semantic search, user & role audit).
 - [**apps/companyprofile/AGENTS.md**](../apps/companyprofile/AGENTS.md): Panduan portal Company Profile publik dan CMS (Next.js 16).

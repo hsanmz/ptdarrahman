@@ -99,7 +99,7 @@ services:
     env_file:
       - ./apps/api/.env
     environment:
-      # Override internal Docker networking. Nilai app-level lain (DB, Pakasir,
+      # Override internal Docker networking. Nilai app-level lain (DB, Midtrans,
       # CORS, JWT) tetap dibaca dari apps/api/.env.
       APP_ENV: ${APP_ENV:-production}
       WA_SERVICE_URL: http://whatsapp:3100

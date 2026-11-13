@@ -45,7 +45,7 @@ export interface UseQrisPaymentOptions {
 }
 
 /**
- * Sumber tunggal state pembayaran QRIS Pakasir untuk pendaftar.
+ * Sumber tunggal state pembayaran QRIS Midtrans untuk pendaftar.
  *
  * Menjembatani kontrak backend:
  * - `GET /payment/my-transaction` → `active_transaction` (pending | pending_verification).
@@ -211,7 +211,7 @@ export function useQrisPayment(options: UseQrisPaymentOptions = {}) {
       }
       setPaymentModalOpen(true)
       if (canRenderQr(data)) {
-        toast('success', 'Kode QRIS Pakasir berhasil diterbitkan!')
+        toast('success', 'Kode QRIS berhasil diterbitkan!')
       } else {
         // Transaksi dikembalikan tanpa QR (mis. pemulihan transaksi
         // rekonsiliasi) — jangan klaim berhasil, arahkan ke pemeriksaan.

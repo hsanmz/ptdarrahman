@@ -31,7 +31,7 @@ function renderModal(overrides: Partial<React.ComponentProps<typeof QrisPaymentM
 describe('QrisPaymentModal — tampilan status pembayaran', () => {
   it('menampilkan QR & instruksi saat menunggu pembayaran', () => {
     renderModal()
-    expect(screen.getByText(/Pembayaran QRIS Pak Kasir/i)).toBeInTheDocument()
+    expect(screen.getByText(/Pembayaran QRIS Midtrans/i)).toBeInTheDocument()
     expect(screen.getByText(/Petunjuk Pembayaran/i)).toBeInTheDocument()
     expect(screen.getByText('Rp 5.000.000')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Cek Status Pembayaran/i })).toBeInTheDocument()

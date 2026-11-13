@@ -51,7 +51,7 @@ export default function AlurJadwalPage() {
     {
       step: 'Tahap 2',
       title: 'Pembayaran Formulir (QRIS)',
-      desc: 'Melunasi biaya formulir pendaftaran menggunakan QRIS dinamis real-time (Pakasir v2). Setelah sukses, kuota gelombang berkurang secara atomik dan Kuitansi Resmi bertanda tangan HMAC terbit.',
+      desc: 'Melunasi biaya formulir pendaftaran menggunakan QRIS dinamis real-time (Midtrans). Setelah sukses, kuota gelombang berkurang secara atomik dan Kuitansi Resmi bertanda tangan HMAC terbit.',
       icon: QrCode,
       color: 'from-amber-500 to-yellow-600',
       badge: 'QRIS Otomatis',

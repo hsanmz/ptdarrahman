@@ -148,14 +148,14 @@ Sistem PPDB mengintegrasikan modul Computer Based Test (CBT) mandiri dan sesi ta
 
 ---
 
-## Integrasi Payment Gateway Pakasir API v2 & Penyelesaian Pendaftaran
+## Integrasi Payment Gateway Midtrans (Core API QRIS) & Penyelesaian Pendaftaran
 
-Sistem PPDB mengintegrasikan gerbang pembayaran resmi **Pakasir API v2** untuk pembayaran formulir pendaftaran santri baru:
+Sistem PPDB mengintegrasikan gerbang pembayaran resmi **Midtrans** (Core API `/charge` QRIS) untuk pembayaran formulir pendaftaran santri baru:
 
 1. **Biaya Formulir:**
    - Setelah registrasi, sistem membuat tagihan formulir.
    - Pendaftar melakukan pembayaran via QRIS dinamis (`POST /payment/create-qris`).
-   - Webhook Pakasir (`POST /payment/webhook` / `POST /payment/webhook/pak-kasir`) memvalidasi pembayaran secara atomik & idempoten menggunakan header `X-Secret`.
+   - Webhook Midtrans (`POST /payment/webhook`) memvalidasi pembayaran secara atomik & idempoten menggunakan verifikasi SHA-512 signature (`order_id + status_code + gross_amount + ServerKey`).
    - Setelah lunas, kuitansi resmi terbit (`GET /payment/receipt/{id}` dan link publik `/kuitansi/:id`).
 2. **Kelulusan & Penandatanganan LoA (Tahap Akhir):**
    - Pendaftar yang dinyatakan lulus oleh panitia dapat melihat hasil seleksi di `/applicant/pengumuman`.
@@ -224,11 +224,11 @@ Untuk menjaga integritas arsip dan tampilan dokumen institusi, sistem menerapkan
 
 Sistem PPDB terhubung ke beberapa layanan eksternal berikut:
 
-### Pakasir API v2 — Payment Gateway
-- Menyediakan QRIS dinamis per transaksi untuk pembayaran formulir (`POST /payment/create-qris`).
-- Webhook diterima di `POST /payment/webhook` dan `POST /payment/webhook/pak-kasir`, divalidasi menggunakan header `X-Secret`, pencocokan nominal, serta pengecekan idempoten untuk mencegah duplikasi saldo.
+### Midtrans — Payment Gateway
+- Menyediakan QRIS dinamis per transaksi untuk pembayaran formulir (`POST /payment/create-qris`) melalui Midtrans Core API `/charge`.
+- Webhook diterima di `POST /payment/webhook`, divalidasi menggunakan verifikasi SHA-512 signature, pencocokan nominal transaksi, serta pengecekan idempoten dan concurrency lock Redis untuk mencegah duplikasi saldo.
 - Kuitansi resmi bertanda tangan HMAC token dapat diverifikasi publik di `/kuitansi/:id` tanpa login.
-- Implementasi: `apps/api/src/core/pakasir.py` & `apps/api/src/services/payment_service.py`.
+- Implementasi: `apps/api/src/core/midtrans.py` & `apps/api/src/services/payment_service.py`.
 
 ### Cloudinary — Penyimpanan File & Gambar
 - Digunakan untuk upload file dan gambar melalui `POST /companyprofile/upload` atau `POST /auth/upload`.
@@ -260,7 +260,7 @@ Seluruh fitur yang berkaitan dengan data sensitif, dokumen resmi, dan autentikas
 
 - **HMAC Token pada Kuitansi:** Setiap kuitansi resmi yang diterbitkan ditandatangani secara digital menggunakan HMAC token. Token ini dapat diverifikasi publik tanpa login di `/kuitansi/:id` dan `/receipt/:id` untuk membuktikan keaslian dokumen.
 - **Audit Log Akses Dossier:** Seluruh aktivitas melihat dan mengunduh dossier pendaftar — termasuk unduhan per berkas maupun paket ZIP — dicatat dalam tabel `audit_log` bersama alamat IP admin pemohon. Akses dossier dibatasi dengan izin khusus (`require_ppdb_admin`).
-- **Validasi X-Secret Webhook:** Webhook eksternal (Pakasir payment) divalidasi menggunakan header secret yang ditetapkan di konfigurasi server. Request tanpa header yang valid atau dengan nominal tidak cocok langsung ditolak.
+- **Validasi Signature Webhook Midtrans:** Webhook pembayaran Midtrans divalidasi menggunakan signature SHA-512 (`order_id + status_code + gross_amount + ServerKey`). Request dengan signature tidak valid atau nominal tidak cocok langsung ditolak.
 - **Data Kesehatan Sensitif:** Identifikasi kesehatan pendaftar hanya dapat dibuka oleh admin berizin pada halaman detail/dossier. Akses dicatat dalam audit log. Data tidak ditampilkan di tabel operasional umum.
 - **HTTP-only Cookie JWT:** Token autentikasi disimpan di HTTP-only Cookie untuk mencegah akses dari JavaScript sisi klien (mitigasi serangan XSS). Auto-refresh token dilakukan tanpa interaksi pengguna saat token kedaluwarsa (response 401).
 - **Manajemen Sesi Multi-Perangkat:** Seluruh sesi login aktif dipantau dan dapat dicabut dari jarak jauh oleh pemilik akun melalui `/applicant/profile` atau panel admin. Revoke sesi mencegah akses tidak sah dari perangkat yang hilang atau dicuri.

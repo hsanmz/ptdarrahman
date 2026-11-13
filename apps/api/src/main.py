@@ -140,28 +140,24 @@ def _validate_secrets() -> None:
 
 
 def _validate_payment_gateway() -> None:
-    """Production wajib punya kredensial Pakasir lengkap.
+    """Production wajib punya kredensial Midtrans lengkap.
 
-    Tanpa ini, backend bisa diam-diam memakai QRIS sandbox atau menerima
-    webhook tanpa validasi secret — keduanya tidak boleh terjadi di production.
+    Tanpa ini, backend bisa diam-diam memakai mode sandbox atau menolak transaksi.
     """
     if not settings.is_production:
         return
     missing = [
         name
         for name, value in (
-            ("PAKASIR_SLUG", settings.pakasir_slug),
-            ("PAKASIR_API_KEY", settings.pakasir_api_key),
-            ("PAKASIR_WEBHOOK_SECRET", settings.pakasir_webhook_secret),
+            ("MIDTRANS_SERVER_KEY", settings.midtrans_server_key),
         )
         if not (value or "").strip()
     ]
     if missing:
         raise RuntimeError(
-            "Konfigurasi payment gateway Pakasir belum lengkap untuk mode "
+            "Konfigurasi payment gateway Midtrans belum lengkap untuk mode "
             "production: " + ", ".join(missing) + ". "
-            "Set nilainya di apps/api/.env agar QRIS tidak memakai mode sandbox "
-            "dan webhook pembayaran tervalidasi."
+            "Set nilainya di apps/api/.env agar transaksi payment gateway terhubung."
         )
 
 

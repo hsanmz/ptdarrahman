@@ -18,9 +18,9 @@ Sistem otomatis menautkan pendaftar ke satu-satunya gelombang aktif di periode a
 [4. USER LOGIN KE APLIKASI PPDB]
        │
        ▼
-[5. PEMBAYARAN BIAYA FORMULIR (PAKASIR v2 QRIS)]
+[5. PEMBAYARAN BIAYA FORMULIR (MIDTRANS QRIS)]
 - Pendaftar scan QRIS dinamis di halaman Checkout.
-- Webhook Pakasir memvalidasi pembayaran secara atomik & idempoten.
+- Webhook Midtrans memvalidasi pembayaran secara atomik & idempoten.
 - Kuota gelombang berkurang atomik; Kuitansi resmi ber-HMAC terbit (/kuitansi/:id).
        │
        ▼

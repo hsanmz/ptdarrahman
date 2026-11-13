@@ -15,7 +15,7 @@ Aplikasi frontend berbasis **Vite + React + TypeScript** untuk sistem Penerimaan
 
 ### 👨‍🎓 Portal Calon Santri (Pendaftar)
 - 📝 **Registrasi Bertahap:** 6 tahapan form wizard (Biodata Santri, Data Orang Tua/Wali Lengkap, Kontak, Domisili, Kuesioner Kesehatan 10 pertanyaan baku, dan Persetujuan). Bebas jenjang dan bebas jalur seleksi.
-- 💳 **Pembayaran Biaya Formulir:** Terintegrasi QRIS dinamis Pakasir v2 dengan timer otomatis dan penerbitan kuitansi resmi berstempel HMAC.
+- 💳 **Pembayaran Biaya Formulir:** Terintegrasi QRIS dinamis Midtrans dengan timer otomatis dan penerbitan kuitansi resmi berstempel HMAC.
 - 📁 **Unggah Dokumen:** Pengunggahan berkas persyaratan wajib seragam (NISN, KK, Akta Kelahiran, Pas Foto, KTP Orang Tua/Wali, dan 4 Rapor Terakhir).
 - 💻 **Ujian Seleksi CBT & Tahfidz:** Akses ke portal tes seleksi (`/applicant/tes-seleksi`) dan ruang ujian mandiri (`/exam/:scheduleId`) lengkap dengan timer, autosave, anti-cheating monitor, dan sesi Tahfidz Al-Qur'an.
 - 🤝 **Wawancara Terpadu:** Jadwal wawancara calon santri dan orang tua/wali dalam satu waktu bersamaan (`/applicant/wawancara`).
@@ -30,7 +30,7 @@ Aplikasi frontend berbasis **Vite + React + TypeScript** untuk sistem Penerimaan
 - 👁️ **Live Monitoring Ujian Real-Time:** Konsol pengawasan live pengerjaan ujian CBT (`/admin/monitoring/:category/:scheduleId`), status pengerjaan, pelanggaran keluar layar > 5 detik, dan modal unfreeze peserta.
 - 🎙️ **Penjadwalan Tahfidz & Wawancara:** Manajemen jadwal penguji Tahfidz dan pewawancara terpadu.
 - ⚖️ **Penilaian & Review LoA:** Form penilaian evaluator dua kolom, rekapitulasi nilai seleksi gabungan, penentuan kelulusan, dan monitoring tanda tangan LoA pendaftar.
-- 💳 **Monitoring Keuangan Formulir:** Pemantauan transaksi pembayaran formulir via webhook Pakasir v2, kuitansi resmi bertanda tangan digital HMAC.
+- 💳 **Monitoring Keuangan Formulir:** Pemantauan transaksi pembayaran formulir via webhook Midtrans, kuitansi resmi bertanda tangan digital HMAC.
 - 🗄️ **Arsip Dossier & Halaman Detail (`/admin/arsip/:id`):** Pencarian data dossier santri lintas seluruh periode dan gelombang, pratinjau 4 berkas resmi kontinu (Formulir A4, Dokumen Upload terverifikasi, Lembar Penilaian/CBT A4, dan LoA Resmi A4), serta ekspor bundle ZIP satu-klik (`GET /ppdb/archive/applicants/:id/dossier/zip`) dengan log audit alamat IP admin.
 
 ### 🌐 Rute Verifikasi Publik (Tanpa Login)

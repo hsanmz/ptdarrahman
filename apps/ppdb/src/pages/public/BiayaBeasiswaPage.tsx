@@ -372,7 +372,7 @@ export default function BiayaBeasiswaPage() {
               Amankan Kuota Diskon Pendaftar Awal Sekarang
             </h3>
             <p className="mt-2 text-xs sm:text-sm text-emerald-100 max-w-lg mx-auto">
-              Slot diskon pendaftar awal otomatis terkunci saat pembayaran formulir terkonfirmasi oleh sistem QRIS Pakasir.
+              Slot diskon pendaftar awal otomatis terkunci saat pembayaran formulir terkonfirmasi oleh sistem pembayaran Midtrans.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

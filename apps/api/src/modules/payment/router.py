@@ -161,22 +161,8 @@ async def payment_webhook(
     service: PaymentService = Depends(get_payment_service),
 ):
     """
-    Webhook pembayaran formulir & PPDB (Pakasir QRIS / Gateway).
+    Webhook pembayaran formulir & PPDB resmi Midtrans untuk verifikasi pembayaran real-time.
     """
     payload = await _read_json_body(request)
-    x_secret = request.headers.get("X-Secret")
-    return service.process_pakkasir_webhook(payload, x_secret=x_secret)
-
-
-@router.post("/webhook/pak-kasir")
-async def pakkasir_webhook(
-    request: Request,
-    service: PaymentService = Depends(get_payment_service),
-):
-    """
-    Webhook resmi 1 Pintu QRIS Pakasir untuk verifikasi pembayaran real-time.
-    """
-    payload = await _read_json_body(request)
-    x_secret = request.headers.get("X-Secret")
-    return service.process_pakkasir_webhook(payload, x_secret=x_secret)
+    return service.process_midtrans_webhook(payload)
 

@@ -23,7 +23,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from src.core.database import get_db
-from src.core.pakasir import CreateTransactionResult
+from src.core.midtrans import CreateTransactionResult
 from src.core.security import create_access_token, hash_password
 from src.main import app
 from src.models.auth import Role, User
@@ -68,7 +68,7 @@ def admin_token(db_session: Session):
         admin = User(
             id=str(uuid.uuid4()),
             username="superadmin",
-            email="superadmin@ptdarrahman.sch.id",
+            email="superadmin@ptdarrahman.com",
             password_hash=hash_password("SuperAdmin123!"),
             full_name="Super Admin PTDARRAHMAN",
             role_id=admin_role.id,
@@ -100,8 +100,8 @@ def _make_created_result(
         fee=0,
         total_payment=350000,
         payment_method="qris",
-        qr_string="00020101021226590016ID.CO.PAKASIR...",
-        payment_link="https://app.pakasir.com/pay/dummy",
+        qr_string="00020101021226590016ID.CO.MIDTRANS...",
+        payment_link="https://app.midtrans.com/pay/dummy",
         va_number=None,
         expired_at=datetime.now(WIB).isoformat(),
         is_sandbox=True,
@@ -480,11 +480,11 @@ class TestFullSystemEndToEnd:
         )
 
         # =====================================================================
-        # 5. PEMBAYARAN FORMULIR PAKASIR v2 QRIS & EARLY BIRD QUALIFICATION
+        # 5. PEMBAYARAN FORMULIR MIDTRANS QRIS & EARLY BIRD QUALIFICATION
         # =====================================================================
         fake_txn_id = f"tx_{uuid.uuid4().hex[:8]}"
         with patch(
-            "src.services.payment_service.get_pakasir_client"
+            "src.services.payment_service.get_midtrans_client"
         ) as mock_get_client:
             mock_client = MagicMock()
             mock_client.create_transaction.return_value = _make_created_result(
@@ -502,19 +502,19 @@ class TestFullSystemEndToEnd:
             txn_id = qris_data["id"]
             order_id = qris_data["order_id"]
 
-        # Webhook Pakasir v2 masuk (Lunas)
+        # Webhook Midtrans masuk (Lunas)
         webhook_payload = {
             "order_id": order_id,
-            "txn_id": fake_txn_id,
-            "amount": 350000,
-            "status": "completed",
-            "payment_method": "qris",
-            "completed_at": now.isoformat(),
+            "transaction_id": fake_txn_id,
+            "gross_amount": "350000.00",
+            "transaction_status": "settlement",
+            "fraud_status": "accept",
+            "payment_type": "qris",
+            "settlement_time": now.isoformat(),
         }
 
         webhook_res = client.post(
             "/payment/webhook",
-            headers={"X-Secret": ""},
             json=webhook_payload,
         )
         assert webhook_res.status_code == 200, webhook_res.text
@@ -792,7 +792,7 @@ class TestFullSystemEndToEnd:
         # Bayar formulir pendaftar 2
         fake_p2_txn_id = f"tx_{uuid.uuid4().hex[:8]}"
         with patch(
-            "src.services.payment_service.get_pakasir_client"
+            "src.services.payment_service.get_midtrans_client"
         ) as mock_get_client2:
             mock_client2 = MagicMock()
             mock_client2.create_transaction.return_value = _make_created_result(
@@ -811,14 +811,14 @@ class TestFullSystemEndToEnd:
         # Webhook pembayaran pendaftar 2 berhasil
         client.post(
             "/payment/webhook",
-            headers={"X-Secret": ""},
             json={
                 "order_id": p2_order_id,
-                "txn_id": fake_p2_txn_id,
-                "amount": 350000,
-                "status": "completed",
-                "payment_method": "qris",
-                "completed_at": now.isoformat(),
+                "transaction_id": fake_p2_txn_id,
+                "gross_amount": "350000.00",
+                "transaction_status": "settlement",
+                "fraud_status": "accept",
+                "payment_type": "qris",
+                "settlement_time": now.isoformat(),
             },
         )
 

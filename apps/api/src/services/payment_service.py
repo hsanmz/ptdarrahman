@@ -11,13 +11,13 @@ from zoneinfo import ZoneInfo
 from fastapi import HTTPException
 
 from src.core.config import settings
-from src.core.pakasir import (
+from src.core.midtrans import (
     STATUS_CANCELED,
     STATUS_COMPLETED,
-    PakasirError,
-    PakasirUncertainError,
+    MidtransError,
+    MidtransUncertainError,
     canonical_status,
-    get_pakasir_client,
+    get_midtrans_client,
 )
 from src.models.ppdb import (
     PPDBApplicant,
@@ -220,7 +220,7 @@ class PaymentService:
             amount=amount,
             status=PENDING_VERIFICATION,
             provider_status="unknown",
-            method="qris_pakasir",
+            method="qris_midtrans",
             qr_string=None,
             expired_at=now_wib + timedelta(minutes=15),
             notes=f"[REKONSILIASI] {reason}",
@@ -258,15 +258,21 @@ class PaymentService:
         if tx.status in ("success", "paid", "cancelled", "failed", "expired"):
             return str(tx.status)
 
-        pakasir = get_pakasir_client()
+        midtrans = get_midtrans_client()
         try:
             if tx.txn_id:
-                result = pakasir.get_transaction_status(tx.txn_id)
+                result = midtrans.get_transaction_status(tx.txn_id)
                 return self._apply_provider_status(tx, result)
-            # txn_id belum ada → pulihkan lewat create idempotent. Pakasir v2
-            # bersifat find-or-create: (slug, order_id) sama → transaksi sama.
+            # txn_id belum ada → pulihkan lewat order_id jika ada
+            if tx.order_id:
+                try:
+                    result = midtrans.get_transaction_status(tx.order_id)
+                    tx.txn_id = result.txn_id or tx.txn_id
+                    return self._apply_provider_status(tx, result)
+                except Exception:
+                    pass
             if tx.order_id and tx.amount:
-                created = pakasir.create_transaction(
+                created = midtrans.create_transaction(
                     order_id=tx.order_id, amount=int(tx.amount)
                 )
                 tx.txn_id = created.txn_id
@@ -279,14 +285,14 @@ class PaymentService:
                 tx.provider_status = "pending"
                 self.repo.update_transaction(tx)
                 return str(tx.status)
-        except PakasirUncertainError as exc:
+        except MidtransUncertainError as exc:
             logger.warning(
                 "Rekonsiliasi tx %s belum pasti (status dipertahankan): %s",
                 tx.id,
                 exc.message,
             )
             return str(tx.status)
-        except PakasirError as exc:
+        except MidtransError as exc:
             logger.warning("Rekonsiliasi tx %s gagal: %s", tx.id, exc.message)
             return str(tx.status)
         return str(tx.status)
@@ -551,11 +557,19 @@ class PaymentService:
         unique_suffix = uuid.uuid4().hex[:6].upper()
         order_id = f"{prefix}-{short_app}-{unique_suffix}"
 
-        # 4. Panggil Pakasir API v2 (find-or-create) & normalisasi hasilnya
-        pakasir = get_pakasir_client()
+        # 4. Panggil Midtrans API (find-or-create charge) & normalisasi hasilnya
+        midtrans = get_midtrans_client()
+        customer_details = {
+            "first_name": applicant.full_name or "Calon Santri",
+            "phone": applicant.phone or "",
+        }
         try:
-            created = pakasir.create_transaction(order_id=order_id, amount=final_amount)
-        except PakasirUncertainError as exc:
+            created = midtrans.create_transaction(
+                order_id=order_id,
+                amount=final_amount,
+                customer_details=customer_details,
+            )
+        except MidtransUncertainError as exc:
             self._save_pending_verification(
                 applicant=applicant,
                 order_id=order_id,
@@ -577,8 +591,8 @@ class PaymentService:
                     "beberapa saat lagi sebelum mengulang."
                 ),
             ) from exc
-        except PakasirError as exc:
-            logger.exception("Gagal membuat transaksi Pakasir: %s", exc.message)
+        except MidtransError as exc:
+            logger.exception("Gagal membuat transaksi Midtrans: %s", exc.message)
             raise HTTPException(
                 status_code=502,
                 detail=f"Gagal membuat transaksi ke payment gateway: {exc.message}",
@@ -629,7 +643,7 @@ class PaymentService:
             tx.amount = final_amount
             tx.status = "pending"
             tx.provider_status = "pending"
-            tx.method = "qris_pakasir"
+            tx.method = "qris_midtrans"
             tx.qr_string = created.qr_string
             tx.expired_at = expired_dt
             tx.updated_at = now_wib
@@ -645,7 +659,7 @@ class PaymentService:
                 amount=final_amount,
                 status="pending",
                 provider_status="pending",
-                method="qris_pakasir",
+                method="qris_midtrans",
                 qr_string=created.qr_string,
                 expired_at=expired_dt,
                 created_at=now_wib,
@@ -754,18 +768,18 @@ class PaymentService:
             self.repo.update_transaction(tx)
             return {"success": True, "message": "Transaksi berhasil dibatalkan."}
 
-        pakasir = get_pakasir_client()
+        midtrans = get_midtrans_client()
         try:
-            result = pakasir.cancel_transaction(tx.txn_id)
-        except PakasirUncertainError as exc:
+            result = midtrans.cancel_transaction(tx.txn_id)
+        except MidtransUncertainError as exc:
             logger.warning(
                 "Pembatalan tx %s tidak pasti, sinkronisasi status: %s",
                 tx.id,
                 exc.message,
             )
             return self._finalize_cancel_after_reconcile(tx, now_wib)
-        except PakasirError as exc:
-            logger.warning("Gagal membatalkan transaksi di Pakasir v2: %s", exc.message)
+        except MidtransError as exc:
+            logger.warning("Gagal membatalkan transaksi di Midtrans: %s", exc.message)
             raise HTTPException(
                 status_code=502,
                 detail=f"Gagal membatalkan transaksi di gateway: {exc.message}",
@@ -833,7 +847,7 @@ class PaymentService:
         if is_late_or_cancelled:
             tx.status = "exception"
             tx.provider_status = "completed"
-            tx.method = "qris_pakasir"
+            tx.method = "qris_midtrans"
             tx.confirmed_at = now_wib
             tx.notes = (
                 "[PENGECUALIAN ADMIN] Pembayaran formulir sukses terlambat "
@@ -1132,38 +1146,11 @@ class PaymentService:
             "message": "Payment confirmation cancelled successfully",
         }
 
-    def process_pakkasir_webhook(
-        self, payload: dict, x_secret: str | None = None
-    ) -> dict:
+    def process_midtrans_webhook(self, payload: dict) -> dict:
         """
-        Webhook 1 Pintu QRIS Pak Kasir v2 untuk verifikasi formulir real-time.
+        Webhook resmi Midtrans untuk verifikasi formulir & PPDB real-time.
         """
-        logger.info("Menerima webhook Pakasir: %s", payload)
-
-        if settings.pakasir_webhook_secret:
-            if not x_secret or not hmac.compare_digest(
-                x_secret, settings.pakasir_webhook_secret
-            ):
-                logger.warning(
-                    "Webhook Pakasir ditolak: X-Secret tidak valid atau tidak cocok"
-                )
-                raise HTTPException(
-                    status_code=401, detail="Header X-Secret tidak valid"
-                )
-        elif settings.is_production:
-            logger.error(
-                "PAKASIR_WEBHOOK_SECRET belum dikonfigurasi — webhook ditolak "
-                "di mode production."
-            )
-            raise HTTPException(
-                status_code=503,
-                detail="Webhook pembayaran belum dikonfigurasi dengan aman",
-            )
-        else:
-            logger.warning(
-                "PAKASIR_WEBHOOK_SECRET kosong — memproses webhook tanpa "
-                "validasi secret (hanya non-production)."
-            )
+        logger.info("Menerima webhook Midtrans: %s", payload)
 
         order_id = (
             payload.get("order_id")
@@ -1173,14 +1160,47 @@ class PaymentService:
         )
         if not order_id:
             order_id = payload.get("transaction_id")
-        txn_id = payload.get("txn_id")
-        amount = payload.get("amount")
+        txn_id = payload.get("transaction_id") or payload.get("txn_id")
+        status_code = str(payload.get("status_code") or "")
+        gross_amount = str(payload.get("gross_amount") or payload.get("amount") or "")
+        signature_key = payload.get("signature_key")
+
+        # Verifikasi signature resmi Midtrans (SHA-512)
+        if settings.midtrans_server_key:
+            midtrans = get_midtrans_client()
+            if not signature_key or not midtrans.verify_webhook_signature(
+                order_id=str(order_id or ""),
+                status_code=status_code,
+                gross_amount=gross_amount,
+                signature_key=str(signature_key),
+            ):
+                logger.warning("Webhook Midtrans ditolak: signature key tidak valid")
+                raise HTTPException(
+                    status_code=400, detail="Signature key webhook Midtrans tidak valid"
+                )
+        elif settings.is_production:
+            logger.error(
+                "MIDTRANS_SERVER_KEY belum dikonfigurasi — webhook ditolak "
+                "di mode production."
+            )
+            raise HTTPException(
+                status_code=503,
+                detail="Webhook pembayaran belum dikonfigurasi dengan aman",
+            )
+        else:
+            logger.warning(
+                "MIDTRANS_SERVER_KEY kosong — memproses webhook tanpa "
+                "validasi signature (hanya non-production)."
+            )
+
+        amount = payload.get("gross_amount") or payload.get("amount")
         status = str(
-            payload.get("status")
-            or payload.get("transaction_status")
+            payload.get("transaction_status")
+            or payload.get("status")
             or payload.get("payment_status")
             or ""
         ).lower()
+        fraud_status = str(payload.get("fraud_status") or "").lower()
 
         tx = None
         if order_id:
@@ -1194,7 +1214,7 @@ class PaymentService:
 
         if not tx:
             logger.warning(
-                "Transaksi Pakasir tidak ditemukan untuk order_id=%s, txn_id=%s",
+                "Transaksi Midtrans tidak ditemukan untuk order_id=%s, txn_id=%s",
                 order_id,
                 txn_id,
             )
@@ -1240,7 +1260,7 @@ class PaymentService:
         from src.core.cache import get_redis
 
         r = get_redis()
-        lock_key = f"lock:pakasir_webhook:{tx.id}"
+        lock_key = f"lock:midtrans_webhook:{tx.id}"
         lock_token = str(uuid.uuid4())
         lock_acquired = False
         if r is not None:
@@ -1248,7 +1268,7 @@ class PaymentService:
                 lock_acquired = bool(r.set(lock_key, lock_token, nx=True, ex=30))
                 if not lock_acquired:
                     logger.info(
-                        "Webhook Pakasir untuk tx %s sedang diproses konkuren "
+                        "Webhook Midtrans untuk tx %s sedang diproses konkuren "
                         "- menunggu",
                         tx.id,
                     )
@@ -1268,7 +1288,7 @@ class PaymentService:
 
                     if not lock_acquired:
                         logger.warning(
-                            "Webhook Pakasir untuk tx %s ditolak: masih dikunci "
+                            "Webhook Midtrans untuk tx %s ditolak: masih dikunci "
                             "proses lain",
                             tx.id,
                         )
@@ -1295,7 +1315,7 @@ class PaymentService:
 
             if amount is not None:
                 try:
-                    amt_int = int(amount)
+                    amt_int = int(float(amount))
                     if amt_int != tx.amount:
                         logger.warning(
                             "Webhook nominal tidak cocok untuk tx %s: "
@@ -1317,7 +1337,7 @@ class PaymentService:
                     pass
 
             now_wib = datetime.now(WIB)
-            provider_state = canonical_status(status)
+            provider_state = canonical_status(status, fraud_status=fraud_status)
             is_success = provider_state == STATUS_COMPLETED
             is_failed = provider_state == STATUS_CANCELED
 
@@ -1332,7 +1352,7 @@ class PaymentService:
             elif is_failed:
                 tx.status = (
                     "cancelled"
-                    if status in ("canceled", "cancelled", "batal")
+                    if status in ("canceled", "cancelled", "batal", "cancel")
                     else "failed"
                 )
                 tx.provider_status = status
@@ -1360,5 +1380,5 @@ class PaymentService:
                 except Exception:
                     pass
 
-    def process_webhook(self, payload: dict, x_secret: str | None = None) -> dict:
-        return self.process_pakkasir_webhook(payload, x_secret=x_secret)
+    def process_webhook(self, payload: dict) -> dict:
+        return self.process_midtrans_webhook(payload)

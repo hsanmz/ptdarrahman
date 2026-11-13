@@ -20,7 +20,7 @@ export const SEMANTIC_ONTOLOGY: Record<string, string[]> = {
   santri: ["applicant", "pendaftar", "siswa", "murid", "anak", "peserta", "biodata", "calon santri", "pelajar"],
   pendaftar: ["applicant", "santri", "siswa", "calon", "registrasi", "biodata", "peserta", "formulir"],
   dokumen: ["berkas", "ijazah", "kk", "akta", "nisn", "nik", "foto", "rapor", "upload", "lampiran", "file", "verifikasi"],
-  bayar: ["pembayaran", "keuangan", "biaya", "formulir", "qris", "pakasir", "lunas", "transaksi", "kuitansi"],
+  bayar: ["pembayaran", "keuangan", "biaya", "formulir", "qris", "midtrans", "lunas", "transaksi", "kuitansi"],
   tahfidz: ["hafalan", "quran", "juz", "surah", "tajwid", "kelancaran", "simakan", "setoran", "penguji", "tahsin", "makhraj"],
   wawancara: ["interview", "pewawancara", "wali santri", "orang tua", "bk", "tanya jawab", "psikotes", "kesiapan"],
   lulus: ["kelulusan", "hasil", "loa", "letter of acceptance", "diterima", "pengumuman", "lolos"],
@@ -59,7 +59,7 @@ export const ROUTE_SEMANTIC_TAGS: Record<string, { category: SemanticSearchItem[
   },
   "/admin/pembayaran-formulir": {
     category: "Navigasi",
-    keywords: ["biaya formulir", "uang masuk", "qris", "pakasir", "transaksi", "kuitansi", "lunas", "invoice"],
+    keywords: ["biaya formulir", "uang masuk", "qris", "midtrans", "transaksi", "kuitansi", "lunas", "invoice"],
     desc: "Monitoring transaksi QRIS pembayaran formulir pendaftaran",
   },
   "/admin/sessions/tahfidz": {

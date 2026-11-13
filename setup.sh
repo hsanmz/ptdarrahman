@@ -244,7 +244,7 @@ setup_env_files() {
         if [ -z "$existing_jwt" ] || [[ "$existing_jwt" == *"ganti_dengan"* ]]; then
             need_api=true
         fi
-        if ! grep -q "PAKASIR_WEBHOOK_SECRET=" "$api_env"; then
+        if ! grep -q "MIDTRANS_SERVER_KEY=" "$api_env"; then
             need_api=true
         fi
     fi

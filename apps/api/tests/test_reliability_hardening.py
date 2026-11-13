@@ -57,18 +57,18 @@ class TestSecretValidationHardening:
 
 
 class TestPaymentGatewayValidationHardening:
-    """Test Pakasir requirements in production."""
+    """Test Midtrans requirements in production."""
 
     def test_skips_validation_in_non_production(self):
         with patch.object(settings, "app_env", "development"):
-            with patch.object(settings, "pakasir_api_key", ""):
+            with patch.object(settings, "midtrans_server_key", ""):
                 # Should not raise in development
                 _validate_payment_gateway()
 
     def test_enforces_credentials_in_production(self):
         with patch.object(settings, "app_env", "production"):
-            with patch.object(settings, "pakasir_api_key", ""):
-                with pytest.raises(RuntimeError, match="PAKASIR_API_KEY"):
+            with patch.object(settings, "midtrans_server_key", ""):
+                with pytest.raises(RuntimeError, match="MIDTRANS_SERVER_KEY"):
                     _validate_payment_gateway()
 
 
@@ -160,7 +160,7 @@ class TestWebhookIdempotencyAndReplayProtection:
                 assert response.get("status") == "duplicate_suppressed"
                 assert response.get("duplicate") is True
 
-    def test_pakasir_webhook_already_paid_returns_idempotent_success(self):
+    def test_midtrans_webhook_already_paid_returns_idempotent_success(self):
         from unittest.mock import MagicMock
 
         from src.models.ppdb import PPDBPaymentTransaction
@@ -179,13 +179,11 @@ class TestWebhookIdempotencyAndReplayProtection:
         mock_repo.get_transaction_by_order_id.return_value = existing_tx
 
         svc = PaymentService(mock_repo)
-        with patch.object(settings, "pakasir_webhook_secret", "secret123"):
-            result = svc.process_pakkasir_webhook(
-                {"order_id": "ORDER-123", "status": "completed", "amount": 250000},
-                x_secret="secret123",
-            )
-            assert result["status"] == "already_paid"
-            assert result["success"] is True
+        result = svc.process_midtrans_webhook(
+            {"order_id": "ORDER-123", "transaction_status": "settlement", "gross_amount": "250000.00"}
+        )
+        assert result["status"] == "already_paid"
+        assert result["success"] is True
 
     @pytest.mark.asyncio
     async def test_wa_webhook_deletes_idempotency_key_on_db_exception(self):
@@ -231,7 +229,7 @@ class TestWebhookIdempotencyAndReplayProtection:
                         "wa_hook_idempotency:msg-fail-123:message.sent"
                     )
 
-    def test_pakasir_webhook_amount_mismatch_raises_400_and_records_anomaly(self):
+    def test_midtrans_webhook_amount_mismatch_raises_400_and_records_anomaly(self):
         from unittest.mock import MagicMock
 
         from fastapi import HTTPException
@@ -252,18 +250,16 @@ class TestWebhookIdempotencyAndReplayProtection:
         mock_repo.get_transaction_by_order_id.return_value = existing_tx
 
         svc = PaymentService(mock_repo)
-        with patch.object(settings, "pakasir_webhook_secret", "secret123"):
-            with pytest.raises(HTTPException) as exc_info:
-                svc.process_pakkasir_webhook(
-                    {"order_id": "ORDER-MM", "status": "completed", "amount": 100000},
-                    x_secret="secret123",
-                )
-            assert exc_info.value.status_code == 400
-            assert "Nominal webhook tidak cocok" in exc_info.value.detail
-            assert "[ANOMALI WEBHOOK] Nominal tidak cocok" in existing_tx.notes
-            mock_repo.update_transaction.assert_called_once_with(existing_tx)
+        with pytest.raises(HTTPException) as exc_info:
+            svc.process_midtrans_webhook(
+                {"order_id": "ORDER-MM", "transaction_status": "settlement", "gross_amount": "100000.00"}
+            )
+        assert exc_info.value.status_code == 400
+        assert "Nominal webhook tidak cocok" in exc_info.value.detail
+        assert "[ANOMALI WEBHOOK] Nominal tidak cocok" in existing_tx.notes
+        mock_repo.update_transaction.assert_called_once_with(existing_tx)
 
-    def test_pakasir_webhook_releases_redis_lock_in_finally_on_error(self):
+    def test_midtrans_webhook_releases_redis_lock_in_finally_on_error(self):
         from unittest.mock import MagicMock
 
         from src.models.ppdb import PPDBPaymentTransaction
@@ -285,28 +281,26 @@ class TestWebhookIdempotencyAndReplayProtection:
         mock_redis.set.return_value = True  # lock acquired
 
         svc = PaymentService(mock_repo)
-        with patch.object(settings, "pakasir_webhook_secret", "secret123"):
-            with patch("src.core.cache.get_redis", return_value=mock_redis):
-                with patch.object(
-                    svc,
-                    "_settle_successful_transaction",
-                    side_effect=RuntimeError("Settlement failure"),
-                ):
-                    with pytest.raises(RuntimeError, match="Settlement failure"):
-                        svc.process_pakkasir_webhook(
-                            {
-                                "order_id": "ORDER-LOCK",
-                                "status": "completed",
-                                "amount": 250000,
-                            },
-                            x_secret="secret123",
-                        )
-                    # Verify lock was safely released via Lua script
-                    assert mock_redis.eval.called
-                    args, kwargs = mock_redis.eval.call_args
-                    assert "lock:pakasir_webhook:tx-lock-test" in args
+        with patch("src.core.cache.get_redis", return_value=mock_redis):
+            with patch.object(
+                svc,
+                "_settle_successful_transaction",
+                side_effect=RuntimeError("Settlement failure"),
+            ):
+                with pytest.raises(RuntimeError, match="Settlement failure"):
+                    svc.process_midtrans_webhook(
+                        {
+                            "order_id": "ORDER-LOCK",
+                            "transaction_status": "settlement",
+                            "gross_amount": "250000.00",
+                        }
+                    )
+                # Verify lock was safely released via Lua script
+                assert mock_redis.eval.called
+                args, kwargs = mock_redis.eval.call_args
+                assert "lock:midtrans_webhook:tx-lock-test" in args
 
-    def test_pakasir_webhook_contention_raises_409_when_cannot_acquire_and_not_settled(
+    def test_midtrans_webhook_contention_raises_409_when_cannot_acquire_and_not_settled(
         self,
     ):
         from unittest.mock import MagicMock
@@ -332,22 +326,20 @@ class TestWebhookIdempotencyAndReplayProtection:
         mock_redis.set.return_value = False  # cannot acquire lock
 
         svc = PaymentService(mock_repo)
-        with patch.object(settings, "pakasir_webhook_secret", "secret123"):
-            with patch("src.core.cache.get_redis", return_value=mock_redis):
-                with pytest.raises(HTTPException) as exc_info:
-                    svc.process_pakkasir_webhook(
-                        {
-                            "order_id": "ORDER-CONT",
-                            "status": "completed",
-                            "amount": 250000,
-                        },
-                        x_secret="secret123",
-                    )
-                assert exc_info.value.status_code == 409
-                assert (
-                    "Transaksi sedang diproses secara bersamaan"
-                    in exc_info.value.detail
+        with patch("src.core.cache.get_redis", return_value=mock_redis):
+            with pytest.raises(HTTPException) as exc_info:
+                svc.process_midtrans_webhook(
+                    {
+                        "order_id": "ORDER-CONT",
+                        "transaction_status": "settlement",
+                        "gross_amount": "250000.00",
+                    }
                 )
+            assert exc_info.value.status_code == 409
+            assert (
+                "Transaksi sedang diproses secara bersamaan"
+                in exc_info.value.detail
+            )
 
     @pytest.mark.asyncio
     async def test_wa_webhook_preserves_idempotency_key_if_db_already_committed(self):
@@ -404,7 +396,7 @@ class TestWebhookIdempotencyAndReplayProtection:
                         # already succeeded
                         mock_redis.delete.assert_not_called()
 
-    def test_pakasir_lock_expiry_old_owner_does_not_delete_new_owner_lock(self):
+    def test_midtrans_lock_expiry_old_owner_does_not_delete_new_owner_lock(self):
         from unittest.mock import MagicMock
 
         from src.models.ppdb import PPDBPaymentTransaction
@@ -443,49 +435,46 @@ class TestWebhookIdempotencyAndReplayProtection:
 
         svc = PaymentService(mock_repo)
 
-        with patch.object(settings, "pakasir_webhook_secret", "secret123"):
-            with patch("src.core.cache.get_redis", return_value=mock_redis):
-                # Process A starts and acquires lock
-                # Token A is stored in redis_store
-                # We simulate lock expiry by setting redis_store[lock_key] to
-                # token_B (as if Process B took it)
-                lock_key = "lock:pakasir_webhook:tx-expiry-test"
+        with patch("src.core.cache.get_redis", return_value=mock_redis):
+            # Process A starts and acquires lock
+            # Token A is stored in redis_store
+            # We simulate lock expiry by setting redis_store[lock_key] to
+            # token_B (as if Process B took it)
+            lock_key = "lock:midtrans_webhook:tx-expiry-test"
 
-                # Simulate Process A executing settlement
-                def slow_settle(*args, **kwargs):
-                    # While Process A is settling, TTL expires and Process B
-                    # acquires lock with token_B
-                    redis_store[lock_key] = "token_B_from_new_owner"
-                    # Process A updates DB to success
-                    tx.status = "success"
-                    return {"status": "success"}
+            # Simulate Process A executing settlement
+            def slow_settle(*args, **kwargs):
+                # While Process A is settling, TTL expires and Process B
+                # acquires lock with token_B
+                redis_store[lock_key] = "token_B_from_new_owner"
+                # Process A updates DB to success
+                tx.status = "success"
+                return {"status": "success"}
 
-                with patch.object(
-                    svc, "_settle_successful_transaction", side_effect=slow_settle
-                ):
-                    svc.process_pakkasir_webhook(
-                        {
-                            "order_id": "ORDER-EXPIRY",
-                            "status": "completed",
-                            "amount": 250000,
-                        },
-                        x_secret="secret123",
-                    )
-
-                # Assert that Process A's finally block did NOT delete Process B's lock!
-                assert redis_store.get(lock_key) == "token_B_from_new_owner"
-
-                # Now Process B runs under its lock: it re-fetches tx from
-                # repo, sees status='success',
-                # and returns already_paid without re-settling!
-                result_b = svc.process_pakkasir_webhook(
+            with patch.object(
+                svc, "_settle_successful_transaction", side_effect=slow_settle
+            ):
+                svc.process_midtrans_webhook(
                     {
                         "order_id": "ORDER-EXPIRY",
-                        "status": "completed",
-                        "amount": 250000,
-                    },
-                    x_secret="secret123",
+                        "transaction_status": "settlement",
+                        "gross_amount": "250000.00",
+                    }
                 )
+
+            # Assert that Process A's finally block did NOT delete Process B's lock!
+            assert redis_store.get(lock_key) == "token_B_from_new_owner"
+
+            # Now Process B runs under its lock: it re-fetches tx from
+            # repo, sees status='success',
+            # and returns already_paid without re-settling!
+            result_b = svc.process_midtrans_webhook(
+                {
+                    "order_id": "ORDER-EXPIRY",
+                    "transaction_status": "settlement",
+                    "gross_amount": "250000.00",
+                }
+            )
                 assert result_b["status"] == "already_paid"
 
     @pytest.mark.asyncio

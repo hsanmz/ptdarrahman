@@ -87,7 +87,7 @@ export default function QrisPaymentModal({
       <DialogContent className="max-w-lg p-5 sm:p-6 rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 flex items-center justify-between gap-2">
-            <span>Pembayaran QRIS Pak Kasir</span>
+            <span>Pembayaran QRIS Midtrans</span>
             <StateBadge state={state} secondsRemaining={secondsRemaining} />
           </DialogTitle>
         </DialogHeader>

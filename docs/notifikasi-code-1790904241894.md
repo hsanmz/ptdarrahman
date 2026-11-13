@@ -44,7 +44,7 @@ Semua notifikasi kepada pendaftar dikirim melalui WhatsApp; email tidak digunaka
 
 ### 2. Pembayaran Formulir Berhasil
 * **Event key:** `payment_success_formulir`
-* **Trigger:** Webhook Pakasir mendeteksi pembayaran formulir lunas via QRIS.
+* **Trigger:** Webhook Midtrans mendeteksi pembayaran formulir lunas via QRIS.
 * **Template Pesan:**
 > ✅ **Pembayaran Formulir Berhasil!**
 >

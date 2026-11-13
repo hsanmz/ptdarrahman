@@ -39,10 +39,10 @@ def test_normal_payment_webhook_marks_success():
 
     payload = {
         "order_id": "tx-1",
-        "status": "PAID",
-        "payment_method": "qris",
+        "transaction_status": "settlement",
+        "payment_type": "qris",
     }
-    res = service.process_pakkasir_webhook(payload)
+    res = service.process_midtrans_webhook(payload)
 
     assert res["success"] is True
     assert tx.status == "success"
@@ -74,10 +74,10 @@ def test_late_payment_webhook_on_cancelled_transaction_marked_as_exception():
 
     payload = {
         "order_id": "tx-2",
-        "status": "PAID",
-        "payment_method": "qris",
+        "transaction_status": "settlement",
+        "payment_type": "qris",
     }
-    res = service.process_pakkasir_webhook(payload)
+    res = service.process_midtrans_webhook(payload)
 
     assert res["success"] is True
     assert res["status"] == "exception"
@@ -112,10 +112,10 @@ def test_late_payment_webhook_on_expired_applicant_marked_as_exception():
 
     payload = {
         "order_id": "tx-3",
-        "status": "PAID",
-        "payment_method": "qris",
+        "transaction_status": "settlement",
+        "payment_type": "qris",
     }
-    res = service.process_pakkasir_webhook(payload)
+    res = service.process_midtrans_webhook(payload)
 
     assert res["success"] is True
     assert res["status"] == "exception"

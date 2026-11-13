@@ -148,7 +148,7 @@ export default function CheckoutPage() {
                 <div className="min-w-0 flex-1">
                   <CardTitle className="text-base sm:text-lg">Tagihan Formulir Pendaftaran</CardTitle>
                   <CardDescription className="text-xs sm:text-sm">
-                    Pembayaran otomatis 1 pintu via QRIS Pak Kasir
+                    Pembayaran otomatis via QRIS Midtrans
                   </CardDescription>
                 </div>
                 <Badge variant={headerBadge.variant} className="self-start sm:self-auto px-3 py-1 text-xs shrink-0">
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
                       QRIS
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-slate-800">PAK KASIR PAYMENT GATEWAY</h4>
+                      <h4 className="font-bold text-sm text-slate-800">MIDTRANS PAYMENT GATEWAY</h4>
                       <p className="text-[11px] text-muted-foreground">Scan menggunakan aplikasi Bank (BCA, Mandiri, BNI, BRI, BSI) atau E-Wallet (GoPay, OVO, DANA, ShopeePay)</p>
                     </div>
                   </div>
@@ -339,7 +339,7 @@ export default function CheckoutPage() {
 
             </CardContent>
             <CardFooter className="flex justify-between items-center p-4 sm:p-6 border-t bg-muted/20 text-xs text-muted-foreground">
-              <span>PPDB PTDARRAHMAN · Integrasi Resmi Pak Kasir API v2</span>
+              <span>PPDB PTDARRAHMAN · Integrasi Resmi Midtrans</span>
               <Button variant="ghost" size="sm" onClick={() => logout().then(() => navigate('/auth/login'))}>
                 Keluar (Logout)
               </Button>

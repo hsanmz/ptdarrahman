@@ -20,9 +20,9 @@ Aplikasi ini adalah **backend utama** untuk seluruh ekosistem Pesantren Tahfidz 
 - 🚦 **Transaksi PPDB & Gelombang (Atomik):** Mengatur validasi periode tunggal, alokasi gelombang otomatis, master komponen biaya periode, diskonasi gelombang, kuota pembayaran formulir, dan pembatalan otomatis invoice pending saat kuota terpenuhi.
 - 💻 **Modul CBT Mandiri & Anti-Cheating:** Bank Soal Akademik & Psikologi per periode, penjadwalan ujian CBT massal per batch/kloter dengan cutoff pendaftaran H-1, anti-cheating tab switch > 5 detik, autosave instan jawaban, dan live monitoring pengawas dengan tombol unfreeze peserta.
 - 👤 **Profil Mandiri Pendaftar (`/ppdb/applicants/me`):** Pembacaan dan pembaruan mandiri data pendaftar dan kuesioner kesehatan dengan penguncian otomatis (`is_locked = true`) pasca-penandatanganan LoA resmi.
-- 💳 **Integrasi Payment Gateway Pakasir API v2:**
-  - Pembuatan QRIS dinamis untuk pembayaran formulir pendaftaran.
-  - Webhook 1 Pintu terverifikasi dengan header `X-Secret` dan idempotency guard.
+- 💳 **Integrasi Payment Gateway Midtrans:**
+  - Pembuatan QRIS dinamis untuk pembayaran formulir pendaftaran via Midtrans Core API.
+  - Webhook resmi terverifikasi dengan signature key SHA-512 dan idempotency guard.
   - Penerbitan kuitansi resmi bertanda tangan digital (HMAC signed token) untuk verifikasi publik (`/payment/public-receipt/{id}`).
   - Background scheduler untuk pengingat pembayaran Senin, pengingat submit dokumen H+3, dan pengingat seleksi H-2, H-1, 1 jam sebelum ujian via WhatsApp.
 - 📜 **Penerbitan LoA Digital & Arsip Dossier:**

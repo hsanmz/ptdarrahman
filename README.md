@@ -26,7 +26,7 @@ Selamat datang di monorepo Sistem Terpadu **Pesantren Tahfidz Qur'an dan Digital
    - [Infrastruktur Docker & Resource Limits](#2-infrastruktur-docker--resource-limits)
    - [Autentikasi, Sesi & RBAC Detail](#3-autentikasi-sesi--rbac-detail)
    - [Pipeline Tahap Calon Santri](#4-pipeline-tahap-calon-santri)
-   - [Arsitektur Pembayaran Pakasir API v2](#5-arsitektur-pembayaran-pakasir-api-v2)
+   - [Arsitektur Pembayaran Midtrans](#5-arsitektur-pembayaran-midtrans)
    - [Arsitektur WhatsApp Microservice & BullMQ](#6-arsitektur-whatsapp-microservice--bullmq)
    - [Arsitektur Database & Domain Models](#7-arsitektur-database--domain-models)
    - [Aturan Bisnis Kritis (Business Invariants)](#8-aturan-bisnis-kritis-business-invariants)
@@ -101,7 +101,7 @@ Project ini menggunakan arsitektur modular **pnpm workspace** yang diorkestrasi 
 | Database | MySQL 8 |
 | Cache/Queue | Redis 7 |
 | Auth | JWT (HTTP-only Cookie), RBAC |
-| Payment | Pakasir API v2 |
+| Payment | Midtrans Payment Gateway |
 | Storage | Cloudinary & Local disk |
 | Scheduler | APScheduler (session & reminder maintenance) |
 
@@ -254,9 +254,9 @@ Calon santri melalui tahapan seleksi terstruktur dengan alur yang berujung tunta
     └──► Auto-link ke satu-satunya gelombang aktif
             │
             ▼
- 2. BAYAR FORMULIR (Pakasir v2 QRIS)
+ 2. BAYAR FORMULIR (Midtrans QRIS)
     POST /payment/create-qris ──► Scan QRIS
-    Webhook Pakasir v2 ──► Konfirmasi Pembayaran
+    Webhook Midtrans ──► Konfirmasi Pembayaran
     └──► Kuota berkurang atomik; Kuitansi resmi terbit (/kuitansi/:id)
             │
             ▼
@@ -306,16 +306,16 @@ Calon santri melalui tahapan seleksi terstruktur dengan alur yang berujung tunta
 
 ---
 
-### 5. Arsitektur Pembayaran Pakasir API v2
+### 5. Arsitektur Pembayaran Midtrans
 
-Sistem pembayaran mengintegrasikan gerbang pembayaran resmi **Pakasir API v2** dengan perlindungan idempotensi satu pintu:
+Sistem pembayaran mengintegrasikan gerbang pembayaran resmi **Midtrans** dengan perlindungan idempotensi satu pintu:
 
 ```
-[ Pendaftar ]                 [ Core API ]                [ Pakasir API v2 ]
+[ Pendaftar ]                 [ Core API ]                [ Midtrans ]
       │                             │                            │
       │─── Klik "Bayar Formulir" ──►│                            │
-      │                             │─── POST /api/v2/invoice ──►│
-      │                             │    (order_id, amount)      │
+      │                             │─── POST /charge (QRIS) ───►│
+      │                             │    (order_id, gross_amount)│
       │                             │◄── Response QRIS payload ──│
       │◄── Tampilkan QR Code ───────│                            │
       │                             │                            │
@@ -323,11 +323,11 @@ Sistem pembayaran mengintegrasikan gerbang pembayaran resmi **Pakasir API v2** d
       │                                                          │
       │                                                          │─── Webhook Notifikasi ──┐
       │                                                          │    POST /payment/webhook│
-      │                                                          │    (Header: X-Secret)   │
+      │                                                          │    (signature_key SHA512)│
       │                             ┌────────────────────────────┴─────────────────────────┘
       │                             ▼
       │                     [ Webhook Handler API ]
-      │                     ├── 1. Validasi header X-Secret
+      │                     ├── 1. Validasi signature_key (SHA-512)
       │                     ├── 2. Pencocokan nominal tagihan (exact match)
       │                     ├── 3. Idempotency Check (skip jika invoice sudah PAID)
       │                     ├── 4. Pengurangan kuota gelombang secara atomik di DB
@@ -347,7 +347,7 @@ Sistem pembayaran mengintegrasikan gerbang pembayaran resmi **Pakasir API v2** d
 ```
 
 #### Penanganan Transaksi Terlambat (`late_payment_exception`):
-Jika webhook pembayaran sukses tiba dari Pakasir **setelah** tagihan dibatalkan karena kuota gelombang telah habis:
+Jika webhook pembayaran sukses tiba dari Midtrans **setelah** tagihan dibatalkan karena kuota gelombang telah habis:
 1. Sistem **tidak** menolak pembayaran dan **tidak** memindahkan pendaftar secara otomatis ke gelombang lain.
 2. Sistem menandai transaksi dengan status `late_payment_exception`.
 3. Insiden masuk ke dashboard panitia untuk penanganan manual administratif (penambahan kuota darurat atau proses pengembalian dana resmi).
@@ -445,7 +445,7 @@ Aturan-aturan berikut adalah pilar integritas sistem yang wajib dipatuhi di back
 
 | Layanan Eksternal | Protokol | Arah Komunikasi | Peran & Penggunaan |
 |---|---|---|---|
-| **Pakasir API v2** | HTTPS REST | Dua Arah (Outbound API call & Inbound Webhook) | Pembuatan QRIS formulir, verifikasi notifikasi pembayaran, kuitansi HMAC |
+| **Midtrans** | HTTPS REST | Dua Arah (Outbound API call & Inbound Webhook) | Pembuatan QRIS formulir, verifikasi notifikasi pembayaran, kuitansi HMAC |
 | **Cloudinary** | HTTPS REST | Outbound (Core API ──► Cloudinary) | Media storage untuk avatar pendaftar, foto staf, galeri, dan aset CMS |
 | **WhatsApp (whatsapp-web.js)** | Redis Queue | Internal Monorepo | Core API enqueue ke BullMQ ──► WhatsApp Microservice kirim pesan |
 
@@ -504,7 +504,7 @@ Ringkasan Visual Identity Ar-Rahman:
 | Skrip & Tooling | [`scripts/README.md`](scripts/README.md) | Sinkronisasi Windows-WSL, normalisasi LF, utilitas debug |
 | Skrip Setup Otomatis | [`setup.sh`](setup.sh) | Skrip inisialisasi satu perintah (`./setup.sh docker` & `./setup.sh local`) |
 | **Panduan Agent (root)** | [`AGENTS.md`](AGENTS.md) | Aturan coding & konvensi lintas project |
-| Panduan Agent API | [`apps/api/AGENTS.md`](apps/api/AGENTS.md) | Arsitektur backend (FastAPI, Alembic, Pakasir v2, Repositories) |
+| Panduan Agent API | [`apps/api/AGENTS.md`](apps/api/AGENTS.md) | Arsitektur backend (FastAPI, Alembic, Midtrans, Repositories) |
 | Panduan Agent PPDB | [`apps/ppdb/AGENTS.md`](apps/ppdb/AGENTS.md) | Arsitektur frontend PPDB (rute tahapan, modal, backoffice) |
 | Panduan Agent Superadmin | [`apps/superadmin/AGENTS.md`](apps/superadmin/AGENTS.md) | Arsitektur panel Superadmin |
 | Panduan Agent Company Profile | [`apps/companyprofile/AGENTS.md`](apps/companyprofile/AGENTS.md) | Arsitektur portal Company Profile & auth cookies |

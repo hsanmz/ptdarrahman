@@ -1,6 +1,6 @@
 # PPDB Frontend App (PTDARRAHMAN)
 
-Aplikasi frontend Penerimaan Peserta Didik Baru (PPDB) untuk Pesantren Tahfidz Qur'an dan Digital Ar-Rahman. Melayani calon santri/wali murid (registrasi, ujian seleksi terpadu & wawancara, pembayaran formulir QRIS Pakasir v2, dan penetapan hasil kelulusan / penandatanganan LoA digital) serta backoffice admin PPDB.
+Aplikasi frontend Penerimaan Peserta Didik Baru (PPDB) untuk Pesantren Tahfidz Qur'an dan Digital Ar-Rahman. Melayani calon santri/wali murid (registrasi, ujian seleksi terpadu & wawancara, pembayaran formulir QRIS Midtrans, dan penetapan hasil kelulusan / penandatanganan LoA digital) serta backoffice admin PPDB.
 
 ## Tech Stack
 - **Framework:** React 19 + Vite 8
@@ -48,7 +48,7 @@ Aplikasi frontend Penerimaan Peserta Didik Baru (PPDB) untuk Pesantren Tahfidz Q
 - `/admin/data-pendaftar` (`DataPendaftarPage`): Ringkasan dan tabel pendaftar aktif (gelombang aktif).
 - `/admin/verifikasi-dokumen` (`VerifikasiDokumenPage`): Daftar pendaftar untuk verifikasi berkas persyaratan.
 - `/admin/verifikasi-dokumen/:id` (`VerifikasiDokumenDetailPage`): Detail verifikasi berkas dan kuesioner kesehatan per pendaftar (dua kolom dengan DocTrigger).
-- `/admin/pembayaran-formulir` (`PembayaranFormulirPage`): Monitoring invoice formulir dan integrasi Pakasir v2.
+- `/admin/pembayaran-formulir` (`PembayaranFormulirPage`): Monitoring invoice formulir dan integrasi Midtrans.
 - `/admin/kuitansi/:id` (`AdminReceiptPage`): Detail dan cetak kuitansi resmi pembayaran formulir.
 - `/admin/jadwal-seleksi/akademik` (`JadwalUjianPage`, `category="akademik"`): Manajemen jadwal ujian CBT Akademik per gelombang/batch.
 - `/admin/jadwal-seleksi/psikologi` (`JadwalUjianPage`, `category="psikologi"`): Manajemen jadwal ujian CBT Psikologi per gelombang/batch.
@@ -80,7 +80,7 @@ Aplikasi frontend Penerimaan Peserta Didik Baru (PPDB) untuk Pesantren Tahfidz Q
 - **`PeriodFeeItemsModal`**: Modal manajemen master komponen biaya pendidikan per periode (tambah, edit, hapus, dan total nominal standar).
 - **`WavesSheet`**: Sheet drawer pengelolaan gelombang pendaftaran dan diskonasi per komponen biaya (Diskon Reguler, Diskon Early Bird, dan Simulasi Hitung Biaya).
 - **`OfficialReceiptModal` & `OfficialReceiptCard`**: Modal dan kartu kuitansi resmi lengkap dengan stempel digital dan verifikasi QR HMAC token.
-- **`QrisPaymentModal`**: Dialog QRIS dinamis Pakasir v2 dengan timer kedaluwarsa, panduan bayar, dan pengecekan status otomatis.
+- **`QrisPaymentModal`**: Dialog QRIS dinamis Midtrans dengan timer kedaluwarsa, panduan bayar, dan pengecekan status otomatis.
 - **`ApplicantLoAModal` & `LoaOfficialDocument`**: Tampilan Surat Penerimaan Resmi (LoA) dengan klausul non-refundable, QR verifikasi, dan kanvas tanda tangan digital orang tua.
 - **`ApplicantFormDocument`**: Dokumen formulir pendaftaran santri baku A4 lengkap dengan identifikasi kesehatan.
 - **`OfficialAssessmentSheet`**: Lembar penilaian evaluator ujian Tahfidz dan Wawancara berbobot resmi.
@@ -109,7 +109,7 @@ Aplikasi frontend Penerimaan Peserta Didik Baru (PPDB) untuk Pesantren Tahfidz Q
 3. **Kuesioner Identifikasi Kesehatan (10 Soal):**
    - Menggantikan Medcheck, diisi saat registrasi, tersimpan sebagai data profil sensitif yang hanya dapat dilihat di detail/dossier admin.
 4. **Pembayaran Formulir, Master Biaya Periode & Diskonasi Gelombang:**
-   - Biaya formulir (`ppdb_periods.form_fee`) dan minimal DP biaya pendidikan (`ppdb_periods.minimum_dp`) adalah master tingkat **Periode** — semua gelombang di bawahnya memakai nilai yang sama. Kuota gelombang dan diskon pendaftar awal dihitung dari pembayaran formulir sukses via QRIS dinamis Pakasir v2.
+   - Biaya formulir (`ppdb_periods.form_fee`) dan minimal DP biaya pendidikan (`ppdb_periods.minimum_dp`) adalah master tingkat **Periode** — semua gelombang di bawahnya memakai nilai yang sama. Kuota gelombang dan diskon pendaftar awal dihitung dari pembayaran formulir sukses via QRIS dinamis Midtrans.
    - Kelayakan diskon pendaftar awal per pendaftar (`early_discount_eligible`) ditandai backend saat formulir sukses (sesuai kuota gelombang), dan LoA hanya menerapkan potongan early bird bila flag itu aktif.
    - Seluruh komponen biaya masuk / biaya pendidikan dikonfigurasi di level Periode (`ppdb_period_fee_items`), sedangkan gelombang hanya mengatur diskonasi (`ppdb_wave_fee_discounts`): Diskon Reguler dan Diskon Early Bird.
    - Biaya pendidikan disajikan transparan pada LoA resmi. Penyetoran biaya dilakukan **di luar aplikasi** (transfer rekening resmi PTDARRAHMAN / tunai di kantor bendahara pesantren).

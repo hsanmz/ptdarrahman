@@ -16,7 +16,7 @@ Pengujian menyeluruh secara nyata (End-to-End Testing & Comprehensive System Aud
 - **Total Test Case Tereksekusi:** 246 pengujian otomatis (Unit, Modul, Integrasi, Reliability Hardening, dan Siklus Penuh E2E Lifecycle).
 - **Hasil Akhir Suite:** **245 PASSED**, **1 XFAIL** (known edge-case handling), **0 FAILED**.
 - **Cakupan Pengujian:** Meliputi 100% siklus perjalanan Pendaftar (Calon Santri), Admin Verifikator/Evaluator, dan Backoffice (Superadmin/Panitia PPDB).
-- **Bug Kritis Ditemukan & Diperbaiki:** 6 temuan bug di lapisan skema basis data, model ORM, penanganan transaksi Pakasir v2, penutupan gelombang atomik, dan generasi ZIP arsip dossier. Seluruh perbaikan telah diuji ulang melalui *regression testing* tanpa efek samping pada modul lain.
+- **Bug Kritis Ditemukan & Diperbaiki:** 6 temuan bug di lapisan skema basis data, model ORM, penanganan transaksi Midtrans, penutupan gelombang atomik, dan generasi ZIP arsip dossier. Seluruh perbaikan telah diuji ulang melalui *regression testing* tanpa efek samping pada modul lain.
 
 ---
 
@@ -26,7 +26,7 @@ Seluruh alur bisnis telah diaudit dan diterjemahkan menjadi skenario uji berbasi
 
 | Nama Dokumen / Sumber | Domain Flow | Komponen Kunci yang Diverifikasi |
 |---|---|---|
-| `docs/pendaftar-code-1790812852070.txt` | Portal Mandiri Calon Santri | Wizard registrasi 6 section, 10 butir kuesioner kesehatan baku, QRIS Pakasir v2 dinamis, kuota early bird per pendaftar, upload berkas persyaratan, integrasi jadwal CBT & tahfidz, pelaksanaan CBT Akademik & Psikologi anti-kecurangan (tab switch violation > 5 detik, auto-save klik opsi, auto-grading), pengumuman hasil kelulusan, penandatanganan LoA digital santri & orang tua (`is_locked = true`), penerbitan No. Registrasi resmi `REG-{YYYYMMDD}-{XXXX}`, dan tautan grup WhatsApp resmi. |
+| `docs/pendaftar-code-1790812852070.txt` | Portal Mandiri Calon Santri | Wizard registrasi 6 section, 10 butir kuesioner kesehatan baku, QRIS Midtrans dinamis, kuota early bird per pendaftar, upload berkas persyaratan, integrasi jadwal CBT & tahfidz, pelaksanaan CBT Akademik & Psikologi anti-kecurangan (tab switch violation > 5 detik, auto-save klik opsi, auto-grading), pengumuman hasil kelulusan, penandatanganan LoA digital santri & orang tua (`is_locked = true`), penerbitan No. Registrasi resmi `REG-{YYYYMMDD}-{XXXX}`, dan tautan grup WhatsApp resmi. |
 | `docs/admin-code-1790812960259.txt` | Backoffice Verifikator & Evaluator | Verifikasi dokumen 2 kolom (preview berkas vs status terima/tolak), akses sensitif kuesioner kesehatan, live monitoring CBT (status peserta, sisa waktu, deteksi keluar jendela, unfreeze peserta), pengisian rubrik terbobot Tahfidz & Wawancara, gerbang keputusan kelulusan seleksi (validasi kelengkapan nilai & catatan wajib evaluator), audit log akses dossier pendaftar. |
 | `docs/backoffice-code-1790813618837.txt` | Konfigurasi Backoffice Panitia | Aturan Periode Tunggal & Gelombang Tunggal secara global, Master Komponen Biaya tingkat Periode (`ppdb_period_fee_items`, biaya formulir, minimal DP), Diskonasi Gelombang (`ppdb_wave_fee_discounts`: reguler & early bird), kuota atomik penutupan gelombang saat kuota bayar sukses terpenuhi, import bank soal CSV (MCQ pilihan ganda A-E), penjadwalan ujian CBT massal, dan cutoff pendaftaran H-1. |
 | `docs/notifikasi-code-1790904241894.md` | WhatsApp Notification Gateway | Template WhatsApp resmi, deduplikasi event notifikasi (`registration_account_created`, `payment_success_formulir`, `document_approved`, `assessment_stage_completed`, `registration_result_passed`, `loa_signed`), dan pembersihan berkala token kedaluwarsa. |
@@ -58,7 +58,7 @@ Seluruh alur bisnis telah diaudit dan diterjemahkan menjadi skenario uji berbasi
 ### B. Modul Teruji
 - **Modul Autentikasi & Otorisasi:** JWT HTTP-only cookies, manajemen sesi multi-perangkat, remote session revoke, dan role-based access control.
 - **Modul PPDB Registration & Profil:** Form registrasi 6 section, 10 instrumen kesehatan, penguncian data pasca-LoA (`is_locked`).
-- **Modul Pembayaran (Pakasir v2 Gateway):** QRIS dinamis, webhook idempotency, alokasi kuota early bird otomatis, dan kuitansi HMAC SHA-256.
+- **Modul Pembayaran (Midtrans Payment Gateway):** QRIS dinamis (Core API), webhook SHA-512 signature, alokasi kuota early bird otomatis, dan kuitansi HMAC SHA-256.
 - **Modul Seleksi Terpadu & CBT:** Bank soal MCQ, penjadwalan kloter/batch, timer sinkronisasi, deteksi pelanggaran, auto-submit, auto-grading, dan evaluasi rubrik.
 - **Modul LoA & Registrasi Resmi:** Penomoran otomatis `REG-{YYYYMMDD}-{XXXX}`, penandatanganan digital, dan verifikasi QR publik.
 - **Modul Arsip & Dossier Backoffice:** Audit trail pembukaan data kesehatan sensitif dan paket ZIP dossier pendaftar.
@@ -77,8 +77,8 @@ Berikut adalah rekapitulasi skenario pengujian utama yang dieksekusi secara otom
 | **TC-BO-04** | Backoffice | Penjadwalan Seleksi | Pembuatan jadwal CBT massal dengan token/PIN sesi acak, rubrik kriteria Tahfidz & Wawancara, serta sesi seleksi | Gelombang aktif | Jadwal CBT & Sesi Tahfidz terbit dengan token sesi | **PASS** |
 | **TC-REG-01** | Pendaftar | Registrasi Akun | Pendaftaran pendaftar 1 dengan 6 bagian identitas lengkap + 10 butir instrumen kuesioner kesehatan baku | Gelombang buka | Akun terdaftar, pendaftar terhubung ke gelombang aktif, status awal `registered` | **PASS** |
 | **TC-REG-02** | Pendaftar | Profil & Kuesioner | Pengambilan profil pendaftar via `/ppdb/applicants/me` dan pembaruan data kesehatan saat `is_locked = false` | Login berhasil | Profil terambil lengkap dan pembaruan data diizinkan | **PASS** |
-| **TC-PAY-01** | Pendaftar / Gateway | Buat QRIS Pakasir v2 | Pembuatan invoice formulir pendaftaran via `/payment/create-qris` | Status pembayaran pending | QR string dan URL pembayaran Pakasir v2 berhasil dibuat | **PASS** |
-| **TC-PAY-02** | Gateway ↔ API | Webhook Pakasir v2 | Simulasi webhook pembayaran berhasil; alokasi kuota early bird untuk pembayar formulir sukses ke-1 | Transaksi invoice pending | Status berubah menjadi `paid`, flag `early_discount_eligible = True` aktif | **PASS** |
+| **TC-PAY-01** | Pendaftar / Gateway | Buat QRIS Midtrans | Pembuatan invoice formulir pendaftaran via `/payment/create-qris` | Status pembayaran pending | QR string dan URL pembayaran Midtrans berhasil dibuat | **PASS** |
+| **TC-PAY-02** | Gateway ↔ API | Webhook Midtrans | Simulasi webhook pembayaran berhasil; alokasi kuota early bird untuk pembayar formulir sukses ke-1 | Transaksi invoice pending | Status berubah menjadi `paid`, flag `early_discount_eligible = True` aktif | **PASS** |
 | **TC-PAY-03** | Pendaftar / Publik | Kuitansi Resmi | Pembuatan kuitansi ber-HMAC dan verifikasi keaslian via endpoint publik kuitansi | Pembayaran sukses | Kuitansi terbit dan QR HMAC terverifikasi valid | **PASS** |
 | **TC-DOC-01** | Pendaftar | Upload Dokumen | Unggah dokumen persyaratan (KK, NISN, Rapor, Foto) via `/ppdb/documents/upload` | Pembayaran selesai | Berkas tersimpan dengan entitas `ppdb_document:{type}` | **PASS** |
 | **TC-DOC-02** | Admin | Verifikasi Dokumen | Admin memverifikasi dan menyetujui seluruh dokumen pendaftar | Berkas terunggah | Seluruh dokumen berstatus disetujui; status pendaftar naik ke `selection` | **PASS** |
@@ -140,9 +140,9 @@ flowchart TD
 
 #### 4. BUG-04 (Severity: P1 - Payment Gateway Integration)
 - **Deskripsi:** Pembuatan transaksi QRIS (`POST /payment/create-qris`) melempar HTTP 400 `"Anda memiliki transaksi QRIS yang belum terverifikasi"`.
-- **Akar Masalah:** Method `register_applicant` membuat entri rintisan (*stub*) `PPDBPaymentTransaction` tanpa `order_id` dan `qr_string`. Saat pendaftar memanggil `create_qris_transaction`, sistem mendeteksi transaksi pending dan menolaknya alih-alih menginisialisasi stub tersebut ke gateway Pakasir v2.
+- **Akar Masalah:** Method `register_applicant` membuat entri rintisan (*stub*) `PPDBPaymentTransaction` tanpa `order_id` dan `qr_string`. Saat pendaftar memanggil `create_qris_transaction`, sistem mendeteksi transaksi pending dan menolaknya alih-alih menginisialisasi stub tersebut ke gateway Midtrans.
 - **Komponen Terdampak:** `apps/api/src/services/payment_service.py`.
-- **Perbaikan:** Mengizinkan transaksi aktif yang belum diinisialisasi (`not active_tx.order_id`) untuk diperbarui (*update*) langsung dengan data sesi dari Pakasir v2.
+- **Perbaikan:** Mengizinkan transaksi aktif yang belum diinisialisasi (`not active_tx.order_id`) untuk diperbarui (*update*) langsung dengan data sesi dari Midtrans.
 - **Hasil Regresi:** Alur pembayaran formulir QRIS berjalan mulus sejak klik pertama registrasi hingga verifikasi webhook.
 
 #### 5. BUG-05 (Severity: P2 - Backoffice Archive Export)
@@ -163,9 +163,9 @@ flowchart TD
 
 ## 6. Catatan Integrasi dan Status Service Eksternal
 
-1. **Pakasir API v2 (Payment Gateway):**
+1. **Midtrans (Payment Gateway):**
    - **Status:** **TERVERIFIKASI & TERINTEGRASI (Sandbox/Mock)**
-   - Fitur QRIS dinamis, batas kedaluwarsa invoice, verifikasi webhook satu pintu (`/payment/webhook` & `/payment/webhook/pak-kasir`), validasi secret header `X-Secret`, pencegahan double-spending, serta pembuatan kuitansi digital ber-HMAC berjalan sesuai spesifikasi.
+   - Fitur QRIS dinamis (Core API `/charge`), batas kedaluwarsa invoice, verifikasi webhook (`/payment/webhook`) dengan signature SHA-512 (`order_id + status_code + gross_amount + ServerKey`), pencegahan double-spending, serta pembuatan kuitansi digital ber-HMAC berjalan sesuai spesifikasi.
 2. **WhatsApp Notification Service (whatsapp-web.js):**
    - **Status:** **TERVERIFIKASI & AMAN**
    - Core API berhasil mengantrekan event notifikasi ke Redis/BullMQ. Tidak ada pesan WhatsApp sungguhan yang terkirim ke nomor publik selama testing; modul notifikasi dimock dan diuji keandalan penanganan kegagalannya tanpa menghentikan proses transaksi inti.

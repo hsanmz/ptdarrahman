@@ -12,7 +12,7 @@ Dokumen ini memberikan panduan arsitektur, konvensi kode, modul, dan aturan bisn
 - **Migrasi Database:** Alembic (`alembic upgrade head`)
 - **Data Validation & Settings:** Pydantic v2 & `pydantic-settings`
 - **Cache & Message Broker:** Redis (`redis-py` / `aioredis` untuk task queue notifikasi WhatsApp)
-- **HTTP Client:** `httpx` (komunikasi dengan Pakasir v2, WhatsApp bridge, dll.)
+- **HTTP Client:** `httpx` (komunikasi dengan Midtrans, WhatsApp bridge, dll.)
 - **Testing:** `pytest` dengan fixture database transaksi rollback (`tests/conftest.py`)
 
 ---
@@ -29,7 +29,7 @@ apps/api/src/
 │   ├── database.py             # SQLAlchemy engine, get_db, Base, audit_log
 │   ├── dependencies.py         # Auth guards, token decoding, RBAC checks
 │   ├── events.py               # Distributed SSE hub (Redis pub/sub + in-memory fallback)
-│   ├── pakasir.py              # Official client integration Pakasir API v2
+│   ├── midtrans.py             # Official client integration Midtrans Payment Gateway
 │   ├── rate_limit.py           # In-memory / Redis rate limiting
 │   ├── scheduler.py            # Background scheduler (pembersihan sesi & reminder cron)
 │   ├── security.py             # Password hashing (bcrypt) & JWT token encoding/cookies
@@ -58,7 +58,7 @@ apps/api/src/
     ├── auth/                   # POST /auth/login, /me, /refresh, /logout, /sessions
     ├── search/                 # GET /search/global (pencarian modular terpadu lintas entitas)
     ├── cbt/                    # Bank soal CBT (akademik & psikologi), jadwal ujian massal, live monitoring, exam engine API
-    ├── payment/                # Pakasir v2 QRIS formulir, webhook, kuitansi resmi
+    ├── payment/                # Midtrans QRIS formulir, webhook, kuitansi resmi
     ├── ppdb/                   # Pendaftaran, profil mandiri, dokumen, periode & fee items, gelombang & diskon, arsip
     ├── selection/              # Seleksi Tahfidz & Wawancara Terpadu, rubrik, penilaian evaluator, reschedule massal
     ├── superadmin/             # Stats dashboard, audit trail, user & role management
@@ -124,14 +124,14 @@ apps/api/src/
 
 ---
 
-## 💳 Modul Pembayaran & Integrasi Pakasir v2
+## 💳 Modul Pembayaran & Integrasi Midtrans
 
-- **Client Pakasir (`src/core/pakasir.py`):**
-  - Menggunakan spesifikasi Pakasir API v2.
-  - Normalisasi respons flat JSON (`status`, `data`, `order_id`, `amount`, `payment_method`).
+- **Client Midtrans (`src/core/midtrans.py`):**
+  - Menggunakan spesifikasi Midtrans Core API & Snap.
+  - Normalisasi respons Charge QRIS (`transaction_id`, `order_id`, `gross_amount`, `qr_string`, `expiry_time`).
 - **Endpoint Utama (`src/modules/payment/router.py`):**
   - `POST /payment/create-qris`: Membuat invoice dinamis QRIS untuk biaya formulir pendaftaran (`payment_type="form"`).
-  - `POST /payment/webhook` & `POST /payment/webhook/pak-kasir`: Webhook pembayaran atomik & idempoten. Divalidasi dengan header `X-Secret` dan pencocokan nominal.
+  - `POST /payment/webhook`: Webhook notifikasi pembayaran atomik & idempoten. Divalidasi dengan signature key SHA-512 resmi Midtrans dan pencocokan nominal.
   - `GET /payment/receipt/{id}` & `GET /payment/public-receipt/{id}`: Menampilkan data kuitansi resmi yang diamankan dengan HMAC token.
 - **Background Scheduler (`src/core/scheduler.py`):**
   - Menjalankan cron internal untuk pembersihan berkala sesi dan refresh token yang kedaluwarsa, pengingat pembayaran formulir setiap Senin, pengingat dokumen H+3, dan pengingat seleksi H-2, H-1, 1 jam sebelum ujian.

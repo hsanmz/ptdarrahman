@@ -30,10 +30,10 @@ certbot → renewal otomatis + challenge webroot
 - Server Linux (Ubuntu 24.04 LTS / Debian 12) dengan Docker Engine + Docker Compose (plugin v2) terinstall.
 - Akses root/SSH ke VPS.
 - DNS **A/AAAA** sudah diarahkan ke IP VPS:
-  - `ptdarrahman.sch.id` → IP VPS (companyprofile)
-  - `ppdb.ptdarrahman.sch.id` → IP VPS
-  - `admin.ptdarrahman.sch.id` → IP VPS (superadmin)
-  - `api.ptdarrahman.sch.id` → IP VPS (API)
+  - `ptdarrahman.com` → IP VPS (companyprofile)
+  - `ppdb.ptdarrahman.com` → IP VPS
+  - `admin.ptdarrahman.com` → IP VPS (superadmin)
+  - `api.ptdarrahman.com` → IP VPS (API)
 - MySQL remote (Hostinger/srv lain) siap, creds lengkap di `apps/api/.env`.
 - Domain dapat berupa subdomain dari domain yang "numpang", semua A/AAAA diarahkan ke VPS.
 
@@ -72,10 +72,10 @@ nano apps/api/.env  # sesuaikan
 - `JWT_SECRET` (min 32 karakter) — `python3 -c "import secrets; print(secrets.token_hex(32))"`
 - `CRON_SECRET` (min 16 karakter)
 - `COOKIE_SECURE=true` (nginx forward `X-Forwarded-Proto: https`)
-- `PAKASIR_SLUG`, `PAKASIR_API_KEY`, `PAKASIR_WEBHOOK_SECRET` **wajib** terisi
+- `MIDTRANS_SERVER_KEY`, `MIDTRANS_CLIENT_KEY`, `MIDTRANS_IS_PRODUCTION` **wajib** terisi
 - `CORS_ORIGINS` = daftar origin frontend publik. Contoh:
   ```
-  https://ptdarrahman.sch.id,https://ppdb.ptdarrahman.sch.id,https://admin.ptdarrahman.sch.id
+  https://ptdarrahman.com,https://ppdb.ptdarrahman.com,https://admin.ptdarrahman.com
   ```
 - `WA_SERVICE_URL=http://whatsapp:3100`
 - `WA_SERVICE_API_KEY` = sama dengan `API_KEY` di `apps/whatsapp/.env`
