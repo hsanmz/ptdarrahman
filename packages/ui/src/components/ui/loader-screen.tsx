@@ -39,8 +39,8 @@ export function LoaderScreen({ logoUrl: propLogoUrl }: LoaderScreenProps) {
 
       tl.fromTo(
         bismillahRef.current,
-        { y: -15, opacity: 0 },
-        { y: 0, opacity: 0.18, duration: 0.5 }
+        { y: -15, opacity: 0, scale: 0.95 },
+        { y: 0, opacity: 0.95, scale: 1, duration: 0.6 }
       )
         .fromTo(
           ring1Ref.current,
@@ -188,14 +188,18 @@ export function LoaderScreen({ logoUrl: propLogoUrl }: LoaderScreenProps) {
       <div className="text-center relative z-10">
         <div
           ref={bismillahRef}
-          className="arabic-quote text-xs text-[var(--color-gold,#D4A853)] mb-4"
-          style={{ fontFamily: 'var(--font-arabic, serif), serif', opacity: 0 }}
+          className="arabic-quote text-2xl sm:text-3xl font-serif font-bold mb-4 tracking-wide select-none drop-shadow-sm"
+          style={{
+            fontFamily: "'Amiri', 'Traditional Arabic', 'Scheherazade New', var(--font-arabic, serif), serif",
+            color: 'var(--color-gold-dark, #B88F3D)',
+            opacity: 0,
+          }}
         >
-          ﷽
+          بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </div>
 
         <div className="relative inline-block">
-          <div className="absolute inset-0 rounded-full bg-[var(--color-gold,#D4A853)] blur-2xl opacity-10 scale-150" />
+          <div className="absolute inset-0 rounded-full bg-[var(--color-gold,#D4A853)] blur-2xl opacity-15 scale-150" />
           <div
             ref={logoWrapperRef}
             style={{ opacity: 0 }}
@@ -208,7 +212,7 @@ export function LoaderScreen({ logoUrl: propLogoUrl }: LoaderScreenProps) {
                 className="h-full w-auto object-contain"
               />
             ) : (
-              <div className="h-16 w-16 rounded-lg bg-[var(--color-emerald,#1A6B47)] flex items-center justify-center text-white font-bold text-2xl select-none">
+              <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 border border-emerald-600/40 shadow-md flex items-center justify-center text-white font-serif font-bold text-3xl select-none">
                 ار
               </div>
             )}

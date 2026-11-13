@@ -57,6 +57,7 @@ TABLES = {
     "leadership": "leadership_members",
     "about": "about_content",
     "faq": "faq_items",
+    "ppdb": "ppdb_content",
 }
 
 PUBLIC_SETTINGS_KEYS = {
@@ -766,7 +767,7 @@ def cp_entity_list(entity: str, skip: int = 0, limit: int = 100):
         else "year.desc"
         if entity == "achievements"
         else "order.asc"
-        if entity in ("hero-slides", "programs", "testimonials", "leadership", "about", "faq")
+        if entity in ("hero-slides", "programs", "testimonials", "leadership", "about", "faq", "ppdb")
         else None
     )
     items = list_all(table, order=order, skip=skip, limit=limit)

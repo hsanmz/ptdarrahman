@@ -42,6 +42,7 @@ ENTITY_COLUMNS: dict[str, set[str]] = {
     "leadership": {"board", "order", "content"},
     "about": {"section", "order", "content"},
     "faq": {"question", "answer", "category", "order"},
+    "ppdb": {"section", "order", "content"},
 }
 
 # Columns that must be present (and non-empty) when creating a row. Mirrors the
@@ -62,6 +63,7 @@ REQUIRED_FIELDS: dict[str, set[str]] = {
     "leadership": {"board"},
     "about": {"section"},
     "faq": {"question", "answer"},
+    "ppdb": {"section"},
 }
 
 # Simple per-column type coercion for columns that map to typed DB columns.
@@ -73,6 +75,7 @@ INT_COLUMNS: dict[str, set[str]] = {
     "leadership": {"order"},
     "about": {"order"},
     "faq": {"order"},
+    "ppdb": {"order"},
 }
 
 # Real column widths from `src/models/content.py`. Oversized input is a client

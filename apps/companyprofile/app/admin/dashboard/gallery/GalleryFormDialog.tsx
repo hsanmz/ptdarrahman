@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 import {
   AlertTriangle,
   FileText,
+  Image as ImageIcon,
   Images,
   Save,
   ShieldCheck,
@@ -32,6 +33,7 @@ import {
 } from './gallery-form'
 import { GalleryCategoryPicker } from './GalleryCategoryPicker'
 import { GalleryImageField } from './GalleryImageField'
+import { GalleryAlbumImagesField } from './GalleryAlbumImagesField'
 
 interface Props {
   mode: 'create' | 'edit'
@@ -85,7 +87,12 @@ export function GalleryFormDialog({
   const [initialFormData] = useState<FormState>(formData)
   const isDirty = isFormDirty(formData, initialFormData)
 
-  const values = readGalleryForm(formData)
+  const values = readGalleryForm(
+    formData,
+    editingItem && typeof editingItem.content === 'object' && editingItem.content !== null
+      ? (editingItem.content as Record<string, unknown>)
+      : null,
+  )
   const endpoint = TABS.find((tab) => tab.key === activeTab)?.endpoint ?? '/gallery'
 
   function update(patch: Partial<FormState>) {
@@ -110,6 +117,8 @@ export function GalleryFormDialog({
     }
     if (patch.title !== undefined) next._c_title = patch.title
     if (patch.desc !== undefined) next._c_desc = patch.desc
+    if (patch.type !== undefined) next._c_type = patch.type
+    if (patch.images !== undefined) next._c_images = patch.images
     if (patch.image !== undefined) {
       next.image = patch.image
       clearFieldError('image')
@@ -225,6 +234,41 @@ export function GalleryFormDialog({
                   title="Kategori & Judul"
                   description="Pilih kategori baku, lalu beri judul yang menggambarkan momennya."
                 >
+                  {/* Pilihan Tipe: Biasa (Foto Tunggal) vs Album Foto */}
+                  <div className="space-y-1.5 mb-1">
+                    <Label className="text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">
+                      Tipe Konten
+                    </Label>
+                    <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-zinc-100/80 border border-[var(--border)]">
+                      <button
+                        type="button"
+                        onClick={() => updateValues({ type: 'single' })}
+                        className={cn(
+                          'flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-all',
+                          values.type === 'single'
+                            ? 'bg-white text-emerald-800 shadow-xs border border-zinc-200'
+                            : 'text-zinc-600 hover:text-zinc-900'
+                        )}
+                      >
+                        <ImageIcon className="h-3.5 w-3.5" />
+                        <span>Biasa (Foto Tunggal)</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateValues({ type: 'album' })}
+                        className={cn(
+                          'flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-all',
+                          values.type === 'album'
+                            ? 'bg-white text-emerald-800 shadow-xs border border-zinc-200'
+                            : 'text-zinc-600 hover:text-zinc-900'
+                        )}
+                      >
+                        <Images className="h-3.5 w-3.5 text-[#D4A853]" />
+                        <span>Album (Koleksi Foto)</span>
+                      </button>
+                    </div>
+                  </div>
+
                   <GalleryCategoryPicker
                     id={FIELD_IDS.category}
                     value={values.category}
@@ -250,7 +294,7 @@ export function GalleryFormDialog({
                       autoComplete="off"
                       value={values.title}
                       onChange={(event) => updateValues({ title: event.target.value })}
-                      placeholder="Contoh: Kegiatan Santri dalam Pembelajaran Tahfidz"
+                      placeholder={values.type === 'album' ? "Contoh: Wisuda & Tasmi' Akbar Santri Angkatan I" : "Contoh: Kegiatan Santri dalam Pembelajaran Tahfidz"}
                       className={cn(
                         FIELD_CLASS,
                         fieldErrors._c_title && 'border-destructive focus:border-destructive focus:ring-destructive/20',
@@ -262,7 +306,7 @@ export function GalleryFormDialog({
                       </p>
                     ) : (
                       <p className="text-[11px] text-[var(--text-muted)]">
-                        Tampil sebagai caption foto di halaman galeri publik.
+                        {values.type === 'album' ? 'Tampil sebagai nama album di galeri publik.' : 'Tampil sebagai caption foto di halaman galeri publik.'}
                       </p>
                     )}
                   </div>
@@ -284,7 +328,7 @@ export function GalleryFormDialog({
                       value={values.desc}
                       onChange={(event) => updateValues({ desc: event.target.value })}
                       rows={6}
-                      placeholder="Tambahkan informasi mengenai kegiatan, waktu pelaksanaan, lokasi, atau konteks foto ini..."
+                      placeholder={values.type === 'album' ? "Ceritakan momen di album ini (misal: susunan acara, lokasi, kesan kegiatan)..." : "Tambahkan informasi mengenai kegiatan, waktu pelaksanaan, lokasi, atau konteks foto ini..."}
                       aria-label="Deskripsi Foto"
                       aria-describedby={`${descId}-help`}
                     />
@@ -307,15 +351,21 @@ export function GalleryFormDialog({
               <div className="mx-auto flex max-w-xl flex-col gap-5">
                 <div className="flex items-start gap-2.5">
                   <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-gold)]/15 text-[#A67C2E]">
-                    <Images className="h-3.5 w-3.5" />
+                    {values.type === 'album' ? (
+                      <Images className="h-3.5 w-3.5" />
+                    ) : (
+                      <ImageIcon className="h-3.5 w-3.5" />
+                    )}
                   </span>
                   <div className="min-w-0">
                     <h3 className="text-sm font-semibold text-[var(--text)]">
-                      Gambar Galeri
+                      {values.type === 'album' ? 'Foto Sampul Album' : 'Gambar Galeri'}
                       <span className="ml-1.5 text-[10px] font-normal text-[var(--text-muted)]">(opsional)</span>
                     </h3>
                     <p className="mt-0.5 text-[11px] leading-relaxed text-[var(--text-muted)]">
-                      Foto utama yang tampil di carousel dan pratinjau galeri publik.
+                      {values.type === 'album'
+                        ? 'Foto sampul utama yang mewakili album ini di halaman galeri.'
+                        : 'Foto utama yang tampil di carousel dan pratinjau galeri publik.'}
                     </p>
                   </div>
                 </div>
@@ -328,6 +378,15 @@ export function GalleryFormDialog({
                   error={fieldErrors.image}
                 />
 
+                {/* Seksi Koleksi Foto jika Tipe Album */}
+                {values.type === 'album' && (
+                  <GalleryAlbumImagesField
+                    images={values.images}
+                    onChange={(images) => updateValues({ images })}
+                    onUploadingChange={setUploading}
+                  />
+                )}
+
                 <div className="space-y-2 rounded-xl border border-[var(--border)]/60 bg-white/60 p-3">
                   <p className="text-[10px] font-semibold tracking-[0.14em] text-[var(--text-muted)] uppercase">
                     Panduan singkat
@@ -336,6 +395,9 @@ export function GalleryFormDialog({
                     <li>Gunakan foto kegiatan yang tajam dengan pencahayaan cukup.</li>
                     <li>Rasio lanskap 4:3 memberikan hasil paling rapi di galeri.</li>
                     <li>Pratinjau lokal tampil segera; tekan Simpan untuk menyimpan.</li>
+                    {values.type === 'album' && (
+                      <li className="text-emerald-800 font-medium">Pada mode album, pengunjung dapat mengeklik album untuk membuka seluruh kumpulan foto di dalamnya.</li>
+                    )}
                   </ul>
                   <p className="border-t border-[var(--border)]/60 pt-2 text-[10px] leading-relaxed text-[var(--text-muted)]">
                     URL gambar maksimal 255 karakter. Tanpa gambar, entri tetap tersimpan

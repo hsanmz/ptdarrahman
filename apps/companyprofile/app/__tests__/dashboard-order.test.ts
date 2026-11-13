@@ -59,6 +59,7 @@ describe('sortRowsByOrder — urutan baris tabel dashboard', () => {
       'about',
       'hero',
       'leadership',
+      'ppdb',
       'programs',
       'staff',
       'testimonials',

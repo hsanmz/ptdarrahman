@@ -43,6 +43,8 @@ import { SocialFormDialog } from './social/SocialFormDialog'
 import { SocialLinkList } from './social/SocialLinkList'
 import { AboutContentBoard } from './about/AboutContentBoard'
 import { AboutFormDialog } from './about/AboutFormDialog'
+import { PpdbContentBoard } from './ppdb/PpdbContentBoard'
+import { PpdbFormDialog } from './ppdb/PpdbFormDialog'
 import { LeadershipCards } from './leadership/LeadershipCards'
 import { LeadershipFormDialog } from './leadership/LeadershipFormDialog'
 import { ProgramFormDialog } from './programs/ProgramFormDialog'
@@ -470,9 +472,13 @@ export default function AdminDashboard() {
   function openCreate(section?: string) {
     const fd: FormState = {}
     for (const f of FORM_FIELDS[activeTab] || []) fd[f.name] = ''
-    const initialSection = activeTab === 'about' ? section || 'hero' : ''
+    const initialSection = activeTab === 'about' ? section || 'hero' : activeTab === 'ppdb' ? section || 'jalur' : ''
     for (const f of getContentFields(activeTab, initialSection)) fd[`_c_${f.name}`] = ''
     if (activeTab === 'about') fd.section = initialSection
+    if (activeTab === 'ppdb') {
+      fd.section = initialSection
+      fd.order = 1
+    }
     if (activeTab === 'hero') fd._c_height_mode = 'peek'
     if (activeTab === 'leadership') fd.board = section || 'yayasan'
     // Berita baru langsung terisi tanggal hari ini supaya admin tidak perlu
@@ -495,6 +501,10 @@ export default function AdminDashboard() {
     // mengetik ulang untuk prestasi tahun ini, namun tetap mudah diubah.
     if (activeTab === 'achievements') {
       fd.year = new Date().getFullYear()
+    }
+    if (activeTab === 'gallery') {
+      fd._c_type = 'single'
+      fd._c_images = []
     }
     fd.image = ''
     fd.gallery = []
@@ -527,6 +537,21 @@ export default function AdminDashboard() {
     }
     if (activeTab === 'news' && !fd._c_content && content.body) {
       fd._c_content = String(content.body)
+    }
+    if (activeTab === 'gallery') {
+      if (content.type) fd._c_type = String(content.type)
+      if (Array.isArray(content.images)) fd._c_images = content.images as string[]
+    }
+    if (activeTab === 'ppdb') {
+      if (item.section) fd.section = String(item.section)
+      if (item.order != null) fd.order = item.order
+      for (const [k, v] of Object.entries(content)) {
+        if (Array.isArray(v)) {
+          fd[`_c_${k}`] = v
+        } else if (typeof v === 'string' || typeof v === 'number') {
+          fd[`_c_${k}`] = String(v)
+        }
+      }
     }
     setFormData(fd)
     setEditingItem(item)
@@ -748,6 +773,8 @@ export default function AdminDashboard() {
                               ? 'Tambah Pengurus'
                               : activeTab === 'faq'
                                 ? 'Tambah FAQ'
+                              : activeTab === 'ppdb'
+                                ? 'Tambah Konten PPDB'
                           : 'Buat Baru'}
                   </button>
                 )}
@@ -821,6 +848,8 @@ export default function AdminDashboard() {
                               ? 'Tambah Pengurus'
                               : activeTab === 'faq'
                                 ? 'Tambah FAQ'
+                              : activeTab === 'ppdb'
+                                ? 'Tambah Konten PPDB'
                           : 'Buat Baru'}
                   </button>
                 ) : undefined
@@ -995,6 +1024,17 @@ export default function AdminDashboard() {
             />
           )}
 
+          {activeTab === 'ppdb' && !loading && (
+            <PpdbContentBoard
+              items={items}
+              canCrud={canCrud}
+              detailLoading={detailLoading}
+              onCreate={(section) => openCreate(section)}
+              onEdit={(item) => void openEdit(item)}
+              onDelete={(item) => void handleDelete(item)}
+            />
+          )}
+
           {activeTab === 'hero' && !loading && items.length > 0 && (
             <div className="mb-5 rounded-2xl border border-[var(--border)]/70 bg-[var(--accent-subtle)]/35 px-4 py-3 text-xs leading-relaxed text-[var(--text-secondary)]">
               Banner beranda hanya menampilkan gambar. Gunakan JPG, PNG, atau WebP maksimal 5 MB, rasio rekomendasi 16:9, dan pilih tinggi banner saat membuat atau mengedit data.
@@ -1036,7 +1076,7 @@ export default function AdminDashboard() {
           )}
 
           {/* Table Data */}
-          {activeTab !== 'settings' && activeTab !== 'contact' && activeTab !== 'achievements' && activeTab !== 'social' && activeTab !== 'about' && activeTab !== 'leadership' && !loading && visibleItems.length > 0 && (
+          {activeTab !== 'settings' && activeTab !== 'contact' && activeTab !== 'achievements' && activeTab !== 'social' && activeTab !== 'about' && activeTab !== 'leadership' && activeTab !== 'ppdb' && !loading && visibleItems.length > 0 && (
             <Card className="overflow-hidden rounded-2xl border-border/70 bg-white/70 shadow-[0_18px_50px_-30px_rgba(26,107,71,0.35)] backdrop-blur-sm">
               <div className="overflow-x-auto no-scrollbar">
                 <Table>
@@ -1269,6 +1309,16 @@ export default function AdminDashboard() {
           onSaved={fetchData}
         />
       )}
+      {formMode && activeTab === 'ppdb' && (
+        <PpdbFormDialog
+          mode={formMode}
+          editingItem={editingItem}
+          formData={formData}
+          setFormData={setFormData}
+          onClose={closeForm}
+          onSaved={fetchData}
+        />
+      )}
       {formMode && activeTab === 'hero' && (
         <HeroFormDialog
           mode={formMode}
@@ -1297,6 +1347,7 @@ export default function AdminDashboard() {
         activeTab !== 'achievements' &&
         activeTab !== 'social' &&
         activeTab !== 'about' &&
+        activeTab !== 'ppdb' &&
         activeTab !== 'hero' &&
         activeTab !== 'leadership' &&
         activeTab !== 'programs' && (

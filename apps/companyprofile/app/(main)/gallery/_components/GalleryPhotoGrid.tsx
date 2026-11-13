@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { ImageOff } from 'lucide-react'
+import { ImageOff, Images } from 'lucide-react'
 import type { GalleryItem } from '@/app/lib/types'
 import { galleryCategoryLabel } from '@/app/lib/gallery-categories'
 
@@ -46,13 +46,34 @@ export default function GalleryPhotoGrid({ items, onSelect }: GalleryPhotoGridPr
           const title = item.content?.title?.trim() || 'Galeri'
           const description = item.content?.desc?.trim() || `Dokumentasi ${title.toLowerCase()}.`
           const category = galleryCategoryLabel(item.category)
+          const isAlbum =
+            item.content?.type === 'album' ||
+            (Array.isArray(item.content?.images) && item.content.images.length > 0)
+          const albumPhotoCount = isAlbum
+            ? (item.image ? 1 : 0) + (item.content?.images?.length || 0)
+            : 1
+
           return (
-            <li key={item.id}>
+            <li key={item.id} className="relative">
+              {/* Stacked cards effect for albums */}
+              {isAlbum && (
+                <>
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-1.5 -right-1.5 h-full w-full rounded-xl sm:rounded-2xl border border-emerald-600/30 bg-emerald-800/20 transform rotate-1 pointer-events-none"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-3 -right-3 h-full w-full rounded-xl sm:rounded-2xl border border-[#D4A853]/30 bg-[#D4A853]/10 transform rotate-2 pointer-events-none"
+                  />
+                </>
+              )}
+
               <button
                 type="button"
                 onClick={() => onSelect(item)}
-                aria-label={`Buka foto ${title}${category ? ` (${category})` : ''}`}
-                className="group relative block w-full aspect-[4/3] overflow-hidden rounded-xl sm:rounded-2xl border border-[var(--color-border)] bg-[var(--bg-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
+                aria-label={isAlbum ? `Buka album ${title} (${albumPhotoCount} foto)` : `Buka foto ${title}${category ? ` (${category})` : ''}`}
+                className="group relative block w-full aspect-[4/3] overflow-hidden rounded-xl sm:rounded-2xl border border-[var(--color-border)] bg-[var(--bg-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] cursor-pointer shadow-xs transition-all hover:shadow-md"
               >
                 {item.image ? (
                   <motion.div layoutId={`gallery-grid-image-${item.id}`} className="absolute inset-0">
@@ -71,9 +92,17 @@ export default function GalleryPhotoGrid({ items, onSelect }: GalleryPhotoGridPr
                   </span>
                 )}
 
+                {/* Album Badge */}
+                {isAlbum && (
+                  <span className="absolute top-2.5 right-2.5 z-10 inline-flex items-center gap-1.5 rounded-full bg-slate-950/85 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold text-white border border-white/20 shadow-lg">
+                    <Images className="h-3 w-3 text-[#D4A853]" />
+                    <span>Album · {albumPhotoCount}</span>
+                  </span>
+                )}
+
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent transition-opacity duration-300 group-hover:from-black/85"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent transition-opacity duration-300 group-hover:from-black/90"
                 />
 
                 <span className="pointer-events-none absolute inset-x-0 bottom-0 p-3 text-left">

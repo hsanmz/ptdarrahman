@@ -91,6 +91,19 @@ class AboutContent(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
 
+class PpdbContentItem(Base):
+    """Konten terstruktur untuk seluruh blok halaman landing PPDB Website Company Profile."""
+
+    __tablename__ = "ppdb_content"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    section: Mapped[str] = mapped_column(String(50), nullable=False)
+    order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    content: Mapped[dict | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+
+
 class FaqItem(Base):
     """FAQ website yang dikelola admin CMS dan ditampilkan publik."""
 

@@ -58,7 +58,7 @@ function buildMockUser(username = 'admin'): AuthMe {
     is_superadmin: true,
     permissions: { companyprofile: 'crud', ppdb: 'crud' },
     page_permissions: [],
-    crud_permissions: ['news', 'programs', 'facilities', 'staff', 'about', 'leadership', 'achievements', 'gallery', 'testimonials', 'faq', 'social', 'contact', 'settings'],
+    crud_permissions: ['news', 'programs', 'facilities', 'staff', 'about', 'leadership', 'achievements', 'gallery', 'testimonials', 'faq', 'social', 'contact', 'settings', 'ppdb'],
   }
 }
 
@@ -406,6 +406,11 @@ export async function getSocialLinks(): Promise<SocialLink[]> {
 export async function getHeroSlides(): Promise<HeroSlide[]> {
   const items = await fetchApi<JsonValue[]>('/hero-slides')
   return items.map((item) => mapContent(item) as unknown as HeroSlide)
+}
+
+export async function getPpdbContentRows(): Promise<JsonValue[]> {
+  const items = await fetchApi<JsonValue[]>('/ppdb')
+  return items.map((item) => mapContent(item) as JsonValue)
 }
 
 // Paginated variant used by the admin dashboard list views. Each page holds up

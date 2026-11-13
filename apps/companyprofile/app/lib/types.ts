@@ -41,6 +41,10 @@ export interface AchievementContent {
 export interface GalleryContent {
   title?: string
   desc?: string
+  /** 'single' (biasa/foto tunggal) atau 'album' (koleksi foto). Default 'single'. */
+  type?: 'single' | 'album'
+  /** Daftar URL foto pendukung di dalam album. */
+  images?: string[]
 }
 
 export interface TestimonialContent {
@@ -249,6 +253,13 @@ export interface PpdbStepContent {
 export interface PpdbStep {
   id: string
   content: PpdbStepContent | null
+}
+
+export interface PpdbFaqItem {
+  id: string
+  question: string
+  answer: string
+  category?: string
 }
 
 export interface PpdbCopyContent {

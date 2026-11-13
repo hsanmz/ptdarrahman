@@ -10,6 +10,7 @@ import { X, Play, ChevronLeft, ChevronRight } from 'lucide-react'
 import { CoverflowCarousel } from '@/app/components/ui/CoverflowCarousel'
 import EmptyState from '@/app/components/ui/EmptyState'
 import GalleryPhotoGrid from './GalleryPhotoGrid'
+import GalleryAlbumModal from './GalleryAlbumModal'
 import { galleryCategoryLabel, galleryFilterOptions } from '@/app/lib/gallery-categories'
 
 function BodyLock({ onClose }: { onClose: () => void }) {
@@ -93,8 +94,20 @@ function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClos
 export default function GalleryClient({ gallery }: { gallery: GalleryItem[] }) {
   const [filter, setFilter] = useState('all')
   const [selected, setSelected] = useState<GalleryItem | null>(null)
+  const [activeAlbum, setActiveAlbum] = useState<GalleryItem | null>(null)
   const [videoModal, setVideoModal] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
+
+  const handleSelectItem = (item: GalleryItem) => {
+    const isAlbum =
+      item.content?.type === 'album' ||
+      (Array.isArray(item.content?.images) && item.content.images.length > 0)
+    if (isAlbum) {
+      setActiveAlbum(item)
+    } else {
+      setSelected(item)
+    }
+  }
 
   const categoryOptions = useMemo(
     () => [
@@ -118,7 +131,11 @@ export default function GalleryClient({ gallery }: { gallery: GalleryItem[] }) {
     [filtered],
   )
 
-  const closeAll = () => { setSelected(null); setVideoModal(null) }
+  const closeAll = () => {
+    setSelected(null)
+    setActiveAlbum(null)
+    setVideoModal(null)
+  }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -182,7 +199,7 @@ export default function GalleryClient({ gallery }: { gallery: GalleryItem[] }) {
               showPagination
               showNavigation
               onSlideClick={(index) => {
-                setSelected(filtered[index])
+                handleSelectItem(filtered[index])
               }}
               label="Galeri Pesantren"
             />
@@ -198,7 +215,7 @@ export default function GalleryClient({ gallery }: { gallery: GalleryItem[] }) {
               key={`grid-${filter}`}
               items={filtered}
               onSelect={(item) => {
-                setSelected(item)
+                handleSelectItem(item)
               }}
             />
           )}
@@ -349,6 +366,16 @@ export default function GalleryClient({ gallery }: { gallery: GalleryItem[] }) {
               </div>
             </div>
           </ModalOverlay>
+        )}
+      </AnimatePresence>
+
+      {/* Album Full View Modal */}
+      <AnimatePresence>
+        {activeAlbum && (
+          <GalleryAlbumModal
+            album={activeAlbum}
+            onClose={() => setActiveAlbum(null)}
+          />
         )}
       </AnimatePresence>
     </>

@@ -13,13 +13,19 @@ const PPDB_API_BASE = (
 
 export interface ActivePpdbWave {
   active: boolean
+  registration_open?: boolean
+  registration_status?: 'open' | 'not_started' | 'closed' | 'quota_reached' | 'schedule_incomplete' | string
   id?: string
   name?: string
   period_id?: string
   period_name?: string | null
-  /**Dari `ppdb_periods.academic_year`, mis. "2027/2028". */
+  /** Dari `ppdb_periods.academic_year`, mis. "2026/2027". */
   academic_year?: string | null
   quota?: number
+  paid_count?: number
+  form_fee?: number
+  minimum_dp?: number
+  early_discount_quota?: number
   registration_start_date?: string | null
   registration_end_date?: string | null
   document_upload_end_date?: string | null
@@ -37,7 +43,7 @@ export async function fetchActivePpdbWave(): Promise<ActivePpdbWave | null> {
     })
     if (!res.ok) return null
     const data = (await res.json()) as ActivePpdbWave
-    return data?.active ? data : null
+    return data && (data.active || data.id) ? data : null
   } catch {
     return null
   }

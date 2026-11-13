@@ -1,7 +1,7 @@
 import {
   Newspaper, GraduationCap, Building2, Users, Trophy,
   Image as ImageIcon, MessageSquare, Link as LinkIcon, Phone, Settings,
-  Home, Network, Info, HelpCircle,
+  Home, Network, Info, HelpCircle, ClipboardList,
 } from 'lucide-react'
 import * as api from '@/app/lib/api'
 import { facilityCategoryLabel } from '@/app/lib/facility-categories'
@@ -9,6 +9,7 @@ import type { RowRecord, TabDef } from './_types'
 
 export const TABS: TabDef[] = [
   { key: 'hero', label: 'Hero Beranda', endpoint: '/hero-slides', fetch: api.getHeroSlides, icon: Home },
+  { key: 'ppdb', label: 'PPDB Landing', endpoint: '/ppdb', fetch: api.getPpdbContentRows, icon: ClipboardList },
   { key: 'news', label: 'Berita', endpoint: '/news', fetch: api.getNews, icon: Newspaper },
   { key: 'programs', label: 'Program', endpoint: '/programs', fetch: api.getPrograms, icon: GraduationCap },
   { key: 'facilities', label: 'Fasilitas', endpoint: '/facilities', fetch: api.getFacilities, icon: Building2 },
@@ -25,7 +26,7 @@ export const TABS: TabDef[] = [
 ]
 
 export const HAS_CONTENT: string[] = [
-  'hero', 'news', 'programs', 'facilities', 'staff', 'about', 'leadership', 'achievements', 'gallery', 'testimonials',
+  'hero', 'news', 'programs', 'facilities', 'staff', 'about', 'leadership', 'achievements', 'gallery', 'testimonials', 'ppdb',
 ]
 
 /**
@@ -84,6 +85,7 @@ export const ORDER_SOURCE: Record<string, 'column' | 'content'> = {
   staff: 'content',
   leadership: 'column',
   about: 'column',
+  ppdb: 'column',
 }
 
 function toOrderNumber(value: unknown): number | null {
@@ -201,6 +203,17 @@ export const TABLE_COLS: Record<string, TableColumn[]> = {
   ],
   gallery: [
     { label: 'Judul', accessor: (i) => i.content?.title || '', variant: 'title' },
+    {
+      label: 'Tipe',
+      accessor: (i) => {
+        const isAlbum =
+          i.content?.type === 'album' ||
+          (Array.isArray(i.content?.images) && (i.content.images as unknown[]).length > 0)
+        return isAlbum ? `Album (${(i.content?.images as unknown[])?.length || 0})` : 'Foto Tunggal'
+      },
+      variant: 'badge',
+      tone: 'gold',
+    },
     { label: 'Kategori', accessor: (i) => i.category, variant: 'badge' },
   ],
   testimonials: [
@@ -483,6 +496,41 @@ export const CONTENT_FIELDS: Record<string, { name: string; label: string; type:
     { name: 'stat_4_suffix', label: 'Statistik 4 — Satuan', type: 'text' },
     { name: 'stat_4_label', label: 'Statistik 4 — Label', type: 'text' },
   ],
+  ppdb: [
+    { name: 'hero_title', label: 'Judul Hero 3D', type: 'textarea' },
+    { name: 'hero_desc', label: 'Deskripsi Hero 3D', type: 'textarea' },
+    { name: 'hero_proof', label: 'Poin Unggulan / Badge', type: 'text' },
+    { name: 'hero_cta_label', label: 'Label Tombol Pelajari', type: 'text' },
+    { name: 'hero_cta_href', label: 'Tautan Tombol Pelajari', type: 'text' },
+    { name: 'hero_register_label', label: 'Label Tombol Daftar', type: 'text' },
+    { name: 'hero_register_href', label: 'Tautan Tombol Daftar', type: 'text' },
+    { name: 'jalur_title', label: 'Judul Seksi Program Pembinaan', type: 'text' },
+    { name: 'jalur_desc', label: 'Deskripsi Seksi Program Pembinaan', type: 'textarea' },
+    { name: 'title', label: 'Judul Kartu / Langkah', type: 'text' },
+    { name: 'kicker', label: 'Kicker / Label Kecil', type: 'text' },
+    { name: 'desc', label: 'Deskripsi', type: 'textarea' },
+    { name: 'items', label: 'Poin Keunggulan (1 per baris)', type: 'list' },
+    { name: 'accent', label: 'Warna Aksen', type: 'select', options: ['emerald', 'amber', 'sky', 'violet', 'rose', 'teal'] },
+    { name: 'icon', label: 'Nama Ikon', type: 'text' },
+    { name: 'cta_label', label: 'Label Tombol Aksi', type: 'text' },
+    { name: 'cta_href', label: 'Tautan Tombol Aksi', type: 'text' },
+    { name: 'question', label: 'Pertanyaan FAQ', type: 'textarea' },
+    { name: 'answer', label: 'Jawaban FAQ', type: 'textarea' },
+    { name: 'category', label: 'Kategori FAQ', type: 'text' },
+    { name: 'cta_title', label: 'Judul CTA Konsultasi', type: 'text' },
+    { name: 'cta_desc', label: 'Deskripsi CTA Konsultasi', type: 'textarea' },
+    { name: 'cta_primary_label', label: 'Label Tombol WhatsApp', type: 'text' },
+    { name: 'cta_primary_href', label: 'Tautan Tombol WhatsApp', type: 'text' },
+  ],
+}
+
+const PPDB_FIELD_NAMES: Record<string, string[]> = {
+  hero: ['hero_title', 'hero_desc', 'hero_proof', 'hero_cta_label', 'hero_cta_href', 'hero_register_label', 'hero_register_href', 'jalur_title', 'jalur_desc'],
+  jalur: ['title', 'kicker', 'desc', 'items', 'accent', 'icon', 'cta_label', 'cta_href'],
+  pillar: ['title', 'desc', 'icon'],
+  step: ['title', 'desc'],
+  faq: ['category', 'question', 'answer'],
+  cta: ['cta_title', 'cta_desc', 'cta_primary_label', 'cta_primary_href'],
 }
 
 const ABOUT_FIELD_NAMES: Record<string, string[]> = {
@@ -509,12 +557,18 @@ const ABOUT_FIELD_NAMES: Record<string, string[]> = {
   cta: ['eyebrow', 'title', 'body', 'button_label', 'button_href'],
 }
 
-/** Tampilkan field yang relevan dengan blok About yang sedang diedit. */
+/** Tampilkan field yang relevan dengan blok About / PPDB yang sedang diedit. */
 export function getContentFields(tabKey: string, section?: string) {
   const fields = CONTENT_FIELDS[tabKey] || []
-  if (tabKey !== 'about' || !section) return fields
-  const allowed = ABOUT_FIELD_NAMES[section]
-  return allowed ? fields.filter((field) => allowed.includes(field.name)) : fields
+  if (tabKey === 'about' && section) {
+    const allowed = ABOUT_FIELD_NAMES[section]
+    return allowed ? fields.filter((field) => allowed.includes(field.name)) : fields
+  }
+  if (tabKey === 'ppdb' && section) {
+    const allowed = PPDB_FIELD_NAMES[section]
+    return allowed ? fields.filter((field) => allowed.includes(field.name)) : fields
+  }
+  return fields
 }
 
 /**

@@ -13,6 +13,7 @@ import type { DashboardLinkComponent, DashboardNavGroup, DashboardNavItem } from
  */
 export const ADMIN_SIDEBAR_GROUPS: { label: string; keys: string[] }[] = [
   { label: 'Beranda', keys: ['hero'] },
+  { label: 'Penerimaan', keys: ['ppdb'] },
   { label: 'Konten', keys: ['news', 'programs', 'facilities', 'gallery', 'testimonials'] },
   { label: 'Informasi', keys: ['staff', 'about', 'leadership', 'achievements', 'faq', 'social', 'contact'] },
   { label: 'Sistem', keys: ['settings'] },

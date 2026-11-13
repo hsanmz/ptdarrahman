@@ -4,6 +4,38 @@ const U = (id: string) => `https://images.unsplash.com/photo-${id}?q=80&w=1200&a
 
 const DUMMY_GALLERY: GalleryItem[] = [
   {
+    id: 'dummy-album-1',
+    image: U('1524178232363-1fb2b075b655'),
+    category: 'Acara & Perayaan',
+    content: {
+      title: 'Wisuda & Tasmi Akbar Santri 2026',
+      desc: 'Dokumentasi lengkap prosesi wisuda tahfidz 30 juz dan penganugerahan santri teladan berprestasi teknologi.',
+      type: 'album',
+      images: [
+        U('1524178232363-1fb2b075b655'),
+        U('1509062522246-3755977927d7'),
+        U('1540575467063-178a50c2df87'),
+        U('1492684223066-81342ee5ff30'),
+        U('1517694712202-14dd9538aa97'),
+      ],
+    },
+  },
+  {
+    id: 'dummy-album-2',
+    image: U('1517694712202-14dd9538aa97'),
+    category: 'Kegiatan Akademik',
+    content: {
+      title: 'Hackathon & Ekspo Digital Santri',
+      desc: 'Momen para santri mempresentasikan karya web modern, automasi IoT, dan inovasi dakwah digital.',
+      type: 'album',
+      images: [
+        U('1517694712202-14dd9538aa97'),
+        U('1503676260728-1c00da094a0b'),
+        U('1589182373726-e4f658ab50f0'),
+      ],
+    },
+  },
+  {
     id: 'dummy-campus-1',
     image: U('1524178232363-1fb2b075b655'),
     category: 'Fasilitas & Lingkungan',

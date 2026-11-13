@@ -11,6 +11,7 @@ from src.models.base import Base
 from src.models.content import (
     Achievement,
     AboutContent,
+    PpdbContentItem,
     FaqItem,
     ContactInfo,
     Facility,

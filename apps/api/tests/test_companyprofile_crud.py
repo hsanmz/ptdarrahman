@@ -922,3 +922,34 @@ def test_testimonials_list_is_ordered_by_order_column(cp: TestClient) -> None:
     finally:
         for rid in ids:
             cp.delete(f"/companyprofile/testimonials/{rid}")
+
+
+def test_ppdb_content_crud_lifecycle(cp: TestClient) -> None:
+    created = cp.post(
+        "/companyprofile/ppdb",
+        json={
+            "section": "jalur",
+            "order": 10,
+            "content": json.dumps({"title": "Program Unggulan Baru", "accent": "emerald"}),
+        },
+    )
+    assert created.status_code == 200, created.text
+    body = cast(dict[str, Any], created.json())
+    rid = body["id"]
+    try:
+        assert body["section"] == "jalur"
+        assert body["order"] == 10
+        assert json.loads(body["content"])["title"] == "Program Unggulan Baru"
+
+        listed = cast(list[dict[str, Any]], cp.get("/companyprofile/ppdb").json())
+        found = next(r for r in listed if r["id"] == rid)
+        assert json.loads(found["content"])["title"] == "Program Unggulan Baru"
+
+        updated = cp.put(
+            f"/companyprofile/ppdb/{rid}",
+            json={"content": json.dumps({"title": "Program Terupdate"})},
+        )
+        assert updated.status_code == 200, updated.text
+        assert json.loads(updated.json()["content"])["title"] == "Program Terupdate"
+    finally:
+        assert cp.delete(f"/companyprofile/ppdb/{rid}").status_code == 200

@@ -2,10 +2,8 @@
  * Konten statis landing PPDB halaman `/ppdb` (copy hero 3D + seksi di bawah hero).
  *
  * Kartu Program Pembinaan, Pilar Kurikulum, langkah Alur Pendaftaran, dan
- * teks seksi/CTA TIDAK lagi dikelola dari CMS Company Profile — semuanya
- * ditulis langsung di sini (mengikuti kit copywriting PTD Ar-Rahman yang
- * semula disemai migrasi 0042 + 0045). Satu-satunya data yang tetap dinamis
- * adalah gelombang PPDB aktif dari backend PPDB (`fetchActivePpdbWave`).
+ * teks seksi/CTA ditulis langsung di sini (mengikuti kit copywriting PTDARRAHMAN).
+ * Data dinamis gelombang aktif PPDB diambil dari backend PPDB (`fetchActivePpdbWave`).
  */
 
 import type {
@@ -13,6 +11,7 @@ import type {
   PpdbJalurCard,
   PpdbPillar,
   PpdbStep,
+  PpdbFaqItem,
 } from './types'
 
 export interface PpdbContent {
@@ -20,6 +19,19 @@ export interface PpdbContent {
   pillars: PpdbPillar[]
   steps: PpdbStep[]
   copy: PpdbCopyContent
+  faqs: PpdbFaqItem[]
+}
+
+/**
+ * Mengambil URL absolut portal PPDB (Vite app), mis. 'http://localhost:5174/register'.
+ * Mencegah broken link 404 jika tombol pendaftaran diarahkan ke route internal Next.js.
+ */
+export function getPortalUrl(path = ''): string {
+  const base = (
+    process.env.NEXT_PUBLIC_PORTAL_URL || 'http://localhost:5174'
+  ).replace(/\/+$/, '')
+  const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : ''
+  return `${base}${cleanPath}`
 }
 
 // ── Ikon & warna aksen ───────────────────────────────────────────────────
@@ -68,27 +80,27 @@ export function pickAccent(value: unknown): AccentKey {
 export const STATIC_PPDB_COPY: PpdbCopyContent = {
   hero_title: `Hafidz 30 Juz\nAhli Teknologi`,
   hero_desc:
-    "Pendidikan pesantren putra terpadu 6 tahun: hafalan mutqin dan rekayasa perangkat lunak modern.",
-  hero_proof: '30 Juz | 6 Tahun | 4 Pilar',
+    "Pendidikan pesantren putra terpadu: memadukan hafalan Al-Qur'an mutqin 30 juz bersanad dengan rekayasa teknologi digital modern.",
+  hero_proof: '30 Juz Bersanad | Coding & Web | Asrama Modern',
   hero_cta_label: 'Daftar Online Sekarang',
   hero_cta_href: '/register',
   hero_register_label: 'Daftar PPDB',
   hero_register_href: '/register',
   jalur_title: 'Program Pembinaan Santri Baru',
   jalur_desc:
-    'Pesantren Tahfidz Qur\u2019an dan Digital Ar-Rahman membina santri melalui program terpadu tahfidz, sains teknologi terapan, dan karakter islami.',
+    "Pesantren Tahfidz Qur'an dan Digital Ar-Rahman membina santri melalui program terpadu tahfidz, sains teknologi terapan, dan karakter islami yang kokoh.",
   kurikulum_title: 'Kurikulum Holistik Masa Depan',
   kurikulum_desc:
-    'Keseimbangan antara ilmu ukhrawi dan bekal teknologi kontemporer',
-  alur_kicker: 'Langkah Mudah',
-  alur_title: 'Alur Pendaftaran PPDB',
+    'Keseimbangan paripurna antara penguasaan ilmu ukhrawi dan kecakapan teknologi kontemporer',
+  alur_kicker: 'Langkah Terpadu',
+  alur_title: 'Alur Pendaftaran PPDB Resmi',
   cta_title: 'Konsultasi Pendaftaran Santri Baru?',
   cta_desc:
     'Tim panitia PPDB siap melayani pertanyaan mengenai kurikulum, program beasiswa, dan kunjungan kampus pesantren.',
-  cta_primary_label: 'Hubungi Panitia',
+  cta_primary_label: 'Hubungi Panitia (WhatsApp)',
   cta_primary_href: '/contact',
-  cta_secondary_label: 'Lihat Fasilitas & Asrama',
-  cta_secondary_href: '/programs',
+  cta_secondary_label: 'Masuk Portal Peserta',
+  cta_secondary_href: '/login',
 }
 
 const STATIC_JALUR: PpdbJalurCard[] = [
@@ -101,7 +113,11 @@ const STATIC_JALUR: PpdbJalurCard[] = [
       kicker: 'Pembinaan Karakter & Sains',
       title: 'Program Reguler Terpadu',
       desc: 'Bagi calon santri putra yang siap mengikuti pembinaan terpadu tahfidz 30 juz dan teknologi informasi dari tingkat dasar hingga mahir.',
-      items: [],
+      items: [
+        "Halaqah Tahfidz harian target mutqin",
+        "Dasar pemrograman & logika komputasi",
+        "Pembiasaan adab & kemandirian asrama",
+      ],
       cta_label: 'Daftar Sekarang',
       cta_href: '/register',
     },
@@ -112,10 +128,14 @@ const STATIC_JALUR: PpdbJalurCard[] = [
     content: {
       order: 2,
       accent: 'amber',
-      kicker: 'Uji Tahfidz',
+      kicker: 'Uji Tahfidz Unggulan',
       title: 'Program Tahfidz Intensif',
-      desc: "Bagi calon santri putra yang telah memiliki bekal hafalan Al-Qur'an dan siap mengikuti uji Tahfidz bersama asatidz penguji.",
-      items: [],
+      desc: "Bagi calon santri putra yang telah memiliki bekal hafalan Al-Qur'an dan siap mengikuti percepatan tasmi' bersama asatidz penguji.",
+      items: [
+        "Bimbingan khusus tahsin & tajwid bersanad",
+        "Target tasmi' 10 & 30 juz bil ghoib",
+        "Integrasi literasi digital islami",
+      ],
       cta_label: 'Daftar Sekarang',
       cta_href: '/register',
     },
@@ -126,10 +146,14 @@ const STATIC_JALUR: PpdbJalurCard[] = [
     content: {
       order: 3,
       accent: 'sky',
-      kicker: 'Prestasi Olimpiade & Minat Teknologi',
+      kicker: 'Eksplorasi Teknologi Terapan',
       title: 'Program Sains & Digital',
-      desc: 'Bagi calon santri putra yang memiliki prestasi olimpiade sains/tafsir, bahasa, atau minat kuat di bidang pemrograman dan teknologi.',
-      items: [],
+      desc: 'Bagi calon santri putra yang memiliki minat kuat di bidang pemrograman web, perakitan Internet of Things (IoT), dan kecerdasan buatan.',
+      items: [
+        "Praktik langsung di Lab Programming",
+        "Pengembangan web modern & database",
+        "Proyek riset IoT & dakwah digital",
+      ],
       cta_label: 'Daftar Sekarang',
       cta_href: '/register',
     },
@@ -140,10 +164,14 @@ const STATIC_JALUR: PpdbJalurCard[] = [
     content: {
       order: 4,
       accent: 'violet',
-      kicker: 'Program Orang Tua Asuh',
+      kicker: 'Dukungan Orang Tua Asuh',
       title: 'Program Beasiswa / Yatim Dhuafa',
-      desc: "Dukungan pendidikan bagi calon santri putra yatim/dhuafa yang memiliki tekad kuat menghafal Al-Qur'an 30 juz di PTD Ar-Rahman.",
-      items: [],
+      desc: "Dukungan pendidikan bagi calon santri putra yatim atau dhuafa berprestasi yang memiliki tekad kuat menghafal Al-Qur'an 30 juz di PTDARRAHMAN.",
+      items: [
+        "Bantuan biaya pendidikan terarah",
+        "Pembinaan intensif tahfidz & teknologi",
+        "Monitoring prestasi berkala",
+      ],
       cta_label: 'Daftar Sekarang',
       cta_href: '/register',
     },
@@ -156,7 +184,7 @@ const STATIC_PILLARS: PpdbPillar[] = [
     icon: 'BookOpen',
     content: {
       order: 1,
-      title: "Tahfidz Al-Qur'an",
+      title: "Tahfidz Al-Qur'an Bersanad",
       desc: "Pembinaan tahsin, ziyadah, dan muraja'ah harian hingga ujian terbuka Tasmi' 10 Juz & 30 Juz Bil Ghoib serta kajian Tafsir Al-Qur'an.",
     },
   },
@@ -165,8 +193,8 @@ const STATIC_PILLARS: PpdbPillar[] = [
     icon: 'Laptop',
     content: {
       order: 2,
-      title: 'Teknologi Digital',
-      desc: 'Praktik langsung di Ruang Programming mencakup pengembangan web modern (Next.js), pengelolaan Basis Data, dan perakitan Internet of Things (IoT).',
+      title: 'Teknologi Digital & Coding',
+      desc: 'Praktik langsung di Ruang Programming mencakup pengembangan web modern (Next.js), basis data, dan perakitan Internet of Things (IoT).',
     },
   },
   {
@@ -183,8 +211,8 @@ const STATIC_PILLARS: PpdbPillar[] = [
     icon: 'ShieldCheck',
     content: {
       order: 4,
-      title: 'Akademi Kepemimpinan',
-      desc: 'Pembentukan adab santri, kemandirian asrama melalui Gerakan Lingkungan Indah (GLI), olahraga prestasi, dan produksi dakwah di Ruang Podcast.',
+      title: 'Kepemimpinan & Karakter',
+      desc: 'Pembentukan adab santri, kemandirian asrama melalui Gerakan Lingkungan Indah (GLI), olahraga sunnah, dan dakwah di Ruang Podcast.',
     },
   },
 ]
@@ -194,33 +222,94 @@ const STATIC_STEPS: PpdbStep[] = [
     id: 'static-step-1',
     content: {
       order: 1,
-      title: 'Pendaftaran Online',
-      desc: 'Isi formulir biodata santri dan unggah dokumen pendukung melalui sistem.',
+      title: 'Pendaftaran Akun & Data Lengkap',
+      desc: 'Pengisian identitas santri, data orang tua/wali lengkap, domisili, dan 10 kuesioner kesehatan mandiri secara transparan.',
     },
   },
   {
     id: 'static-step-2',
     content: {
       order: 2,
-      title: 'Verifikasi Berkas',
-      desc: 'Tim panitia memvalidasi data akademik dan administrasi calon santri.',
+      title: 'Pembayaran Formulir Instan',
+      desc: 'Pembayaran biaya formulir via QRIS otomatis (Pakasir v2). Kuitansi resmi ber-HMAC terbit otomatis dan kuota tercatat akurat.',
     },
   },
   {
     id: 'static-step-3',
     content: {
       order: 3,
-      title: 'Ujian Seleksi & Tasmi',
-      desc: "Tes kemampuan dasar, observasi minat digital, dan tes baca Al-Qur'an.",
+      title: 'Unggah Dokumen Persyaratan',
+      desc: 'Unggah 6 berkas utama: NISN, Kartu Keluarga, Akta Kelahiran, Pas Foto, KTP Orang Tua/Wali, dan 4 rapor semester terakhir.',
     },
   },
   {
     id: 'static-step-4',
     content: {
       order: 4,
-      title: 'Pengumuman & Daftar Ulang',
-      desc: "Penerimaan santri baru resmi dan persiapan orientasi santri (khutbah & ta'aruf).",
+      title: 'Ujian Seleksi Terpadu (CBT & Tahfidz)',
+      desc: 'Pelaksanaan ujian seleksi terpadu CBT (Akademik & Psikologi) serta tes kemampuan membaca & menghafal Al-Qur’an sesuai kloter jadwal.',
     },
+  },
+  {
+    id: 'static-step-5',
+    content: {
+      order: 5,
+      title: 'Wawancara Terpadu Santri & Wali',
+      desc: 'Wawancara terpadu komitmen pendidikan pesantren bagi calon santri dan orang tua/wali dalam satu sesi bersamaan.',
+    },
+  },
+  {
+    id: 'static-step-6',
+    content: {
+      order: 6,
+      title: 'Pengumuman Kelulusan & LoA Digital',
+      desc: 'Penerbitan hasil kelulusan, unduh Letter of Acceptance (LoA) resmi ber-QR verifikasi, dan tanda tangan digital santri & orang tua.',
+    },
+  },
+]
+
+export const STATIC_PPDB_FAQS: PpdbFaqItem[] = [
+  {
+    id: 'faq-1',
+    question: 'Apa saja materi ujian seleksi masuk santri baru?',
+    answer:
+      'Seleksi terpadu terdiri dari 3 tahapan utama: (1) CBT Akademik (Penalaran Matematika & Literasi), (2) CBT Psikologi (Karakter & Potensi Belajar), serta (3) Uji Tahfidz Al-Qur’an (Tahsin, kelancaran tajwid, dan daya tangkap hafalan baru).',
+    category: 'Seleksi',
+  },
+  {
+    id: 'faq-2',
+    question: 'Apakah santri diperbolehkan membawa gadget / smartphone pribadi?',
+    answer:
+      'Santri tidak diperkenankan membawa smartphone pribadi demi menjaga kekhusyukan ibadah, hafalan Al-Qur’an, dan interaksi sosial asrama. Seluruh pembelajaran teknologi, coding, dan riset digital difasilitasi penuh di Ruang Programming Lab dengan pengawasan asatidz.',
+    category: 'Kehidupan Santri',
+  },
+  {
+    id: 'faq-3',
+    question: 'Bagaimana jika calon santri belum memiliki banyak hafalan Al-Qur’an?',
+    answer:
+      'Santri dengan hafalan awal sedikit tetap dapat mendaftar. Penilaian utama tahap tahfidz adalah kelancaran membaca Al-Qur’an sesuai kaidah tajwid (tahsin) serta tekad belajar. Terdapat program matrikulasi dan bimbingan halaqah intensif untuk mengejar target hafalan.',
+    category: 'Tahfidz',
+  },
+  {
+    id: 'faq-4',
+    question: 'Bagaimana mekanisme ujian seleksi (Online atau Offline)?',
+    answer:
+      'Pesantren menyediakan opsi ujian CBT & wawancara secara daring (Zoom) untuk calon santri luar daerah/pulau, serta luring langsung di Lab CBT Pesantren Tahfidz Qur’an dan Digital Ar-Rahman.',
+    category: 'Seleksi',
+  },
+  {
+    id: 'faq-5',
+    question: 'Kapan batas penutupan pendaftaran tiap batch ujian seleksi?',
+    answer:
+      'Jadwal seleksi dibagi per batch/kloter. Batas akhir pendaftaran kloter (cutoff) ditutup otomatis oleh sistem 24 jam (H-1) sebelum pelaksanaan ujian kloter tersebut dimulai, disertai automated reminder WhatsApp.',
+    category: 'Pendaftaran',
+  },
+  {
+    id: 'faq-6',
+    question: 'Bagaimana ketentuan pembayaran biaya pendidikan?',
+    answer:
+      'Di dalam portal PPDB, pendaftar hanya menyelesaikan biaya formulir pendaftaran via QRIS. Biaya pendidikan resmi (uang pangkal, SPP, dll.) disetorkan di luar sistem via transfer ke rekening resmi PTDARRAHMAN setelah calon santri dinyatakan lulus dan menandatangani LoA.',
+    category: 'Biaya',
   },
 ]
 
@@ -229,4 +318,5 @@ export const STATIC_PPDB_CONTENT: PpdbContent = {
   pillars: STATIC_PILLARS,
   steps: STATIC_STEPS,
   copy: STATIC_PPDB_COPY,
+  faqs: STATIC_PPDB_FAQS,
 }

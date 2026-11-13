@@ -8,8 +8,9 @@
  * - `category` WAJIB saat create (kolom `String(100)` NOT NULL — lihat
  *   `REQUIRED_FIELDS` / `GalleryItem`).
  * - `image` lebarnya 255 karakter (boleh kosong — kolom nullable).
- * - `content.title`/`content.desc` string biasa (kolom `content` bertipe
- *   Text, jadi tidak ada batas karakter bermakna yang bisa dicantumkan).
+ * - `content.title`/`content.desc` string biasa.
+ * - `content.type`: 'single' (foto biasa) | 'album' (koleksi foto).
+ * - `content.images`: array URL foto di dalam album bila type === 'album'.
  *   Key `content` lain milik data lama dipertahankan.
  */
 
@@ -32,20 +33,39 @@ export const GALLERY_IMAGE_ACCEPT = IMAGE_ACCEPT
 export const GALLERY_CATEGORY_MAX_LENGTH = 100
 export const GALLERY_IMAGE_URL_MAX_LENGTH = IMAGE_URL_MAX_LENGTH
 
+export type GalleryItemType = 'single' | 'album'
+
 export interface GalleryFormValues {
   category: string
   title: string
   desc: string
   image: string
+  type: GalleryItemType
+  images: string[]
 }
 
 /** Baca nilai form dari `FormState` yang dipakai dashboard. */
-export function readGalleryForm(formData: FormState): GalleryFormValues {
+export function readGalleryForm(
+  formData: FormState,
+  fallbackContent?: Record<string, unknown> | null,
+): GalleryFormValues {
+  const rawType = formData._c_type ?? formData.type ?? fallbackContent?.type
+  const rawImages = formData._c_images ?? formData.images ?? fallbackContent?.images
+  const isAlbum =
+    rawType === 'album' ||
+    (Array.isArray(rawImages) && rawImages.length > 0)
+
+  const images = Array.isArray(rawImages)
+    ? rawImages.map(String).filter((s) => s.trim().length > 0)
+    : []
+
   return {
     category: String(formData.category ?? '').trim(),
-    title: String(formData._c_title ?? ''),
-    desc: String(formData._c_desc ?? ''),
+    title: String(formData._c_title ?? fallbackContent?.title ?? ''),
+    desc: String(formData._c_desc ?? fallbackContent?.desc ?? ''),
     image: String(formData.image ?? '').trim(),
+    type: isAlbum ? 'album' : 'single',
+    images,
   }
 }
 
@@ -62,8 +82,6 @@ export function validateGalleryForm(values: GalleryFormValues): Record<string, s
   if (!category) {
     errors.category = 'Kategori wajib dipilih.'
   }
-  // "Lainnya" polos (tanpa teks khusus) tetap sah — perilaku sama dengan
-  // pemilih kategori fasilitas, sehingga data bisa disimpan lalu ditulis.
 
   if (category.length > GALLERY_CATEGORY_MAX_LENGTH) {
     errors.category = `Kategori maksimal ${GALLERY_CATEGORY_MAX_LENGTH} karakter.`
@@ -99,9 +117,24 @@ export function buildGalleryPayload(args: {
   content.title = values.title
   content.desc = values.desc
 
+  if (values.type === 'album') {
+    content.type = 'album'
+    content.images = values.images
+  } else if ('type' in content) {
+    content.type = 'single'
+    delete content.images
+  }
+
+  let image = values.image
+  // Untuk album: bila foto sampul kosong tapi ada foto di dalam album,
+  // pakai foto pertama sebagai sampul.
+  if (values.type === 'album' && !image && values.images.length > 0) {
+    image = values.images[0]
+  }
+
   return {
     category: values.category,
-    image: values.image,
+    image,
     content: JSON.stringify(content),
   }
 }
