@@ -10,7 +10,7 @@
 [4. USER LOGIN KE APLIKASI/WEB]
        â”‚
        â–¼
-[5. PEMBAYARAN BIAYA FORMULIR (PAK KASIR)]
+[5. PEMBAYARAN BIAYA FORMULIR (MIDTRANS)]
        â”‚ (Webhook otomatis lunas)
        â–¼
 [6. UNLOCK DASHBOARD: UPLOAD DOKUMEN]
@@ -59,7 +59,7 @@
                                           (Diskon Gelombang, SPP, Uang Gedung)
                                                  â”‚
                                                  â–¼
-                                          [16. PEMBAYARAN TAHAP 2 (PAK KASIR)]
+                                          [16. PEMBAYARAN TAHAP 2 (MIDTRANS)]
                                                  â”‚
                                                  â–¼ (LUNAS / DP MASUK)
                                                  â”‚

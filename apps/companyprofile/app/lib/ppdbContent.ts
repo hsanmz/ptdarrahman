@@ -231,7 +231,7 @@ const STATIC_STEPS: PpdbStep[] = [
     content: {
       order: 2,
       title: 'Pembayaran Formulir Instan',
-      desc: 'Pembayaran biaya formulir via QRIS otomatis (Pakasir v2). Kuitansi resmi ber-HMAC terbit otomatis dan kuota tercatat akurat.',
+      desc: 'Pembayaran biaya formulir via QRIS otomatis (Midtrans). Kuitansi resmi ber-HMAC terbit otomatis dan kuota tercatat akurat.',
     },
   },
   {

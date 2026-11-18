@@ -3,7 +3,7 @@
        â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
        â–¼                                                                        â–¼
 [1. VERIFIKASI DOKUMEN GRANULAR]                                       [MONITORING PEMBAYARAN]
-(Cek per-dokumen: KK, NISN, Foto, Medcheck, dll)                        (Status Pak Kasir: Formulir
+(Cek per-dokumen: KK, NISN, Foto, Medcheck, dll)                        (Status Midtrans: Formulir
        â”‚                                                                 & Pembayaran Tahap 2)
        â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                             â”‚
        â–¼ (Semua Dokumen Valid)    â–¼ (Ada Dokumen Salah/Blur)                    â”‚
@@ -42,7 +42,7 @@
                                   â”‚                                             â”‚
                                   â–¼                                             â”‚
                            [7. MONITORING TTD MOU IN-APP & BAYAR TAHAP 2] â—„â”€â”€â”€â”€â”€â”˜
-                           (Pendaftar TTD di Canvas Dashboard & Bayar Pak Kasir)
+                           (Pendaftar TTD di Canvas Dashboard & Bayar Midtrans)
                                   â”‚
                                   â–¼ (LUNAS / MINIMUM DP TAHAP 2 MASUK)
                                   â”‚

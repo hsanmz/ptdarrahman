@@ -163,7 +163,7 @@ INITIAL_SEEDS = [
         "order": 2,
         "content": {
             "title": "Pembayaran Formulir Instan (QRIS)",
-            "desc": "Penyelesaian biaya administrasi formulir via QRIS dinamis otomatis (Pakasir v2) dengan bukti kuitansi digital berstempel HMAC resmi.",
+            "desc": "Penyelesaian biaya administrasi formulir via QRIS dinamis otomatis (Midtrans) dengan bukti kuitansi digital berstempel HMAC resmi.",
         },
     },
     {
