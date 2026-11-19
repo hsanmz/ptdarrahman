@@ -87,6 +87,11 @@ else
   log_ok "Docker sudah ada: $(docker --version)"
 fi
 
+if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != "root" ]; then
+  usermod -aG docker "$SUDO_USER" 2>/dev/null || true
+  log_ok "User $SUDO_USER telah ditambahkan ke grup docker."
+fi
+
 # ── 3. Konfigurasi Environment IP:PORT ─────────────────────────
 log_info "3/6. Menyiapkan konfigurasi IP & kredensial..."
 PUBLIC_IP="${PUBLIC_IP:-103.55.37.77}"
