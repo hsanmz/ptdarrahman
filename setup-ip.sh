@@ -150,7 +150,14 @@ docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic u
 log_info "Menjalankan database seeder awal (Akun Admin, Rubrik, Template)..."
 docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api python -m scripts.seed || log_warn "Seeder selesai."
 
-# ── 6. Ringkasan & Port Akses ─────────────────────────────────
+# ── 6. Pembersihan Cache Docker (Hemat Disk 20GB) ─────────────
+log_info "Membersihkan cache build & dangling image agar disk hemat..."
+docker image prune -f >/dev/null 2>&1 || true
+docker builder prune -f >/dev/null 2>&1 || true
+log_ok "Pembersihan cache selesai. Sisa kapasitas disk:"
+df -h / | awk 'NR==2 {print "  Terpakai: " $3 " / " $2 " (Sisa: " $4 ")"}'
+
+# ── 7. Ringkasan & Port Akses ─────────────────────────────────
 echo
 echo -e "${COLOR_GREEN}============================================================${COLOR_RESET}"
 echo -e "${COLOR_GREEN}  DEPLOY BERHASIL! APLIKASI TELAH AKTIF DI VPS               ${COLOR_RESET}"
