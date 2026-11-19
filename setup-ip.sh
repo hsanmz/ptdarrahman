@@ -96,6 +96,10 @@ fi
 log_info "3/6. Menyiapkan konfigurasi IP & kredensial..."
 if [ -f .env.ip ]; then
   log_ok "File .env.ip sudah ada, menggunakan kredensial yang ada."
+  # Jika MIDTRANS_SERVER_KEY masih kosong, pastikan APP_ENV=development agar API tidak crash
+  if ! grep -q 'MIDTRANS_SERVER_KEY=..*' .env.ip; then
+    sed -i 's/APP_ENV=production/APP_ENV=development/' .env.ip
+  fi
   set -a
   # shellcheck disable=SC1091
   source .env.ip
@@ -118,7 +122,7 @@ MYSQL_PASSWORD=${MYSQL_USER_PASS}
 JWT_SECRET=${JWT_SECRET_KEY}
 CRON_SECRET=${CRON_SECRET_KEY}
 COOKIE_SECURE=false
-APP_ENV=production
+APP_ENV=development
 MIDTRANS_SERVER_KEY=
 MIDTRANS_CLIENT_KEY=
 MIDTRANS_IS_PRODUCTION=false
