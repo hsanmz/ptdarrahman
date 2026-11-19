@@ -35,6 +35,21 @@ fi
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
+# Jika direktori git, pastikan sync dengan commit terbaru origin/main
+if [ -d .git ] && command -v git >/dev/null 2>&1; then
+  log_info "Memeriksa pembaruan repository dari GitHub..."
+  git fetch origin main 2>/dev/null || true
+  LOCAL_COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+  REMOTE_COMMIT=$(git rev-parse origin/main 2>/dev/null || echo "unknown")
+  if [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ] && [ "$REMOTE_COMMIT" != "unknown" ]; then
+    log_warn "Commit lokal ($LOCAL_COMMIT) berbeda dengan origin/main ($REMOTE_COMMIT). Menyelaraskan ke commit terbaru..."
+    git reset --hard origin/main
+    log_ok "Repository berhasil diselaraskan ke commit origin/main ($REMOTE_COMMIT)."
+  else
+    log_ok "Repository sudah pada commit terbaru ($LOCAL_COMMIT)."
+  fi
+fi
+
 echo -e "${COLOR_CYAN}============================================================${COLOR_RESET}"
 echo -e "${COLOR_CYAN}  PTDARRAHMAN — ONE-SHOT DEPLOY VPS (IP:PORT MODE)           ${COLOR_RESET}"
 echo -e "${COLOR_CYAN}============================================================${COLOR_RESET}"
