@@ -385,6 +385,10 @@ class PaymentService:
                 status_code=404, detail="Kuitansi pembayaran tidak ditemukan"
             )
 
+        applicant = (
+            self.repo.get_applicant_by_id(tx.applicant_id) if tx.applicant_id else None
+        )
+
         if token:
             verified_id = verify_secure_doc_token(token, "receipt")
             if verified_id != tx.id:
@@ -392,7 +396,30 @@ class PaymentService:
                     status_code=403, detail="Tanda tangan tautan kuitansi tidak sesuai"
                 )
         elif user_id:
-            pass
+            # IDOR defense: pastikan user adalah pemilik pendaftar atau admin PPDB / Superadmin
+            is_owner = bool(applicant and applicant.user_id == user_id)
+            if not is_owner:
+                from src.core.database import get_by_id
+                from src.core.dependencies import _parse_permissions
+
+                user_rec = get_by_id("users", user_id)
+                is_admin = False
+                if user_rec:
+                    if user_rec.get("user_type") == "superadmin" or user_rec.get("is_superadmin"):
+                        is_admin = True
+                    elif user_rec.get("role_id"):
+                        role = get_by_id("roles", user_rec["role_id"])
+                        if role and (
+                            role.get("is_superadmin")
+                            or _parse_permissions(role.get("permissions")).get("ppdb")
+                            in ("read", "crud", "dashboard")
+                        ):
+                            is_admin = True
+                if not is_admin:
+                    raise HTTPException(
+                        status_code=403,
+                        detail="Anda tidak memiliki izin untuk melihat kuitansi ini.",
+                    )
         else:
             raise HTTPException(
                 status_code=401,
@@ -408,9 +435,6 @@ class PaymentService:
                 ),
             )
 
-        applicant = (
-            self.repo.get_applicant_by_id(tx.applicant_id) if tx.applicant_id else None
-        )
         wave = (
             self.repo.get_wave_by_id(applicant.wave_id)
             if (applicant and applicant.wave_id)

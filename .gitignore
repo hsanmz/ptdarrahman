@@ -93,5 +93,8 @@ apps/companyprofile/*.glb.backup
 # Cadangan file sumber
 apps/companyprofile/components/ui/*.bak
 
+# Binaries
+bin/
+
 # Skrip debug sementara (membaca .env, tidak untuk repo)
 _tmp_proc.py

@@ -115,9 +115,41 @@ DEFAULT_ROLES = [
     },
 ]
 
-# Akun superadmin default (hanya dibuat jika belum ada satupun user
-# superadmin). Ganti password via env `SEED_SUPERADMIN_PASSWORD`.
-DEFAULT_SUPERADMIN_USERNAME = "superadmin"
+DEFAULT_USERS = [
+    {
+        "username": "superadmin",
+        "full_name": "Superadmin",
+        "email": "",
+        "password": "SuperAdmin123!.",
+        "role_name": "Superadmin",
+        "user_type": "superadmin",
+    },
+    {
+        "username": "Superadmin",
+        "full_name": "Superadmin",
+        "email": "",
+        "password": "SuperAdmin123!.",
+        "role_name": "Superadmin",
+        "user_type": "superadmin",
+    },
+    {
+        "username": "adminppdb",
+        "full_name": "Admin PPDB",
+        "email": "",
+        "password": "adminppdb123!.",
+        "role_name": "Admin PPDB",
+        "user_type": "admin",
+    },
+    {
+        "username": "admincp",
+        "full_name": "Admin Company Profile",
+        "email": "",
+        "password": "admincp123!.",
+        "role_name": "AdminCP",
+        "user_type": "admin",
+    },
+]
+
 DEFAULT_SUPERADMIN_PASSWORD = os.getenv("SEED_SUPERADMIN_PASSWORD", "SuperAdmin123!.")
 
 SITE_SETTINGS = [
@@ -354,37 +386,40 @@ def ensure_notification_templates() -> None:
         print(f"  template created: {tpl['event_key']}")
 
 
-def ensure_default_superadmin() -> None:
-    """Create a default superadmin account if none exists."""
-    existing = execute_raw(
-        "SELECT id FROM users WHERE user_type = 'superadmin' LIMIT 1"
-    )
-    if existing:
-        print("  superadmin exists (kept as-is)")
-        return
-    role = get_by_column("roles", "name", "Superadmin")
-    role_id = role["id"] if role else None
+def ensure_default_users() -> None:
+    """Create default system users (Superadmins, Admin PPDB, AdminCP) if missing."""
     now = _now()
-    user_id = str(uuid4())
-    create_record(
-        "users",
-        {
-            "id": user_id,
-            "username": DEFAULT_SUPERADMIN_USERNAME,
-            "full_name": "Superadmin",
-            "password_hash": hash_password(DEFAULT_SUPERADMIN_PASSWORD),
-            "email": "",
-            "phone": "",
-            "user_type": "superadmin",
-            "role_id": role_id,
-            "avatar_url": "",
-            "is_active": 1,
-            "failed_login_attempts": 0,
-            "created_at": now,
-            "updated_at": now,
-        },
-    )
-    print(f"  superadmin created: '{DEFAULT_SUPERADMIN_USERNAME}'")
+
+    for u in DEFAULT_USERS:
+        existing = get_by_column("users", "username", u["username"])
+        if existing:
+            print(f"  user exists: '{u['username']}' (kept as-is)")
+            continue
+
+        role = get_by_column("roles", "name", u["role_name"])
+        role_id = role["id"] if role else None
+        user_id = str(uuid4())
+        pwd = u.get("password", DEFAULT_SUPERADMIN_PASSWORD)
+
+        create_record(
+            "users",
+            {
+                "id": user_id,
+                "username": u["username"],
+                "full_name": u["full_name"],
+                "password_hash": hash_password(pwd),
+                "email": u["email"],
+                "phone": "",
+                "user_type": u["user_type"],
+                "role_id": role_id,
+                "avatar_url": "",
+                "is_active": 1,
+                "failed_login_attempts": 0,
+                "created_at": now,
+                "updated_at": now,
+            },
+        )
+        print(f"  user created: '{u['username']}' ({u['role_name']})")
 
 
 def main() -> None:
@@ -395,7 +430,7 @@ def main() -> None:
     ensure_applicant_roles()
     ensure_site_settings()
     ensure_notification_templates()
-    ensure_default_superadmin()
+    ensure_default_users()
     print("Done.")
 
 

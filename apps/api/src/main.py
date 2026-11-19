@@ -3,7 +3,7 @@ import threading
 import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from scalar_fastapi import get_scalar_api_reference
@@ -137,6 +137,12 @@ def _validate_secrets() -> None:
             "Set CRON_SECRET di .env (min 16 karakter random).\n"
             '  python -c "import secrets; print(secrets.token_hex(16))"'
         )
+    if settings.is_production:
+        if not (settings.cors_origins or "").strip() and not (settings.cors_origin_regex or "").strip():
+            logger.warning(
+                "Production warning: CORS_ORIGINS dan CORS_ORIGIN_REGEX belum dikonfigurasi di .env. "
+                "CORS akan membatasi ke default local dev origin."
+            )
 
 
 def _validate_payment_gateway() -> None:
@@ -241,6 +247,7 @@ app = FastAPI(
     version="0.1.0",
     docs_url=None,
     redoc_url=None,
+    openapi_url=None if settings.is_production else "/openapi.json",
     lifespan=lifespan,
 )
 
@@ -283,6 +290,8 @@ async def health():
 
 @app.get("/scalar", include_in_schema=False)
 def get_scalar_docs():
+    if settings.is_production:
+        raise HTTPException(status_code=404, detail="Not Found")
     return get_scalar_api_reference(
         openapi_url=app.openapi_url,
         title="PTDARRAHMAN API",
@@ -297,11 +306,13 @@ def favicon():
 
 @app.get("/")
 def read_root():
-    return {
+    data = {
         "message": "Pesantren Tahfidz Qur'an dan Digital Ar-Rahman API",
         "version": "0.1.0",
-        "docs": "/scalar",
     }
+    if not settings.is_production:
+        data["docs"] = "/scalar"
+    return data
 
 
 # --- Routers ---

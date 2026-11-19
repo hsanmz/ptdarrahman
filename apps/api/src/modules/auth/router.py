@@ -179,6 +179,15 @@ def list_sessions(
     return service.list_sessions(user)
 
 
+@router.delete("/sessions/others")
+def revoke_other_sessions(
+    user: dict[str, Any] = Depends(get_current_user),
+    service: AuthService = Depends(get_auth_service),
+):
+    """Akhiri semua sesi perangkat lain kecuali sesi saat ini."""
+    return service.revoke_other_sessions(user)
+
+
 @router.delete("/sessions/{session_id}")
 def revoke_session(
     session_id: str,

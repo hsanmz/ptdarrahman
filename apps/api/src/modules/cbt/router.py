@@ -26,6 +26,7 @@ from src.core.dependencies import (
     require_ppdb_admin,
     require_ppdb_read,
 )
+from src.core.rate_limit import rate_limit_dependency
 from src.models.auth import User
 from src.models.cbt import ExamSchedule
 from src.modules.cbt.schemas import (
@@ -459,6 +460,7 @@ def verify_access(
     payload: VerifyExamAccessRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    _: None = Depends(rate_limit_dependency("cbt_verify")),
 ):
     return CBTService.verify_applicant_access(
         db=db,

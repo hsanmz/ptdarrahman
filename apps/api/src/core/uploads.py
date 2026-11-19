@@ -245,6 +245,14 @@ def delete_upload(storage_path: str) -> None:
         return
 
     try:
-        Path(storage_path).unlink(missing_ok=True)
+        upload_root = Path(settings.upload_dir).resolve()
+        target = Path(storage_path).resolve()
+        if not target.is_relative_to(upload_root):
+            logger.warning(
+                "Security alert: blocked attempt to delete file outside upload directory: %s",
+                storage_path,
+            )
+            return
+        target.unlink(missing_ok=True)
     except OSError:
         logger.exception("Local delete failed for %s", storage_path)

@@ -1832,6 +1832,22 @@ class CBTService:
         if attempt.status == "completed":
             raise HTTPException(status_code=400, detail="Ujian sudah selesai.")
 
+        # Hard deadline check (anti-cheating): verifikasi batas waktu dari sisi server
+        schedule = db.execute(
+            select(ExamSchedule).where(ExamSchedule.id == schedule_id)
+        ).scalar_one_or_none()
+        if schedule and attempt.started_at:
+            bank = cls.get_bank_soal_detail(db, schedule.bank_id)
+            total_duration_seconds = bank.duration_minutes * 60
+            elapsed = (datetime.utcnow() - attempt.started_at).total_seconds()
+            # Berikan toleransi 60 detik untuk latensi jaringan saat autosave
+            if elapsed > (total_duration_seconds + 60):
+                cls.finish_exam(db, user, schedule_id)
+                raise HTTPException(
+                    status_code=400,
+                    detail="Waktu pengerjaan ujian telah berakhir. Jawaban tidak dapat disimpan lagi.",
+                )
+
         # Verify Option & Question
         option = db.execute(
             select(ExamOption).where(
@@ -1974,7 +1990,22 @@ class CBTService:
         ).scalar_one_or_none()
 
         if attempt and attempt.status == "in_progress":
-            attempt.remaining_seconds = max(0, remaining_seconds)
+            # Validasi durasi dari sisi server agar peserta tidak bisa memanipulasi sisa waktu
+            schedule = db.execute(
+                select(ExamSchedule).where(ExamSchedule.id == schedule_id)
+            ).scalar_one_or_none()
+            if schedule and attempt.started_at:
+                bank = cls.get_bank_soal_detail(db, schedule.bank_id)
+                total_duration_seconds = bank.duration_minutes * 60
+                elapsed = (datetime.utcnow() - attempt.started_at).total_seconds()
+                server_remaining = max(0, int(total_duration_seconds - elapsed))
+                if server_remaining <= 0:
+                    cls.finish_exam(db, user, schedule_id)
+                    return {"status": "completed", "remaining_seconds": 0}
+                # Jangan biarkan client mengirim remaining_seconds melebihi sisa waktu server
+                attempt.remaining_seconds = min(server_remaining, max(0, remaining_seconds))
+            else:
+                attempt.remaining_seconds = max(0, remaining_seconds)
             attempt.updated_at = datetime.utcnow()
             db.commit()
 

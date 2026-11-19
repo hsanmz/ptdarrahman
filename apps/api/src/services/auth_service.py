@@ -231,7 +231,9 @@ class AuthService:
     ) -> dict:
         user = self.repository.get_user_by_username_or_email(username)
         if not user:
-            raise HTTPException(401, "Username atau email tidak ditemukan")
+            # Cegah account enumeration & timing attack: jalankan verifikasi terhadap hash tiruan
+            verify_password(password, FAKE_HASH)
+            raise HTTPException(401, "Username atau password salah")
 
         if not user.is_active:
             raise HTTPException(403, "User is inactive")
@@ -267,7 +269,7 @@ class AuthService:
 
             user.failed_login_attempts = attempts
             self.repository.update_user(user)
-            raise HTTPException(401, "Password salah")
+            raise HTTPException(401, "Username atau password salah")
 
         # Validasi module access: user_type=admin/applicant dengan role yang
         # seluruh module-nya = "none" tidak boleh login sama sekali.
@@ -404,9 +406,16 @@ class AuthService:
         stored = self.repository.get_refresh_token(token_hash)
         if stored:
             user_id = stored.user_id
+            session_id = stored.id
             try:
                 self.repository.db.delete(stored)
                 self.repository.db.commit()
+                if session_id:
+                    from src.core.cache import blacklist_session
+
+                    blacklist_session(
+                        session_id, ttl_seconds=settings.jwt_expiry_hours * 3600
+                    )
             except Exception:
                 self.repository.db.rollback()
             if user_id:
@@ -506,6 +515,8 @@ class AuthService:
 
     def revoke_session(self, user_dict: dict, session_id: str) -> dict:
         """Akhiri satu sesi perangkat lain. Sesi aktif saat ini tidak boleh."""
+        if session_id == "others":
+            return self.revoke_other_sessions(user_dict)
         user_id = user_dict["id"]
         if session_id and session_id == user_dict.get("session_id"):
             raise HTTPException(
@@ -514,6 +525,24 @@ class AuthService:
             )
         self.revoke_session_by_id(user_id, session_id)
         return {"message": "Sesi berhasil diakhiri"}
+
+    def revoke_other_sessions(self, user_dict: dict) -> dict:
+        """Cabut seluruh sesi perangkat lain kecuali yang sedang aktif."""
+        user_id = user_dict["id"]
+        current_session_id = user_dict.get("session_id")
+        q = self.repository.db.query(RefreshToken).filter(
+            RefreshToken.user_id == user_id
+        )
+        if current_session_id:
+            q = q.filter(RefreshToken.id != current_session_id)
+        other_tokens = q.all()
+        from src.core.cache import blacklist_session
+
+        for rt in other_tokens:
+            blacklist_session(rt.id, ttl_seconds=settings.jwt_expiry_hours * 3600)
+            self.repository.db.delete(rt)
+        self.repository.db.commit()
+        return {"message": "Semua sesi lain berhasil diakhiri"}
 
     def revoke_session_by_id(self, user_id: str, session_id: str | None) -> None:
         """Cabut dan hapus satu sesi dari database agar tidak menumpuk."""
@@ -526,6 +555,11 @@ class AuthService:
                 .delete(synchronize_session=False)
             )
             self.repository.db.commit()
+            from src.core.cache import blacklist_session
+
+            blacklist_session(
+                session_id, ttl_seconds=settings.jwt_expiry_hours * 3600
+            )
         except Exception:
             self.repository.db.rollback()
         self.cleanup_expired_sessions(user_id)
@@ -725,6 +759,12 @@ class AuthService:
                 400, "Format tanggal lahir tidak valid (YYYY-MM-DD)"
             ) from exc
 
+        neutral_response = {
+            "message": (
+                "Jika data cocok, kredensial akan dikirim ke WhatsApp terdaftar."
+            )
+        }
+
         applicant = (
             self.repository.db.query(PPDBApplicant)
             .filter(
@@ -735,17 +775,14 @@ class AuthService:
         )
 
         if not applicant:
-            raise HTTPException(404, "Data pendaftar tidak ditemukan")
+            return neutral_response
 
         user = self.repository.get_user_by_id(applicant.user_id)
-        if not user:
-            raise HTTPException(404, "Akun pengguna tidak ditemukan")
+        if not user or not user.is_active:
+            return neutral_response
         phone = applicant.phone or user.phone
         if not phone:
-            raise HTTPException(
-                400,
-                "Akun belum memiliki nomor WhatsApp terdaftar. Hubungi admin.",
-            )
+            return neutral_response
 
         # Generate new password
         chars = string.ascii_letters + string.digits

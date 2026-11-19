@@ -73,7 +73,7 @@ const USER_KEY = 'sa_user'
 // Aktifkan lewat VITE_MOCK_AUTH=true di .env lokal saat backend/DB belum bisa
 // dipakai. Login tidak menghubungi server: sesi `sa_user` diisi user dummy.
 // Wajib `false` di produksi (default mati).
-export const MOCK_AUTH = (import.meta.env.VITE_MOCK_AUTH || '').trim().toLowerCase() === 'true'
+export const MOCK_AUTH = !import.meta.env.PROD && (import.meta.env.VITE_MOCK_AUTH || '').trim().toLowerCase() === 'true'
 
 function buildMockUser(username = 'superadmin'): AuthUser {
   return {

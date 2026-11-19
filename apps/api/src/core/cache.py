@@ -161,3 +161,34 @@ def redis_rate_limit(key: str, limit: int, window_seconds: int) -> tuple[bool, i
     except Exception as exc:
         logger.warning("Redis rate-limit error (%s) — fail-open", exc)
         return True, 0
+
+
+# ── Session revocation blacklist ─────────────────────────────────────────────
+
+_REVOKED_SESSION_PREFIX = "revoked_sid:"
+
+
+def blacklist_session(session_id: str, ttl_seconds: int = 86400) -> None:
+    """Catat session_id yang di-revoke ke Redis dengan TTL (default 24 jam)."""
+    if not session_id:
+        return
+    r = get_redis()
+    if r is None:
+        return
+    try:
+        r.setex(f"{_REVOKED_SESSION_PREFIX}{session_id}", max(60, ttl_seconds), "1")
+    except Exception as exc:
+        logger.warning("Gagal blacklist session di Redis: %s", exc)
+
+
+def is_session_blacklisted(session_id: str) -> bool:
+    """Cek apakah session_id telah di-revoke (blacklisted)."""
+    if not session_id:
+        return False
+    r = get_redis()
+    if r is None:
+        return False
+    try:
+        return bool(r.exists(f"{_REVOKED_SESSION_PREFIX}{session_id}"))
+    except Exception:
+        return False

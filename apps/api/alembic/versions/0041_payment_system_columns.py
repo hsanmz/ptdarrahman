@@ -1,4 +1,4 @@
-"""Add Pakasir v2 payment columns, receipt snapshots, dp_status, and stage2 templates
+"""Add payment columns (order_id, qr_string), receipt snapshots, dp_status, and stage2 templates
 
 Revision ID: 0041
 Revises: 0040

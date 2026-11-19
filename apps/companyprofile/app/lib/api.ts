@@ -31,7 +31,7 @@ const USER_KEY = 'admin_user'
 // bisa dipakai. Login tidak menghubungi server: cukup mengisi sesi `admin_user`
 // dengan user dummy, sehingga chrome dashboard bisa dibuka untuk inspeksi.
 // Wajib `false` di produksi (default mati).
-export const MOCK_AUTH = (process.env.NEXT_PUBLIC_MOCK_AUTH || '').trim().toLowerCase() === 'true'
+export const MOCK_AUTH = process.env.NODE_ENV !== 'production' && (process.env.NEXT_PUBLIC_MOCK_AUTH || '').trim().toLowerCase() === 'true'
 
 export interface AuthMe {
   id: string; username: string; email: string; phone?: string; full_name: string

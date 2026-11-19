@@ -8,7 +8,7 @@ export const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 // Username yang mengandung "pendaftar"/"applicant"/"siswa" memberi user
 // bertipe applicant (agar portal pendaftar bisa dibuka); selain itu admin.
 // Wajib `false` di produksi (default mati).
-export const MOCK_AUTH = (import.meta.env.VITE_MOCK_AUTH || '').trim().toLowerCase() === 'true'
+export const MOCK_AUTH = !import.meta.env.PROD && (import.meta.env.VITE_MOCK_AUTH || '').trim().toLowerCase() === 'true'
 
 const APPLICANT_HINT = /pendaftar|applicant|siswa|murid/i
 

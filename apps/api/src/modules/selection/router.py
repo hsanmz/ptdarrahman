@@ -301,11 +301,29 @@ def applicant_get_my_results(
     return svc.applicant_get_my_results(user["id"])
 
 
+def _verify_cron_secret(provided: str | None) -> None:
+    """Verifikasi cron secret dengan constant-time comparison (mencegah timing attack).
+
+    Fails closed jika CRON_SECRET belum dikonfigurasi di .env.
+    """
+    import hmac as _hmac
+
+    expected = settings.cron_secret
+    if not expected or len(expected.strip()) < 16:
+        raise HTTPException(
+            status_code=503,
+            detail="CRON_SECRET belum dikonfigurasi dengan aman di server.",
+        )
+    if not provided:
+        raise HTTPException(status_code=401, detail="Unauthorized cron request")
+    if not _hmac.compare_digest(provided.strip().encode("utf-8"), expected.strip().encode("utf-8")):
+        raise HTTPException(status_code=401, detail="Unauthorized cron request")
+
+
 @router.post("/cron/h1-reminders")
 def send_h1_reminders(
     x_cron_secret: str = Header(None),
     svc: SelectionService = Depends(get_selection_service),
 ):
-    if x_cron_secret != settings.cron_secret:
-        raise HTTPException(status_code=401, detail="Unauthorized cron request")
+    _verify_cron_secret(x_cron_secret)
     return svc.send_h1_reminders()

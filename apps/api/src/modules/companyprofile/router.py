@@ -35,6 +35,7 @@ from src.core.database import (
 )
 from src.core.dependencies import get_current_user, require_cp_crud, require_cp_read
 from src.core.events import companyprofile_hub
+from src.core.rate_limit import rate_limit_dependency
 from src.core.request_body import read_refresh_token
 from src.core.security import hash_password, verify_password, verify_token
 from src.core.session_meta import get_session_context
@@ -159,11 +160,14 @@ def _data_violation(exc: Exception) -> HTTPException:
     """Map a DB constraint violation to 400.
 
     Deliberately narrow: only IntegrityError/DataError mean "the values the
-    client sent are wrong". A connection timeout or a missing table is an
-    OperationalError, which must stay a 5xx -- reporting it as 400 would tell
-    the admin their form was invalid when the server is the problem.
+    client sent are wrong". Internal database error details are logged and
+    never exposed to the user.
     """
-    return HTTPException(status_code=400, detail=f"Database rejected the value: {exc}")
+    logger.warning("Database constraint violation on companyprofile CRUD: %s", exc)
+    return HTTPException(
+        status_code=400,
+        detail="Data yang dikirim tidak valid atau melanggar batasan sistem.",
+    )
 
 
 async def _read_json(request: Request) -> Any:
@@ -346,6 +350,7 @@ async def cp_login(
     request: Request,
     response: Response,
     service: AuthService = Depends(get_auth_service),
+    _: None = Depends(rate_limit_dependency("login")),
 ):
     from src.core.dependencies import AccessLevel, Module, has_module_access
 

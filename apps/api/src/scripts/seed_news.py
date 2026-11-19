@@ -140,7 +140,7 @@ def upsert_news(session: Session, item: dict) -> None:
             category="news",
             date="",
             gallery=None,
-            content=content,
+            content=json.dumps(incoming_content, ensure_ascii=False),
             created_at=now,
             updated_at=now,
         )

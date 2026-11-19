@@ -579,7 +579,7 @@ def get_applicant_dossier(
     except Exception as e:
         logger.exception("Gagal memuat dossier pendaftar %s: %s", id, e)
         raise HTTPException(
-            status_code=500, detail=f"Gagal memuat berkas dossier pendaftar: {str(e)}"
+            status_code=500, detail="Gagal memuat berkas dossier pendaftar."
         )
 
 

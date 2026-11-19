@@ -20,6 +20,7 @@ from src.core.cache import (  # noqa: F401
     cache_user,
     get_cached_user,
     invalidate_user_cache,
+    is_session_blacklisted,
 )
 from src.core.database import get_by_id
 from src.core.security import verify_token
@@ -136,6 +137,10 @@ def get_current_user(
     payload = verify_token(token)
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    sid = payload.get("sid")
+    if sid and is_session_blacklisted(sid):
+        raise HTTPException(status_code=401, detail="Sesi telah diakhiri (revoked)")
 
     user_id = payload.get("sub")
     if not user_id:

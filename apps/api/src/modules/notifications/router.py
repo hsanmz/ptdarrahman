@@ -439,8 +439,8 @@ async def wa_webhook(request: Request):
         import json
 
         payload = json.loads(body_bytes.decode("utf-8", errors="replace"))
-    except (json.JSONDecodeError, ValueError) as exc:
-        raise HTTPException(status_code=400, detail=f"Invalid JSON payload: {exc}")
+    except (json.JSONDecodeError, ValueError):
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
 
     event = payload.get("event")
     data = payload.get("data", {})

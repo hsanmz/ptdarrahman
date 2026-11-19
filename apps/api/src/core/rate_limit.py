@@ -21,6 +21,7 @@ RATE_LIMITS: dict[str, tuple[int, int]] = {
     "register_applicant": (3, 300),  # max 3 pendaftaran/IP/5 menit
     "recover_applicant": (5, 300),  # max 5 recovery/IP/5 menit
     "account_recovery": (5, 300),  # max 5 OTP requests/verifications/IP/5 menit
+    "cbt_verify": (10, 60),  # max 10 CBT PIN verification attempts/IP/menit
 }
 
 
