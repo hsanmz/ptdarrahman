@@ -94,13 +94,22 @@ fi
 
 # ── 3. Konfigurasi Environment IP:PORT ─────────────────────────
 log_info "3/6. Menyiapkan konfigurasi IP & kredensial..."
-PUBLIC_IP="${PUBLIC_IP:-103.55.37.77}"
-MYSQL_ROOT_PASS="${MYSQL_ROOT_PASSWORD:-ptdarrahman_root_$(openssl rand -hex 4)}"
-MYSQL_USER_PASS="${MYSQL_PASSWORD:-ptdarrahman_pass_$(openssl rand -hex 4)}"
-JWT_SECRET_KEY=$(openssl rand -hex 32)
-CRON_SECRET_KEY=$(openssl rand -hex 16)
+if [ -f .env.ip ]; then
+  log_ok "File .env.ip sudah ada, menggunakan kredensial yang ada."
+  set -a
+  # shellcheck disable=SC1091
+  source .env.ip
+  set +a
+  MYSQL_ROOT_PASS="${MYSQL_ROOT_PASSWORD:-}"
+  MYSQL_USER_PASS="${MYSQL_PASSWORD:-}"
+else
+  PUBLIC_IP="${PUBLIC_IP:-103.55.37.77}"
+  MYSQL_ROOT_PASS="${MYSQL_ROOT_PASSWORD:-ptdarrahman_root_$(openssl rand -hex 4)}"
+  MYSQL_USER_PASS="${MYSQL_PASSWORD:-ptdarrahman_pass_$(openssl rand -hex 4)}"
+  JWT_SECRET_KEY=$(openssl rand -hex 32)
+  CRON_SECRET_KEY=$(openssl rand -hex 16)
 
-cat > .env.ip <<EOF
+  cat > .env.ip <<EOF
 PUBLIC_IP=${PUBLIC_IP}
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASS}
 MYSQL_DATABASE=ptdarrahman
@@ -114,7 +123,8 @@ MIDTRANS_SERVER_KEY=
 MIDTRANS_CLIENT_KEY=
 MIDTRANS_IS_PRODUCTION=false
 EOF
-log_ok "File .env.ip berhasil dibuat."
+  log_ok "File .env.ip berhasil dibuat."
+fi
 
 # ── 4. Build & Jalankan Docker Stack ──────────────────────────
 log_info "4/6. Membangun dan menjalankan stack aplikasi (proses ini butuh 3-5 menit)..."

@@ -36,13 +36,13 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "127.0.0.1:3306:3306"
-    mem_limit: 384m
+    mem_limit: 512m
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD:-ptdarrahman_root_pass} || exit 1"]
+      test: ["CMD-SHELL", "mysqladmin -h 127.0.0.1 ping --silent || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 6
-      start_period: 30s
+      retries: 12
+      start_period: 90s
 
   # ── 2. phpMyAdmin (Web GUI Database) ───────────────────────────────────────
   phpmyadmin:
