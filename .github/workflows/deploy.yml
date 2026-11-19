@@ -22,9 +22,16 @@ jobs:
           script_stop: true
           script: |
             echo "=== [CI/CD] 1. Mengambil pembaruan kode terbaru dari Git ==="
-            TARGET_DIR="$HOME/project-ppdb"
-            if [ ! -d "$TARGET_DIR" ]; then
-              TARGET_DIR="/root/project-ppdb"
+            TARGET_DIR=""
+            for dir in "$HOME/project-ppdb" "/root/project-ppdb" "$HOME/ptdarrahman" "/root/ptdarrahman"; do
+              if [ -d "$dir" ]; then
+                TARGET_DIR="$dir"
+                break
+              fi
+            done
+            if [ -z "$TARGET_DIR" ]; then
+              echo "Error: Direktori repositori tidak ditemukan di server!"
+              exit 1
             fi
             cd "$TARGET_DIR"
 
