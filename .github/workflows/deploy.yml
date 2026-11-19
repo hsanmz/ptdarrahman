@@ -1,0 +1,42 @@
+name: CI/CD Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to IDCloudHost VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and Deploy to Server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST || '103.55.37.77' }}
+          username: ${{ secrets.VPS_USERNAME || 'root' }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          script_stop: true
+          script: |
+            echo "=== [CI/CD] 1. Mengambil pembaruan kode terbaru dari Git ==="
+            TARGET_DIR="$HOME/project-ppdb"
+            if [ ! -d "$TARGET_DIR" ]; then
+              TARGET_DIR="/root/project-ppdb"
+            fi
+            cd "$TARGET_DIR"
+
+            git pull origin main
+
+            echo "=== [CI/CD] 2. Re-build dan perbarui container yang berubah ==="
+            if [ -f .env.ip ]; then
+              docker compose --env-file .env.ip -f docker-compose.ip.yml up -d --build
+              docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade head
+            elif [ -f .env.prod ]; then
+              docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
+              docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T api alembic upgrade head
+            fi
+
+            echo "=== [CI/CD] 3. Deploy Berhasil! ==="
