@@ -108,7 +108,7 @@ def _upsert_template(event_key: str, label: str, body: str) -> None:
                 "CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
             ),
             {
-                "id": f"notiftmpl-0054-{event_key}",
+                "id": f"nt-54-{event_key}"[:36],
                 "event_key": event_key,
                 "label": label,
                 "body": body,
