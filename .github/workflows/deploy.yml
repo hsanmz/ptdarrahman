@@ -40,10 +40,10 @@ jobs:
             echo "=== [CI/CD] 2. Re-build dan perbarui container yang berubah ==="
             if [ -f .env.ip ]; then
               docker compose --env-file .env.ip -f docker-compose.ip.yml up -d --build
-              docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade head
+              docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade heads
             elif [ -f .env.prod ]; then
               docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
-              docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T api alembic upgrade head
+              docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T api alembic upgrade heads
             fi
 
             echo "=== [CI/CD] 3. Deploy Berhasil! ==="

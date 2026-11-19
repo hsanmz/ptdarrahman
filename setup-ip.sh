@@ -145,7 +145,7 @@ for i in {1..60}; do
 done
 
 log_info "Menjalankan migrasi database (Alembic)..."
-docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade head || log_warn "Alembic upgrade selesai atau dilewati."
+docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade heads || log_warn "Alembic upgrade selesai atau dilewati."
 
 log_info "Menjalankan database seeder awal (Akun Admin, Rubrik, Template)..."
 docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api python -m scripts.seed || log_warn "Seeder selesai."
