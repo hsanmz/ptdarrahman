@@ -91,7 +91,7 @@ def upgrade() -> None:
                 "CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
             ),
             {
-                "id": "notiftmpl-1020-stage2-installment-success",
+                "id": "notif-stage2-installment-success",
                 "ek": "stage2_installment_success",
                 "lb": "Pembayaran Cicilan Tahap 2 Berhasil",
                 "ch": "whatsapp",
@@ -108,7 +108,7 @@ def upgrade() -> None:
                 "VALUES (:id, :ek, :lb, :ch, :es, :bd, 1, NOW(), NOW())"
             ),
             {
-                "id": "notiftmpl-1020-stage2-installment-success",
+                "id": "notif-stage2-installment-success",
                 "ek": "stage2_installment_success",
                 "lb": "Pembayaran Cicilan Tahap 2 Berhasil",
                 "ch": "whatsapp",

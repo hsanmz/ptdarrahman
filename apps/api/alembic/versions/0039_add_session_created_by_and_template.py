@@ -60,7 +60,7 @@ def upgrade() -> None:
                 ":body, :is_active, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
             ),
             {
-                "id": "notiftmpl-1020-officer-session-booked",
+                "id": "notif-officer-session-booked",
                 "event_key": "officer_session_booked",
                 "label": "Pemberitahuan Sesi Diambil Calon Santri (Evaluator/Admin)",
                 "channel": "whatsapp",

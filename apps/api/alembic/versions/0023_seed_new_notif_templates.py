@@ -52,7 +52,7 @@ NEW_TEMPLATES = [
         "📢 *Pendaftaran Akun Berhasil!*\n\nAssalamu'alaikum / Halo *{nama_peserta}*,\nTerima kasih telah mendaftar di *{nama_sekolah}*. Akun PPDB Anda telah berhasil dibuat.\n\nBerikut adalah detail akses Anda:\n👤 Username: *{username}*\n🔑 Password: *{password}*\n🌐 Link Login: *{link_login}*\n\n⚠️ *Penting:*\nLangkah Anda selanjutnya adalah melakukan *Pembayaran Biaya Formulir*. Harap segera login ke sistem untuk melihat tagihan Anda. Batas akhir pembayaran formulir adalah sampai gelombang pendaftaran ditutup pada *{tanggal_tutup_gelombang}*.",
     ),
     (
-        "notiftmpl-1002-payment-formulir-success",
+        "notif-1002-payment-formulir-succ",
         "payment_success_formulir",
         "Pembayaran Formulir Berhasil",
         "whatsapp",
@@ -68,7 +68,7 @@ NEW_TEMPLATES = [
         "❌ *Masa Pembayaran Formulir Telah Berakhir*\n\nHalo *{nama_peserta}*,\nMohon maaf, masa pembayaran formulir untuk Gelombang *{nama_gelombang}* telah resmi ditutup dan tagihan Anda otomatis dibatalkan.\n\nAnda boleh mendaftar lagi pada gelombang berikutnya jika tersedia, tetapi tidak wajib. Silakan cek informasi pendaftaran di *{link_aplikasi}*. Terima kasih.",
     ),
     (
-        "notiftmpl-1004-payment-reminder-monday",
+        "notif-1004-payment-rem-monday",
         "payment_reminder_monday",
         "Pengingat Bayar Formulir (Senin)",
         "whatsapp",
@@ -119,7 +119,7 @@ NEW_TEMPLATES = [
         "📅 *Jadwal Ujian Terkonfirmasi*\n\nHalo *{nama_peserta}*,\nJadwal untuk *{nama_ujian}* Anda telah berhasil diatur.\n\n📆 Tanggal: *{tanggal}*\n⏰ Waktu: *{jam_mulai} - {jam_selesai}*\n📍 Lokasi/Link: *{lokasi_atau_link}*\n\nHarap hadir/bergabung 15 menit sebelum waktu yang ditentukan. Semoga sukses!",
     ),
     (
-        "notiftmpl-1010-tahfidz-score-recorded",
+        "notif-1010-tahfidz-score-rec",
         "tahfidz_score_recorded",
         "Nilai Tahfidz Direkam",
         "whatsapp",
