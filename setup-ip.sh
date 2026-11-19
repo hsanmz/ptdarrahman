@@ -132,7 +132,8 @@ fi
 
 # ── 4. Build & Jalankan Docker Stack ──────────────────────────
 log_info "4/6. Membangun dan menjalankan stack aplikasi (proses ini butuh 3-5 menit)..."
-docker compose --env-file .env.ip -f docker-compose.ip.yml up -d --build
+docker compose --env-file .env.ip -f docker-compose.ip.yml down 2>/dev/null || true
+docker compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
 
 # ── 5. Tunggu Database Siap & Jalankan Migrasi ────────────────
 log_info "5/6. Menunggu container MySQL & API sehat..."
