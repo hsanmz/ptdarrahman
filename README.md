@@ -585,3 +585,4 @@ pnpm dev
 <div align="center">
   <i>Dikembangkan dengan ❤️ untuk generasi Qur'ani masa depan.</i>
 </div>
+<!-- CI trigger: verify Cloudflare Pages removal -->
