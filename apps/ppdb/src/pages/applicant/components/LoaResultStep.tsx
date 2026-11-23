@@ -222,7 +222,7 @@ export default function LoaResultStep({ applicant, selectionResult, loa }: LoaRe
         </div>
         <h3 className="text-lg sm:text-xl font-bold text-red-800 mb-2 font-heading">Mohon Maaf, Anda Belum Diterima</h3>
         <p className="text-red-700 text-sm max-w-md mx-auto leading-relaxed">
-          Terima kasih telah berpartisipasi dalam proses seleksi PPDB Pesantren Tahfidz Qur'an dan Digital Arrahman. Tetap semangat dalam menuntut ilmu di mana pun Anda berada.
+          Terima kasih telah berpartisipasi dalam proses seleksi PPDB Pesantren Tahfidz Qur'an dan Digital Ar-Rahman. Tetap semangat dalam menuntut ilmu di mana pun Anda berada.
         </p>
       </div>
     )
@@ -299,7 +299,7 @@ export default function LoaResultStep({ applicant, selectionResult, loa }: LoaRe
                 Selamat! Anda Dinyatakan LULUS Seleksi Santri Baru
               </h3>
               <p className="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed max-w-2xl">
-                Alhamdulillah, ananda <strong>{applicant?.full_name || 'Calon Santri'}</strong> telah menyelesaikan seluruh tahapan seleksi PPDB Pesantren Tahfidz Qur'an dan Digital Arrahman dan memenuhi kriteria kelulusan.
+                Alhamdulillah, ananda <strong>{applicant?.full_name || 'Calon Santri'}</strong> telah menyelesaikan seluruh tahapan seleksi PPDB Pesantren Tahfidz Qur'an dan Digital Ar-Rahman dan memenuhi kriteria kelulusan.
               </p>
             </div>
           </div>

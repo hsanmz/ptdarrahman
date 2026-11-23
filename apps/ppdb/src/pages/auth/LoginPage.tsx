@@ -155,7 +155,7 @@ export default function LoginPage() {
         </div>
 
         <p className="relative z-10 mt-6 hidden text-[11px] text-white/45 lg:block">
-          Pesantren Tahfidz Qur'an &amp; Digital Arrahman · Sejak 2021 · Bekasi
+          Pesantren Tahfidz Qur'an &amp; Digital Ar-Rahman · Sejak 2021 · Bekasi
         </p>
       </aside>
 

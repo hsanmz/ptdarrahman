@@ -99,9 +99,10 @@ log_ok "User MySQL sudah diselaraskan. phpMyAdmin dan API siap terkoneksi."
 log_info "3/4. Menjalankan migrasi database Alembic..."
 docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade heads
 
-# Jalankan seeder akun
-log_info "4/4. Menjalankan database seeder (membuat user admin jika belum ada)..."
-docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api python -m scripts.seed
+# Jalankan seeder akun & konten resmi
+log_info "4/4. Menjalankan database seeder (akun admin & konten resmi Company Profile)..."
+docker cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
+docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T -w /app api python -m scripts.seed
 
 echo
 echo -e "${COLOR_GREEN}============================================================${COLOR_RESET}"
@@ -110,6 +111,9 @@ echo -e "${COLOR_GREEN}=========================================================
 echo
 echo -e "Daftar User di Database saat ini:"
 docker exec -i ptd-mysql mysql -uroot -p"$MYSQL_ROOT_PASS" -e "SELECT id, username, user_type, is_active FROM ${MYSQL_DB}.users;" 2>/dev/null || true
+echo
+echo -e "Status Konten Company Profile di Database saat ini:"
+docker exec -i ptd-mysql mysql -uroot -p"$MYSQL_ROOT_PASS" -e "SELECT 'news_articles' AS tabel, COUNT(*) AS total FROM ${MYSQL_DB}.news_articles UNION ALL SELECT 'programs', COUNT(*) FROM ${MYSQL_DB}.programs UNION ALL SELECT 'facilities', COUNT(*) FROM ${MYSQL_DB}.facilities UNION ALL SELECT 'leadership_members', COUNT(*) FROM ${MYSQL_DB}.leadership_members UNION ALL SELECT 'gallery_items', COUNT(*) FROM ${MYSQL_DB}.gallery_items UNION ALL SELECT 'testimonials', COUNT(*) FROM ${MYSQL_DB}.testimonials UNION ALL SELECT 'faq_items', COUNT(*) FROM ${MYSQL_DB}.faq_items;" 2>/dev/null || true
 echo
 echo -e "${COLOR_CYAN}1. phpMyAdmin (http://${PUBLIC_IP}:8085):${COLOR_RESET}"
 echo -e "   Server   : mysql"

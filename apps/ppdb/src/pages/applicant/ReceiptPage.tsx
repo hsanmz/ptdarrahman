@@ -71,7 +71,7 @@ export default function ApplicantReceiptPage() {
       try {
         await navigator.share({
           title: 'Kuitansi Pembayaran Formulir PPDB PTDARRAHMAN',
-          text: `Kuitansi Pembayaran Formulir PPDB Pesantren Tahfidz Qur'an dan Digital Arrahman atas nama ${applicant?.full_name || 'Calon Santri'}:\n${shareUrl}`,
+          text: `Kuitansi Pembayaran Formulir PPDB Pesantren Tahfidz Qur'an dan Digital Ar-Rahman atas nama ${applicant?.full_name || 'Calon Santri'}:\n${shareUrl}`,
           url: shareUrl,
         })
       } catch {
@@ -100,7 +100,7 @@ export default function ApplicantReceiptPage() {
     <div className="mx-auto max-w-4xl w-full space-y-6">
       <ApplicantPageHeader
         title="Kuitansi Pembayaran Formulir"
-        description="Bukti pembayaran sah pendaftaran calon santri baru Pesantren Tahfidz Qur'an dan Digital Arrahman."
+        description="Bukti pembayaran sah pendaftaran calon santri baru Pesantren Tahfidz Qur'an dan Digital Ar-Rahman."
         docKey="applicant-payment"
         action={
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">

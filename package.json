@@ -5,7 +5,9 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "seed": "cd apps/api && python3 -m scripts.seed",
+    "seed:cp": "cd apps/api && python3 -m scripts.seed_companyprofile"
   },
   "devDependencies": {
     "turbo": "^2.1.2",

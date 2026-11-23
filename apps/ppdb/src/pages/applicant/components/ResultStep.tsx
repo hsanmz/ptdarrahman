@@ -168,7 +168,7 @@ export default function ResultStep({ applicant, selectionResult, loa }: ResultSt
           </div>
           <h3 className="text-lg sm:text-xl font-bold text-red-800 mb-2">Mohon Maaf, Anda Dinyatakan Tidak Lulus</h3>
           <p className="text-red-700 text-sm max-w-md mx-auto leading-relaxed">
-            Terima kasih telah berpartisipasi dalam proses seleksi PPDB Pesantren Tahfidz Qur'an dan Digital Arrahman.
+            Terima kasih telah berpartisipasi dalam proses seleksi PPDB Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.
           </p>
         </div>
       ) : (

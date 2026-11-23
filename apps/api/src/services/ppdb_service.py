@@ -1918,9 +1918,9 @@ class PPDBService:
         already_signed = bool(app.is_loa_signed)
         now = datetime.now(WIB)
         if not app.registration_number:
-            c_date = (app.created_at or now).strftime("%d%m%y")
-            clean_id = "".join(c for c in app.id if c.isalnum())[-5:].upper().zfill(5)
-            app.registration_number = f"REG-{c_date}{clean_id}"
+            c_date = (app.created_at or now).strftime("%Y%m%d")
+            clean_id = "".join(c for c in app.id if c.isalnum())[-4:].upper().zfill(4)
+            app.registration_number = f"REG-{c_date}-{clean_id}"
 
         app.is_loa_signed = True
         app.loa_signed_at = now

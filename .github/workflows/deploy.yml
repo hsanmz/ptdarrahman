@@ -42,11 +42,13 @@ jobs:
             if [ -f .env.ip ]; then
               docker compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
               docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade heads
-              docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api python -m scripts.seed
+              docker cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
+              docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T -w /app api python -m scripts.seed
             elif [ -f .env.prod ]; then
               docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build --force-recreate
               docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T api alembic upgrade heads
-              docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T api python -m scripts.seed
+              docker cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
+              docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T -w /app api python -m scripts.seed
             fi
 
             echo "=== [CI/CD] 3. Membersihkan cache Docker agar storage 20GB tetap lega ==="

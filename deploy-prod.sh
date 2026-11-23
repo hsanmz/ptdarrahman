@@ -183,10 +183,15 @@ for i in $(seq 1 60); do
 done
 docker compose --env-file .env.prod -f docker-compose.prod.yml ps
 
-# ── 6. Migrasi database ─────────────────────────────────────────────────────
+# ── 6. Migrasi database & seeding ───────────────────────────────────────────
 info "Jalankan Alembic migration..."
 docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T api \
-  alembic upgrade head || warn "Migration gagal — cek koneksi MySQL di apps/api/.env"
+  alembic upgrade heads || warn "Migration gagal — cek koneksi MySQL di apps/api/.env"
+
+info "Jalankan database seeder awal (Akun Admin, Rubrik, Template, Company Profile)..."
+docker cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
+docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T -w /app api \
+  python -m scripts.seed || warn "Seeder selesai atau dilewati."
 
 # ── 7. Sertifikat TLS (opsional) ────────────────────────────────────────────
 if [ "$USE_TLS" = "y" ]; then

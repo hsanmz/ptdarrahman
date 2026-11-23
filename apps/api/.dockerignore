@@ -27,7 +27,6 @@ uploads
 
 # ── Test & dev scripts ────────────────────────────────────────────────────────
 tests
-scripts
 *.md
 README*
 

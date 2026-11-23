@@ -217,7 +217,7 @@ export default function OfficialReceiptCard({ receipt, showWatermark = true }: O
 
         {/* Footer Catatan Kuitansi */}
         <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-2 text-[11px] text-slate-400 text-center sm:text-left">
-          <p>© {new Date().getFullYear()} PPDB Pesantren Tahfidz Qur&apos;an dan Digital Arrahman. Seluruh hak cipta dilindungi.</p>
+          <p>© {new Date().getFullYear()} PPDB Pesantren Tahfidz Qur&apos;an dan Digital Ar-Rahman. Seluruh hak cipta dilindungi.</p>
           <p className="font-mono text-[10px] sm:text-[11px]">Dokumen Digital Sah Tanpa Tanda Tangan Basah</p>
         </div>
       </CardContent>

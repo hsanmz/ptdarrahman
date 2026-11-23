@@ -7,7 +7,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint --cache",
-        "test": "vitest run --passWithNoTests"
+        "test": "vitest run --passWithNoTests",
+        "seed": "cd ../api && python3 -m scripts.seed_companyprofile"
     },
     "dependencies": {
         "@gsap/react": "^2.1.2",

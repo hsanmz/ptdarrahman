@@ -163,8 +163,9 @@ done
 log_info "Menjalankan migrasi database (Alembic)..."
 docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade heads || log_warn "Alembic upgrade selesai atau dilewati."
 
-log_info "Menjalankan database seeder awal (Akun Admin, Rubrik, Template)..."
-docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api python -m scripts.seed || log_warn "Seeder selesai."
+log_info "Menjalankan database seeder awal (Akun Admin, Rubrik, Template, Company Profile)..."
+docker cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
+docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T -w /app api python -m scripts.seed || log_warn "Seeder selesai."
 
 # ── 6. Pembersihan Cache Docker (Hemat Disk 20GB) ─────────────
 log_info "Membersihkan cache build & dangling image agar disk hemat..."

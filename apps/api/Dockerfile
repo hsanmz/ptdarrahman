@@ -10,6 +10,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . .
 
+ENV PYTHONPATH=/app
+
 EXPOSE 8000
 
 # Run migrations before starting the server

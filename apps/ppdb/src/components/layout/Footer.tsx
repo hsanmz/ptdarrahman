@@ -110,7 +110,7 @@ export default function Footer() {
                   PTDARRAHMAN
                 </div>
                 <div className="text-[10px] tracking-wider text-slate-500 sm:text-xs">
-                  Pesantren Tahfidz Qur'an dan Digital Arrahman
+                  Pesantren Tahfidz Qur'an dan Digital Ar-Rahman
                 </div>
               </div>
             </div>

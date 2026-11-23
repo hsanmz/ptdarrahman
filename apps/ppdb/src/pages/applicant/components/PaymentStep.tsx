@@ -56,7 +56,7 @@ export default function PaymentStep({ transaction, applicant }: PaymentStepProps
   const payMethod = (transaction?.method || 'TIDAK DIKETAHUI').toUpperCase()
   const statusLabel = isPaid ? 'LUNAS' : (transaction?.status || 'BELUM BAYAR').toUpperCase()
 
-  const shareText = `*KUITANSI PEMBAYARAN FORMULIR PPDB PTDARRAHMAN*\n\nNo. Kuitansi: ${receiptNo}\nNama: ${applicantName}\nGelombang: ${waveName}\nNominal: ${amountStr}\nMetode: ${payMethod}\nTanggal: ${payDateStr}\nStatus: *${statusLabel}*\n\nBukti sah pendaftaran PPDB Pesantren Tahfidz Qur'an dan Digital Arrahman.`
+  const shareText = `*KUITANSI PEMBAYARAN FORMULIR PPDB PTDARRAHMAN*\n\nNo. Kuitansi: ${receiptNo}\nNama: ${applicantName}\nGelombang: ${waveName}\nNominal: ${amountStr}\nMetode: ${payMethod}\nTanggal: ${payDateStr}\nStatus: *${statusLabel}*\n\nBukti sah pendaftaran PPDB Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.`
 
   const handleCopy = async () => {
     if (!hasPayment) {
@@ -111,7 +111,7 @@ export default function PaymentStep({ transaction, applicant }: PaymentStepProps
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-emerald-300" />
               <span className="text-[11px] font-bold tracking-wider text-emerald-200 uppercase">
-                Pesantren Tahfidz Qur&apos;an dan Digital Arrahman
+                Pesantren Tahfidz Qur&apos;an dan Digital Ar-Rahman
               </span>
             </div>
             <h3 className="font-heading text-lg sm:text-xl font-bold mt-1 text-white">
