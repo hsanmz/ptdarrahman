@@ -152,7 +152,18 @@ export interface TableColumn {
 
 export const TABLE_COLS: Record<string, TableColumn[]> = {
   hero: [
-    { label: 'Gambar Banner', accessor: (i) => i.image ? 'Banner gambar' : 'Tanpa gambar', variant: 'title' },
+    {
+      label: 'Slide / Judul Banner',
+      accessor: (i) =>
+        i.content?.title
+          ? String(i.content.title).replace(/\n/g, ' ')
+          : i.content?.label
+            ? String(i.content.label)
+            : i.image
+              ? 'Banner Gambar'
+              : 'Tanpa Gambar',
+      variant: 'title',
+    },
     { label: 'Ukuran Tampilan', accessor: (i) => i.content?.height_mode === 'full' ? 'Opsi A — Full Screen' : 'Opsi B — Peek Effect', variant: 'badge' },
     { label: 'Urutan', accessor: (i) => (i.order != null ? String(i.order) : ''), variant: 'badge' },
   ],
@@ -402,7 +413,14 @@ export const FORM_FIELDS: Record<string, FormField[]> = {
 }
 
 export const CONTENT_FIELDS: Record<string, { name: string; label: string; type: 'text' | 'textarea' | 'list' | 'number' | 'parent' | 'select'; options?: string[] }[]> = {
-  hero: [{ name: 'height_mode', label: 'Ukuran Tampilan Banner', type: 'select', options: ['full', 'peek'] }],
+  hero: [
+    { name: 'height_mode', label: 'Ukuran Tampilan Banner', type: 'select', options: ['full', 'peek'] },
+    { name: 'label', label: 'Label / Badge (Opsional)', type: 'text' },
+    { name: 'title', label: 'Judul Slide (Opsional)', type: 'textarea' },
+    { name: 'subtitle', label: 'Deskripsi / Subtitle (Opsional)', type: 'textarea' },
+    { name: 'button_label', label: 'Teks Tombol CTA (Opsional)', type: 'text' },
+    { name: 'button_href', label: 'Tautan Tombol CTA (Opsional)', type: 'text' },
+  ],
   news: [
     { name: 'title', label: 'Judul Berita', type: 'text' },
     { name: 'excerpt', label: 'Ringkasan', type: 'textarea' },
