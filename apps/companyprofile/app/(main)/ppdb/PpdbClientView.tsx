@@ -40,6 +40,7 @@ import ShapeDividerDiagonal from '@/app/components/ui/ShapeDividerDiagonal'
 import LiveWaveStatusBar from '@/app/components/ppdb/LiveWaveStatusBar'
 import FeeTransparencySection from '@/app/components/ppdb/FeeTransparencySection'
 import PpdbFaqSection from '@/app/components/ppdb/PpdbFaqSection'
+import { resolvePortalUrl } from '@repo/ui'
 
 const ICON_MAP: Record<PpdbIconName, LucideIcon> = {
   Award,
@@ -122,9 +123,10 @@ interface PpdbClientViewProps {
 export default function PpdbClientView({
   wave,
   settings,
-  portalUrl = 'http://localhost:5174',
+  portalUrl: propPortalUrl,
   ppdbRows = [],
 }: PpdbClientViewProps) {
+  const portalUrl = propPortalUrl || resolvePortalUrl(process.env.NEXT_PUBLIC_PORTAL_URL)
   const ppdb = buildSchedule(wave)
 
   const content = useMemo(() => {

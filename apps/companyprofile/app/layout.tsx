@@ -36,7 +36,6 @@ const inter = Inter({
 const dmSans = DM_Sans({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
   preload: true,
   fallback: ["system-ui", "sans-serif"],

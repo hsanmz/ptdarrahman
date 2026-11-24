@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchPublicFees, FALLBACK_FEES_SUMMARY, type FeesSummary } from '@/services/feeService'
-import { BIAYA_PENDIDIKAN, TOTAL_ESTIMASI_BIAYA } from '@/data/admissionData'
+import { TOTAL_ESTIMASI_BIAYA } from '@/data/admissionData'
 import { Button } from '@/components/ui'
 import {
   CheckCircle2, QrCode, CreditCard,
   GraduationCap, UserPlus, LogIn,
-  Coins, Tag, Info, Receipt
+  Coins, Tag, Info
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -17,6 +17,7 @@ export default function BiayaBeasiswaPage() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     fetchPublicFees()
       .then((data) => {
         if (data && data.items && data.items.length > 0) {
@@ -24,6 +25,7 @@ export default function BiayaBeasiswaPage() {
         }
       })
       .catch((err) => console.error('Failed to load public fees', err))
+      .finally(() => setLoading(false))
   }, [])
 
   const formatRupiah = (val: number) => {

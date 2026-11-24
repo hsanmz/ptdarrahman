@@ -21,7 +21,7 @@ export interface ProgramHarianItem {
   number: number
   title: string
   timeRange: string
-  timeCategory: 'Dini Hari' | 'Pagi' | 'Siang' | 'Sore' | 'Malam'
+  timeCategory: 'Dini Hari' | 'Subuh' | 'Pagi' | 'Siang' | 'Sore' | 'Malam'
   desc: string
   tag: string
   iconName?: string

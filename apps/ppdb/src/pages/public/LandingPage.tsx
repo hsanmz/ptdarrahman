@@ -3,19 +3,17 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui'
 import { apiFetch } from '@/api/client'
 import {
-  ArrowRight, Waves, BookOpen, DollarSign, FileCheck, CalendarCheck,
-  HelpCircle, ShieldCheck, Cpu, Award, Sparkles, LogIn, UserPlus,
+  ArrowRight, Waves, DollarSign,
+  ShieldCheck, Cpu, Award, Sparkles, LogIn, UserPlus,
   Users, ChevronRight, CheckCircle2, Laptop, Clock, Shield, ChevronDown,
-  Trophy, Compass, Star, Tag, Activity
+  Trophy, Compass, Star
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ArabesquePattern } from '@/components/landing/HeroDecorations'
 import {
   PRESTASI_SANTRI,
-  PROGRAM_HARIAN,
   EKSKUL_OUTING,
   BIAYA_PENDIDIKAN,
-  TOTAL_ESTIMASI_BIAYA,
 } from '@/data/admissionData'
 
 interface ActiveWaveData {

@@ -15,7 +15,7 @@ import { Button } from '@/components/ui'
 import {
   BookOpen, Building2, CheckCircle2, Award, Sparkles, Clock, Layers,
   Laptop, Moon, Home, Trophy, UserPlus, LogIn, Sunrise, Sun, Sunset,
-  Compass, Star, ShieldCheck, HeartPulse
+  Compass, Star
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 

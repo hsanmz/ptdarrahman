@@ -179,7 +179,7 @@ export interface Testimonial {
   id: string
   name: string
   child: string
-  image: string
+  image?: string | null
   order: number
   content: TestimonialContent | null
 }
@@ -188,6 +188,12 @@ export interface Testimonial {
 
 export interface HeroSlideContent {
   height_mode?: 'full' | 'peek' | string
+  label?: string
+  title?: string
+  subtitle?: string
+  button_label?: string
+  button_href?: string
+  [key: string]: unknown
 }
 
 export interface HomeCtaContent {

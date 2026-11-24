@@ -4,7 +4,6 @@ import PpdbClientView from './PpdbClientView'
 import { fetchActivePpdbWave } from '@/app/lib/ppdb'
 import { getPublicSettings } from '@/app/lib/server-settings'
 import { getPpdbContentRows } from '@/app/lib/api'
-import { resolvePortalUrl } from '@repo/ui'
 
 export const metadata: Metadata = {
   title: 'Penerimaan Santri Baru (PPDB) | PTDARRAHMAN',
@@ -41,7 +40,7 @@ export default async function PPDBPage() {
     getPpdbContentRows().catch(() => []),
   ])
 
-  const portalUrl = resolvePortalUrl(process.env.NEXT_PUBLIC_PORTAL_URL)
+  const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL?.replace(/\/+$/, '') || ''
 
   let siteUrl = process.env.NEXT_PUBLIC_SITE_URL ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, '') : ''
   if (!siteUrl) {

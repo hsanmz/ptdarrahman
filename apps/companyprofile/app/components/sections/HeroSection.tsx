@@ -153,7 +153,8 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
                   // Fallback jika image link gagal
                   const target = e.currentTarget
                   if (!target.src.includes('unsplash.com')) {
-                    target.src = FALLBACK_SLIDES[index % FALLBACK_SLIDES.length].image
+                    const fallbackImg = FALLBACK_SLIDES[index % FALLBACK_SLIDES.length]?.image
+                    if (fallbackImg) target.src = fallbackImg
                   }
                 }}
               />
