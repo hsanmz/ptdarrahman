@@ -15,7 +15,7 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST || '103.55.37.77' }}
-          username: ${{ secrets.VPS_USERNAME || 'root' }}
+          username: ${{ secrets.VPS_USERNAME || 'admin-ptd' }}
           key: ${{ secrets.VPS_SSH_KEY }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_SSH_PORT || 22 }}
@@ -40,21 +40,50 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            # Deteksi command docker (dengan atau tanpa sudo)
+            DOCKER_CMD="docker"
+            if ! docker ps >/dev/null 2>&1; then
+              if sudo -n docker ps >/dev/null 2>&1; then
+                DOCKER_CMD="sudo docker"
+              else
+                DOCKER_CMD="sudo docker"
+              fi
+            fi
+
             echo "=== [CI/CD] 2. Re-build dan perbarui container yang berubah ==="
             if [ -f .env.ip ]; then
-              docker compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
-              docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade heads
-              docker cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
-              docker compose --env-file .env.ip -f docker-compose.ip.yml exec -T -w /app api python -m scripts.seed
+              $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
+              
+              # Tunggu sampai container API berstatus Up
+              echo "Menunggu service API siap..."
+              for i in $(seq 1 30); do
+                if $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml ps api 2>/dev/null | grep -qE "Up|running"; then
+                  break
+                fi
+                sleep 2
+              done
+
+              $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml exec -T api alembic upgrade heads || true
+              $DOCKER_CMD cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
+              $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml exec -T -w /app api python -m scripts.seed || true
             elif [ -f .env.prod ]; then
-              docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build --force-recreate
-              docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T api alembic upgrade heads
-              docker cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
-              docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T -w /app api python -m scripts.seed
+              $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml up -d --build --force-recreate
+              
+              echo "Menunggu service API siap..."
+              for i in $(seq 1 30); do
+                if $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml ps api 2>/dev/null | grep -qE "Up|running"; then
+                  break
+                fi
+                sleep 2
+              done
+
+              $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml exec -T api alembic upgrade heads || true
+              $DOCKER_CMD cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
+              $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml exec -T -w /app api python -m scripts.seed || true
             fi
 
             echo "=== [CI/CD] 3. Membersihkan cache Docker agar storage 20GB tetap lega ==="
-            docker image prune -f >/dev/null 2>&1 || true
-            docker builder prune -f >/dev/null 2>&1 || true
+            $DOCKER_CMD image prune -f >/dev/null 2>&1 || true
+            $DOCKER_CMD builder prune -f >/dev/null 2>&1 || true
 
             echo "=== [CI/CD] 4. Deploy Berhasil! ==="
