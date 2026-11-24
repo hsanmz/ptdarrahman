@@ -5,7 +5,7 @@ import Link from 'next/link'
 import type { Program } from '@/app/lib/types'
 import type { ProgramMenuLink } from '@/app/lib/programs'
 import { API_BASE } from '@/app/lib/api'
-import { resolveImageSrc } from '@/app/lib/image-file'
+import { resolveImageSrc, FALLBACK_IMAGES, PROGRAM_FALLBACK_IMAGES } from '@/app/lib/image-file'
 import { Clock, Layers, Check, BookOpen, Cpu, Globe, Award, ArrowRight, ExternalLink } from 'lucide-react'
 import { resolvePortalUrl } from '@repo/ui'
 import PpdbWaveBanner from '@/app/components/ui/PpdbWaveBanner'
@@ -112,18 +112,25 @@ export default function ProgramDetailClient({ program, others = [], wave = null 
               )}
 
               {/* Banner Gambar Program */}
-              {program.image && (
-                <div className="relative aspect-[16/9] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-md bg-[var(--bg-secondary)]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={resolveImageSrc(program.image, API_BASE)}
-                    alt={info.title || ''}
-                    className="h-full w-full object-cover"
-                    loading="eager"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </div>
-              )}
+              {(() => {
+                const fallbackSrc = PROGRAM_FALLBACK_IMAGES[program.slug] || FALLBACK_IMAGES.program
+                const src = resolveImageSrc(program.image, API_BASE) || fallbackSrc
+                return (
+                  <div className="relative aspect-[16/9] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-md bg-[var(--bg-secondary)]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt={info.title || 'Program PTDARRAHMAN'}
+                      className="h-full w-full object-cover"
+                      loading="eager"
+                      onError={(e) => {
+                        if (e.currentTarget.src !== fallbackSrc) e.currentTarget.src = fallbackSrc
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  </div>
+                )
+              })()}
             </div>
 
             {/* Gambaran Program */}

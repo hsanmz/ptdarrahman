@@ -1,8 +1,8 @@
 'use client'
 
-import Image from 'next/image'
 import { useState } from 'react'
 import { cn } from '@/app/lib/utils'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 
 export interface AccordionItemData {
   id: string
@@ -57,18 +57,14 @@ export default function InteractiveImageAccordion({
                 isActive ? 'w-[240px] sm:w-[320px]' : 'w-[60px] sm:w-[70px]',
               )}
             >
-              {item.image ? (
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 640px) 240px, 320px"
-                  className="pointer-events-none select-none object-cover"
-                  draggable={false}
-                />
-              ) : (
-                <div className="absolute inset-0 bg-[var(--bg-secondary)]" />
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={resolveImageSrc(item.image) || FALLBACK_IMAGES.facility}
+                alt={item.title}
+                className="pointer-events-none select-none object-cover w-full h-full"
+                draggable={false}
+                onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.facility)}
+              />
               <div className="absolute inset-0 bg-black/40" />
 
               <span

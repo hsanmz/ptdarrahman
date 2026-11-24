@@ -13,6 +13,7 @@ import {
   Calendar,
 } from 'lucide-react'
 import type { GalleryItem } from '@/app/lib/types'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 import { galleryCategoryLabel } from '@/app/lib/gallery-categories'
 
 interface GalleryAlbumModalProps {
@@ -24,15 +25,20 @@ export default function GalleryAlbumModal({ album, onClose }: GalleryAlbumModalP
   // Seluruh foto dalam album: gabungan foto cover (bila ada) + foto-foto di content.images
   const albumImages = React.useMemo(() => {
     const list: string[] = []
-    if (album.image) list.push(album.image)
+    if (album.image) {
+      list.push(resolveImageSrc(album.image) || FALLBACK_IMAGES.gallery)
+    }
     if (Array.isArray(album.content?.images)) {
       for (const img of album.content.images) {
-        if (img && !list.includes(img)) {
-          list.push(img)
+        if (img) {
+          const resolved = resolveImageSrc(img) || FALLBACK_IMAGES.gallery
+          if (!list.includes(resolved)) {
+            list.push(resolved)
+          }
         }
       }
     }
-    return list
+    return list.length > 0 ? list : [FALLBACK_IMAGES.gallery]
   }, [album])
 
   const [activePhotoIndex, setActivePhotoIndex] = useState<number | null>(null)
@@ -159,12 +165,12 @@ export default function GalleryAlbumModal({ album, onClose }: GalleryAlbumModalP
                 className="group relative block w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-zinc-900 shadow-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 aria-label={`Buka foto ke-${idx + 1} dari album ${title}`}
               >
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={src}
                   alt={`${title} - Foto ${idx + 1}`}
-                  fill
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-108"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-108"
+                  onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.gallery)}
                 />
 
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -201,13 +207,12 @@ export default function GalleryAlbumModal({ album, onClose }: GalleryAlbumModalP
             >
               {/* Gambar Full Preview */}
               <div className="absolute inset-0">
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={albumImages[activePhotoIndex]}
                   alt={`${title} - Foto ${activePhotoIndex + 1}`}
-                  fill
-                  className="object-contain"
-                  sizes="100vw"
-                  priority
+                  className="w-full h-full object-contain"
+                  onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.gallery)}
                 />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
               </div>
@@ -270,12 +275,12 @@ export default function GalleryAlbumModal({ album, onClose }: GalleryAlbumModalP
                           : 'border-transparent opacity-60 hover:opacity-100'
                       }`}
                     >
-                      <Image
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={src}
                         alt={`Thumb ${i + 1}`}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
+                        className="w-full h-full object-cover"
+                        onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.gallery)}
                       />
                     </button>
                   ))}

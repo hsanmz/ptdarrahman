@@ -46,18 +46,38 @@ export default function AboutPreview({ settings = {}, content = null }: { settin
           <div className="grid grid-cols-2 gap-2 sm:gap-4">
             <div className="space-y-2 sm:space-y-4">
               <div className="img-overlay aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
-                <img src={resolveImageSrc(images[0], API_BASE)} alt="Boarding School" className="h-full w-full object-cover" />
+                <img
+                  src={resolveImageSrc(images[0], API_BASE) || defaultImages[0]}
+                  alt="Boarding School"
+                  className="h-full w-full object-cover"
+                  onError={(e) => { e.currentTarget.src = defaultImages[0] }}
+                />
               </div>
               <div className="img-overlay aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
-                <img src={resolveImageSrc(images[1], API_BASE)} alt="Students" className="h-full w-full object-cover" />
+                <img
+                  src={resolveImageSrc(images[1], API_BASE) || defaultImages[1]}
+                  alt="Students"
+                  className="h-full w-full object-cover"
+                  onError={(e) => { e.currentTarget.src = defaultImages[1] }}
+                />
               </div>
             </div>
             <div className="space-y-2 sm:space-y-4 pt-4 sm:pt-8">
               <div className="img-overlay aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
-                <img src={resolveImageSrc(images[2], API_BASE)} alt="Technology Lab" className="h-full w-full object-cover" />
+                <img
+                  src={resolveImageSrc(images[2], API_BASE) || defaultImages[2]}
+                  alt="Technology Lab"
+                  className="h-full w-full object-cover"
+                  onError={(e) => { e.currentTarget.src = defaultImages[2] }}
+                />
               </div>
               <div className="img-overlay aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
-                <img src={resolveImageSrc(images[3], API_BASE)} alt="Sports" className="h-full w-full object-cover" />
+                <img
+                  src={resolveImageSrc(images[3], API_BASE) || defaultImages[3]}
+                  alt="Sports"
+                  className="h-full w-full object-cover"
+                  onError={(e) => { e.currentTarget.src = defaultImages[3] }}
+                />
               </div>
             </div>
           </div>

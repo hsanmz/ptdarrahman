@@ -132,7 +132,10 @@ export function mergeNewsArticles(articles: NewsArticle[]): NewsArticle[] {
     const previous = merged.get(key)
 
     const rawImg = article.image || previous?.image || ''
-    const cleanImg = resolveImageSrc(rawImg, '')
+    const fallbackArticleImg =
+      FALLBACK_NEWS.find((fn) => fn.slug === article.slug)?.image ||
+      'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop'
+    const cleanImg = resolveImageSrc(rawImg) || fallbackArticleImg
 
     if (!previous) {
       const artContent = { ...(article.content ?? {}) }

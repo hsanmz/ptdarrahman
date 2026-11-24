@@ -7,6 +7,7 @@ import { Quote, Star } from 'lucide-react'
 import ShapeDivider from '../ui/ShapeDivider'
 import Marquee from '../ui/Marquee'
 import type { Testimonial } from '@/app/lib/types'
+import { resolveImageSrc } from '@/app/lib/image-file'
 
 const DEFAULT_TESTIMONIALS: Testimonial[] = [
   {
@@ -78,20 +79,21 @@ function TestimonialCard({ t }: { t: Testimonial }) {
       </div>
 
       <div className="flex items-center gap-3 pt-4 border-t border-[var(--border)]/60">
-        <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-[var(--accent)]/30 flex-shrink-0 relative bg-[var(--bg-secondary)]">
+        <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-[var(--accent)]/30 flex-shrink-0 relative bg-[var(--bg-secondary)] flex items-center justify-center">
           {t.image ? (
-            <Image
-              src={t.image}
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={resolveImageSrc(t.image)}
               alt={t.name || 'Wali Santri'}
-              width={44}
-              height={44}
               className="object-cover w-full h-full"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+              }}
             />
-          ) : (
-            <div className="w-full h-full bg-[var(--accent)]/15 flex items-center justify-center text-sm font-bold text-[var(--accent)]">
-              {t.name?.charAt(0) || '?'}
-            </div>
-          )}
+          ) : null}
+          <div className="w-full h-full bg-[var(--accent)]/15 flex items-center justify-center text-sm font-bold text-[var(--accent)]">
+            {t.name?.charAt(0) || '?'}
+          </div>
         </div>
         <div className="overflow-hidden">
           <div className="font-[var(--font-heading)] font-bold text-sm text-[var(--text)] truncate">

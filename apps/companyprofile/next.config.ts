@@ -20,6 +20,7 @@ const cspImageSrc = [
   "data:",
   "blob:",
   "https:",
+  "http:",
   ...(apiOrigin ? [apiOrigin] : []),
   ...(apiOrigin.includes("localhost") ? [] : ["http://localhost:8000"]),
 ].join(" ");
@@ -44,6 +45,8 @@ const remotePatterns: {
   hostname: string;
   port?: string;
 }[] = [
+  { protocol: "https", hostname: "**" },
+  { protocol: "http", hostname: "**" },
   { protocol: "https", hostname: "res.cloudinary.com" },
   { protocol: "https", hostname: "img.youtube.com" },
   { protocol: "https", hostname: "ui-avatars.com" },
@@ -103,6 +106,18 @@ const nextConfig: NextConfig = {
         source: '/program/:slug',
         destination: '/programs/:slug',
         permanent: true,
+      },
+    ];
+  },
+  async rewrites() {
+    const targetApi =
+      process.env.INTERNAL_API_URL?.trim().replace(/\/+$/, '') ||
+      process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '') ||
+      'http://localhost:8000';
+    return [
+      {
+        source: '/uploads/:path*',
+        destination: `${targetApi}/uploads/:path*`,
       },
     ];
   },

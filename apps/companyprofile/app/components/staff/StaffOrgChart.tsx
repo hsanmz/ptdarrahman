@@ -3,6 +3,7 @@
 // Image component removed; using standard <img> element
 import type { Staff } from '@/app/lib/types'
 import { buildStaffTree, type StaffTreeNode } from '@/app/lib/staff-tree'
+import { resolveImageSrc } from '@/app/lib/image-file'
 
 export function StaffOrgChart({
   staff,
@@ -48,15 +49,21 @@ function TreeNode({
           selectedId === s.id ? 'border-[var(--accent)] shadow-lg' : 'border-[var(--border)]'
         }`}
       >
-        <span className="block w-16 h-16 rounded-full overflow-hidden border-2 border-[var(--accent)]/20 relative mb-3">
+        <span className="block w-16 h-16 rounded-full overflow-hidden border-2 border-[var(--accent)]/20 relative mb-3 bg-[var(--bg)] flex items-center justify-center">
           {s.image ? (
             /* eslint-disable-next-line @next/next/no-img-element */
-            <img src={s.image} alt={p.name || ''} className="object-cover w-full h-full" />
-          ) : (
-            <span className="flex w-full h-full items-center justify-center bg-[var(--bg)] text-[var(--accent)] font-bold">
-              {(p.name || '?').charAt(0).toUpperCase()}
-            </span>
-          )}
+            <img
+              src={resolveImageSrc(s.image)}
+              alt={p.name || ''}
+              className="object-cover w-full h-full"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+              }}
+            />
+          ) : null}
+          <span className="flex w-full h-full items-center justify-center bg-[var(--bg)] text-[var(--accent)] font-bold absolute inset-0 -z-10">
+            {(p.name || '?').charAt(0).toUpperCase()}
+          </span>
         </span>
         <span className="text-sm font-bold text-center leading-tight">{p.name}</span>
         <span className="text-[11px] text-[var(--accent)] font-medium text-center mt-0.5">{p.position}</span>

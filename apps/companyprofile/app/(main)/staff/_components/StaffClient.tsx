@@ -9,6 +9,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/app/components/ui/Dialog'
 import type { Staff } from '@/app/lib/types'
+import { resolveImageSrc } from '@/app/lib/image-file'
 
 const tabs = [
   { key: 'all', idn: 'Semua' },
@@ -67,14 +68,21 @@ export default function StaffClient({ staff }: { staff: Staff[] }) {
             <>
               <DialogHeader>
                 <div className="flex items-center gap-4">
-                  <span className="relative block w-16 h-16 rounded-full overflow-hidden border-2 border-[var(--accent)]/20 shrink-0">
+                  <span className="relative block w-16 h-16 rounded-full overflow-hidden border-2 border-[var(--accent)]/20 shrink-0 bg-[var(--bg-secondary)] flex items-center justify-center">
                     {selected.image ? (
-                      <Image src={selected.image} alt={selected.content?.name || ''} fill className="object-cover" sizes="64px" />
-                    ) : (
-                      <span className="flex w-full h-full items-center justify-center bg-[var(--bg-secondary)] text-[var(--accent)] font-bold text-xl">
-                        {(selected.content?.name || '?').charAt(0).toUpperCase()}
-                      </span>
-                    )}
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={resolveImageSrc(selected.image)}
+                        alt={selected.content?.name || ''}
+                        className="object-cover w-full h-full"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    ) : null}
+                    <span className="flex w-full h-full items-center justify-center bg-[var(--bg-secondary)] text-[var(--accent)] font-bold text-xl absolute inset-0 -z-10">
+                      {(selected.content?.name || '?').charAt(0).toUpperCase()}
+                    </span>
                   </span>
                   <div>
                     <DialogTitle>{selected.content?.name}</DialogTitle>

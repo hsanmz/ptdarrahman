@@ -1,11 +1,11 @@
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Calendar, User, ArrowLeft, ArrowRight } from 'lucide-react'
 import RichContent from '@/app/components/ui/RichContent'
 import { useScrollReveal } from '@/app/hooks/useScrollAnimations'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 import NewsSidebar from './NewsSidebar'
 import type { NewsArticle } from '@/app/lib/types'
 import type { ActivePpdbWave } from '@/app/lib/ppdb'
@@ -43,11 +43,12 @@ export default function NewsDetailClient({ article, allNews, wave = null }: { ar
       {/* Hero */}
       <section className="relative pt-28 pb-20 md:pt-36 overflow-hidden">
         <div className="absolute inset-0">
-          {article.image ? (
-            <Image src={article.image} alt={info?.title || 'Gambar Berita'} fill className="object-cover" sizes="100vw" priority />
-          ) : (
-            <div className="absolute inset-0 bg-[var(--bg-secondary)]" />
-          )}
+          <img
+            src={resolveImageSrc(article.image) || FALLBACK_IMAGES.news}
+            alt={info?.title || 'Gambar Berita'}
+            className="w-full h-full object-cover"
+            onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.news)}
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white/95" />
         </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
@@ -99,12 +100,12 @@ export default function NewsDetailClient({ article, allNews, wave = null }: { ar
 
               {article.gallery && article.gallery.length > 0 && (
                 <div className="img-overlay rounded-xl sm:rounded-2xl shadow-md overflow-hidden mb-8 relative aspect-[16/9]">
-                  <Image
-                    src={article.gallery[0] || ''}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resolveImageSrc(article.gallery[0]) || FALLBACK_IMAGES.news}
                     alt={info?.title || 'Galeri Berita'}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 800px"
+                    className="w-full h-full object-cover"
+                    onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.news)}
                     loading="lazy"
                   />
                 </div>

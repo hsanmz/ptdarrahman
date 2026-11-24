@@ -110,6 +110,9 @@ export default function Footer({ programs = [] }: { programs?: Program[] }) {
                   src={logoUrl}
                   alt="PTDARRAHMAN Logo"
                   className="h-12 w-auto object-contain"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://res.cloudinary.com/dunynusuh/image/upload/v1771353749/82ed87dd-4f99-46ca-b481-775f19b6b7c9.png'
+                  }}
                 />
               ) : (
                 <div className="h-12 w-12 rounded bg-[var(--accent)] flex items-center justify-center text-white font-bold text-lg select-none">ار</div>

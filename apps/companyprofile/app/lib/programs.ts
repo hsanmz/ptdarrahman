@@ -125,10 +125,24 @@ const FALLBACK_ICONS: Record<string, string> = {
   'dirasah-islamiyah': 'book-quran',
 }
 
+const FALLBACK_PROGRAM_IMAGES: Record<string, string> = {
+  'tahfidz-al-quran': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop',
+  'teknologi-digital': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop',
+  bilingual: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop',
+  'akademi-kepemimpinan': 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop',
+  'dirasah-islamiyah': 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop',
+}
+
 export function fallbackProgram(slug: string): Program | null {
   const content = FALLBACK_CONTENT[slug]
   if (!content) return null
-  return { id: slug, slug, icon: FALLBACK_ICONS[slug] ?? 'book-quran', image: '', content }
+  return {
+    id: slug,
+    slug,
+    icon: FALLBACK_ICONS[slug] ?? 'book-quran',
+    image: FALLBACK_PROGRAM_IMAGES[slug] || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop',
+    content,
+  }
 }
 
 

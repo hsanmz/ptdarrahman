@@ -5,6 +5,9 @@ interface Props {
   className?: string
 }
 
+const FALLBACK_LOGO =
+  'https://res.cloudinary.com/dunynusuh/image/upload/v1771353749/82ed87dd-4f99-46ca-b481-775f19b6b7c9.png'
+
 export default function AnimatedLogo({ src, alt, isTransparent, className = '' }: Props) {
   return (
     <span className={`relative inline-block ${className}`}>
@@ -17,8 +20,13 @@ export default function AnimatedLogo({ src, alt, isTransparent, className = '' }
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={src}
+        src={src || FALLBACK_LOGO}
         alt={alt}
+        onError={(e) => {
+          if (e.currentTarget.src !== FALLBACK_LOGO) {
+            e.currentTarget.src = FALLBACK_LOGO
+          }
+        }}
         className={`h-8 sm:h-10 w-auto object-contain transition-all duration-300 relative ${
           isTransparent ? 'brightness-0 invert' : ''
         }`}

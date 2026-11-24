@@ -6,7 +6,7 @@ import Link from 'next/link'
 import PageHeader from '@/app/components/layout/PageHeader'
 import type { Program } from '@/app/lib/types'
 import { API_BASE } from '@/app/lib/api'
-import { resolveImageSrc } from '@/app/lib/image-file'
+import { resolveImageSrc, FALLBACK_IMAGES, PROGRAM_FALLBACK_IMAGES } from '@/app/lib/image-file'
 import {
   BookOpen,
   Cpu,
@@ -177,21 +177,21 @@ export default function ProgramsClient({ programs }: { programs: Program[] }) {
                       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute inset-0"
                     >
-                      {activeProg.image ? (
-                        <img
-                          src={resolveImageSrc(activeProg.image, API_BASE)}
-                          alt={info.title || ''}
-                          className="h-full w-full object-cover"
-                          loading="eager"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center text-[var(--text-muted)] gap-3 bg-[var(--bg-secondary)]">
-                          <Icon className="w-16 h-16 opacity-30 text-[var(--accent)]" />
-                          <span className="text-xs uppercase tracking-wider text-[var(--text-muted)] font-semibold">
-                            PTDARRAHMAN Program
-                          </span>
-                        </div>
-                      )}
+                      {(() => {
+                        const fallbackSrc = PROGRAM_FALLBACK_IMAGES[activeProg.slug] || FALLBACK_IMAGES.program
+                        const src = resolveImageSrc(activeProg.image, API_BASE) || fallbackSrc
+                        return (
+                          <img
+                            src={src}
+                            alt={info.title || 'Program PTDARRAHMAN'}
+                            className="h-full w-full object-cover"
+                            loading="eager"
+                            onError={(e) => {
+                              if (e.currentTarget.src !== fallbackSrc) e.currentTarget.src = fallbackSrc
+                            }}
+                          />
+                        )
+                      })()}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
                       <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 text-white">

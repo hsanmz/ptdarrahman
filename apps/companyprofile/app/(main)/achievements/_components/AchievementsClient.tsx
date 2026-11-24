@@ -7,6 +7,7 @@ import { useScrollReveal } from '@/app/hooks/useScrollAnimations'
 import type { Achievement } from '@/app/lib/types'
 import { Award } from 'lucide-react'
 import EmptyState from '@/app/components/ui/EmptyState'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 
 export default function AchievementsClient({ achievements }: { achievements: Achievement[] }) {
   const sectionRef = useRef<HTMLElement>(null)
@@ -81,8 +82,15 @@ export default function AchievementsClient({ achievements }: { achievements: Ach
               }
               return (
                 <div key={a.id} className="glass-card rounded-2xl overflow-hidden group">
-                  <div className="aspect-[16/10] overflow-hidden relative">
-                    {a.image ? <Image src={a.image} alt={info.title || ''} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" loading="lazy" /> : <div className="w-full h-full bg-[var(--bg-secondary)]" />}
+                  <div className="aspect-[16/10] overflow-hidden relative bg-[var(--bg-secondary)]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={resolveImageSrc(a.image) || FALLBACK_IMAGES.achievement}
+                      alt={info.title || 'Prestasi Santri'}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      loading="lazy"
+                      onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.achievement)}
+                    />
                     <div className="absolute top-3 left-3 flex items-center gap-2">
                       <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-[var(--accent)] text-white shadow-sm">
                         {a.year}

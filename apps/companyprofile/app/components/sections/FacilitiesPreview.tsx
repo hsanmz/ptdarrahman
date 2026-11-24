@@ -7,7 +7,8 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { useScrollReveal } from '../../hooks/useScrollAnimations'
 import TiltCard from '../ui/TiltCard'
-
+import { API_BASE } from '@/app/lib/api'
+import { resolveImageSrc } from '@/app/lib/image-file'
 import type { Facility } from '@/app/lib/types'
 
 const fallbackFacilities = [
@@ -40,10 +41,10 @@ const fallbackFacilities = [
 export default function FacilitiesPreview({ facilities = [] }: { facilities?: Facility[] }) {
   const displayFacilities =
     facilities.length > 0
-      ? facilities.slice(0, 5).map((f) => ({
-          image: f.image || fallbackFacilities[0].image,
-          name: f.content?.name || '',
-          desc: f.content?.desc || '',
+      ? facilities.slice(0, 5).map((f, i) => ({
+          image: resolveImageSrc(f.image, API_BASE) || fallbackFacilities[i % fallbackFacilities.length].image,
+          name: f.content?.name || fallbackFacilities[i % fallbackFacilities.length].name,
+          desc: f.content?.desc || fallbackFacilities[i % fallbackFacilities.length].desc,
         }))
       : fallbackFacilities
 
@@ -70,13 +71,15 @@ export default function FacilitiesPreview({ facilities = [] }: { facilities?: Fa
         <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4">
           {/* Large left card */}
           <TiltCard glare={false} maxTilt={5} className="md:col-span-2 lg:col-span-7">
-            <div className="img-overlay rounded-xl sm:rounded-2xl shadow-md aspect-[4/3] relative">
-              <Image
+            <div className="img-overlay rounded-xl sm:rounded-2xl shadow-md aspect-[4/3] relative overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={first.image}
                 alt={first.name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 60vw"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = fallbackFacilities[0].image
+                }}
               />
               <div className="overlay p-3 sm:p-6">
                 <h3 className="text-base sm:text-xl md:text-2xl font-bold font-[var(--font-display)] text-white mb-0.5 sm:mb-1">
@@ -97,16 +100,18 @@ export default function FacilitiesPreview({ facilities = [] }: { facilities?: Fa
                 className={`${i >= 2 ? 'col-span-2' : ''}`}
               >
                 <div
-                  className={`img-overlay rounded-xl sm:rounded-2xl shadow-md relative ${
+                  className={`img-overlay rounded-xl sm:rounded-2xl shadow-md relative overflow-hidden ${
                     i >= 2 ? 'aspect-[3/1] sm:aspect-[3/1]' : 'aspect-square'
                   }`}
                 >
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={f.image}
                     alt={f.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = fallbackFacilities[(i + 1) % fallbackFacilities.length].image
+                    }}
                   />
                   <div className="overlay p-3 sm:p-5">
                     <h3 className="text-xs sm:text-base md:text-lg font-bold font-[var(--font-display)] text-white mb-0.5">

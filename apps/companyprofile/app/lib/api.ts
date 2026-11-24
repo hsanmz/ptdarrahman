@@ -23,6 +23,21 @@ export const PRIMARY_API = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost
 // Fallback API opsional (mis. darurat ke server kedua). Kosongkan untuk
 // menonaktifkan mekanisme fallback; JANGAN fallback ke localhost di produksi.
 export const FALLBACK_API = (process.env.NEXT_PUBLIC_FALLBACK_API_URL || '').replace(/\/+$/, '')
+
+/** Resolusi URL API dinamis: di browser, sesuaikan otomatis ke host pemanggil jika env localhost */
+export function getApiBase(): string {
+  if (typeof window !== 'undefined') {
+    const envApi = process.env.NEXT_PUBLIC_API_URL
+    if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
+      return envApi.replace(/\/+$/, '')
+    }
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return `${window.location.protocol}//${window.location.hostname}:8000`
+    }
+  }
+  return PRIMARY_API
+}
+
 export const API_BASE = PRIMARY_API
 const USER_KEY = 'admin_user'
 
@@ -82,9 +97,10 @@ function isRetryableStatus(status: number): boolean {
 }
 
 async function fetchWithFallback(url: string, opts?: RequestInit): Promise<Response> {
-  if (!FALLBACK_API || API_BASE === FALLBACK_API) return fetch(url, opts)
+  const currentBase = getApiBase()
+  if (!FALLBACK_API || currentBase === FALLBACK_API) return fetch(url, opts)
 
-  const fallbackUrl = url.replace(PRIMARY_API, FALLBACK_API)
+  const fallbackUrl = url.replace(currentBase, FALLBACK_API)
 
   let res: Response
   try {
@@ -139,7 +155,7 @@ async function tryRefresh(): Promise<string | null> {
   if (_pendingRefresh) return _pendingRefresh
   _pendingRefresh = (async () => {
     try {
-      const res = await fetchWithFallback(`${API_BASE}/companyprofile/auth/refresh`, {
+      const res = await fetchWithFallback(`${getApiBase()}/companyprofile/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Client-App': 'companyprofile' },
         body: JSON.stringify({}),
@@ -161,7 +177,7 @@ async function fetchApi<T>(endpoint: string, opts?: RequestInit): Promise<T> {
   const finalOpts: RequestInit = { next: { revalidate: 60 }, ...opts }
   if (opts?.cache) delete finalOpts.next
 
-  const res = await fetchWithFallback(`${API_BASE}/companyprofile${endpoint}`, finalOpts)
+  const res = await fetchWithFallback(`${getApiBase()}/companyprofile${endpoint}`, finalOpts)
   if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
   return parseJsonSafe<T>(res, `API ${endpoint}`)
 }
@@ -270,7 +286,7 @@ export async function login(username: string, password: string) {
       access_token: string; refresh_token: string; token_type: string
     }
   }
-  const res = await fetchWithFallback(`${API_BASE}/companyprofile/auth/login`, {
+  const res = await fetchWithFallback(`${getApiBase()}/companyprofile/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Client-App': 'companyprofile' },
     body: JSON.stringify({ username, password }),
@@ -293,7 +309,7 @@ export async function login(username: string, password: string) {
 
 export async function logout() {
   try {
-    await fetchWithFallback(`${API_BASE}/companyprofile/auth/logout`, {
+    await fetchWithFallback(`${getApiBase()}/companyprofile/auth/logout`, {
       method: 'POST',
       // Wajib: tanpa Content-Type, fetch kirim `text/plain` dan FastAPI
       // menolak body sebagai JSON → 422 (cookie tetap aktif di server).
@@ -312,7 +328,7 @@ export async function logout() {
 // ── Mutations (protected) ───────────────────────────────────
 
 async function fetchApiWithAuth<T>(endpoint: string, opts: RequestInit): Promise<T> {
-  let res = await fetchWithFallback(`${API_BASE}/companyprofile${endpoint}`, {
+  let res = await fetchWithFallback(`${getApiBase()}/companyprofile${endpoint}`, {
     cache: 'no-store',
     ...opts,
     credentials: 'include' as RequestCredentials,
@@ -324,7 +340,7 @@ async function fetchApiWithAuth<T>(endpoint: string, opts: RequestInit): Promise
   if (res.status === 401) {
     const newToken = await tryRefresh()
     if (newToken) {
-      res = await fetchWithFallback(`${API_BASE}/companyprofile${endpoint}`, {
+      res = await fetchWithFallback(`${getApiBase()}/companyprofile${endpoint}`, {
         ...opts,
         credentials: 'include' as RequestCredentials,
         headers: {
@@ -453,7 +469,7 @@ export async function updateContactInfo(data: JsonValue) {
 }
 
 async function fetchAuthApi<T>(endpoint: string, opts?: RequestInit): Promise<T> {
-  let res = await fetchWithFallback(`${API_BASE}${endpoint}`, {
+  let res = await fetchWithFallback(`${getApiBase()}${endpoint}`, {
     ...opts,
     credentials: 'include' as RequestCredentials,
     headers: {
@@ -464,7 +480,7 @@ async function fetchAuthApi<T>(endpoint: string, opts?: RequestInit): Promise<T>
   if (res.status === 401) {
     const newToken = await tryRefresh()
     if (newToken) {
-      res = await fetchWithFallback(`${API_BASE}${endpoint}`, {
+      res = await fetchWithFallback(`${getApiBase()}${endpoint}`, {
         ...opts,
         credentials: 'include' as RequestCredentials,
         headers: {
@@ -509,7 +525,7 @@ export async function uploadImage(file: File, purpose = 'general') {
   const form = new FormData()
   form.append('file', file)
   form.append('purpose', purpose)
-  let res = await fetchWithFallback(`${API_BASE}/companyprofile/upload`, {
+  let res = await fetchWithFallback(`${getApiBase()}/companyprofile/upload`, {
     method: 'POST',
     body: form,
     credentials: 'include' as RequestCredentials,
@@ -517,7 +533,7 @@ export async function uploadImage(file: File, purpose = 'general') {
   if (res.status === 401) {
     const newToken = await tryRefresh()
     if (newToken) {
-      res = await fetchWithFallback(`${API_BASE}/companyprofile/upload`, {
+      res = await fetchWithFallback(`${getApiBase()}/companyprofile/upload`, {
         method: 'POST',
         body: form,
         credentials: 'include' as RequestCredentials,

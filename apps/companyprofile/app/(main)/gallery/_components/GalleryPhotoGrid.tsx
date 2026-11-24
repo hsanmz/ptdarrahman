@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { ImageOff, Images } from 'lucide-react'
 import type { GalleryItem } from '@/app/lib/types'
 import { galleryCategoryLabel } from '@/app/lib/gallery-categories'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 
 const INITIAL_VISIBLE = 12
 
@@ -75,22 +76,16 @@ export default function GalleryPhotoGrid({ items, onSelect }: GalleryPhotoGridPr
                 aria-label={isAlbum ? `Buka album ${title} (${albumPhotoCount} foto)` : `Buka foto ${title}${category ? ` (${category})` : ''}`}
                 className="group relative block w-full aspect-[4/3] overflow-hidden rounded-xl sm:rounded-2xl border border-[var(--color-border)] bg-[var(--bg-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] cursor-pointer shadow-xs transition-all hover:shadow-md"
               >
-                {item.image ? (
-                  <motion.div layoutId={`gallery-grid-image-${item.id}`} className="absolute inset-0">
-                    <Image
-                      src={item.image}
-                      alt={title}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                    />
-                  </motion.div>
-                ) : (
-                  <span className="absolute inset-0 flex items-center justify-center text-[var(--text-muted)]">
-                    <ImageOff className="w-5 h-5" aria-hidden="true" />
-                  </span>
-                )}
+                <motion.div layoutId={`gallery-grid-image-${item.id}`} className="absolute inset-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resolveImageSrc(item.image) || FALLBACK_IMAGES.gallery}
+                    alt={title}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.gallery)}
+                  />
+                </motion.div>
 
                 {/* Album Badge */}
                 {isAlbum && (

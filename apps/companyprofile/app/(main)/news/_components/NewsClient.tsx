@@ -7,6 +7,7 @@ import PageHeader from '@/app/components/layout/PageHeader'
 import { useScrollReveal } from '@/app/hooks/useScrollAnimations'
 import type { NewsArticle } from '@/app/lib/types'
 import { mergeNewsArticles, fallbackNews } from '@/app/lib/news'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 import {
   ArrowRight,
   Calendar,
@@ -204,20 +205,13 @@ export default function NewsClient({ news }: { news: NewsArticle[] }) {
                 className="group glass-card rounded-3xl overflow-hidden !no-underline grid grid-cols-1 lg:grid-cols-12 border border-[var(--border)] hover:border-[var(--accent)]/40 hover:shadow-xl transition-all duration-300"
               >
                 <div className="lg:col-span-7 aspect-[16/10] lg:aspect-auto lg:min-h-[360px] relative overflow-hidden bg-[var(--bg-secondary)]">
-                  {featuredArticle.image ? (
-                    <Image
-                      src={featuredArticle.image}
-                      alt={featuredArticle.content?.title || 'Sorotan Berita Utama'}
-                      fill
-                      priority
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      sizes="(max-width: 1024px) 100vw, 60vw"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)]">
-                      <BookOpen className="w-12 h-12 stroke-1" />
-                    </div>
-                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resolveImageSrc(featuredArticle.image) || FALLBACK_IMAGES.news}
+                    alt={featuredArticle.content?.title || 'Sorotan Berita Utama'}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.news)}
+                  />
                   <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-md">
                       <Sparkles className="w-3.5 h-3.5" />
@@ -287,20 +281,15 @@ export default function NewsClient({ news }: { news: NewsArticle[] }) {
                       className="group glass-card rounded-2xl overflow-hidden !no-underline flex flex-col border border-[var(--border)] hover:border-[var(--accent)]/40 hover:shadow-lg transition-all duration-300"
                     >
                       <div className="aspect-[16/10] overflow-hidden relative bg-[var(--bg-secondary)]">
-                        {article.image ? (
-                          <Image
-                            src={article.image}
-                            alt={info?.title || 'Gambar berita'}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-700"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)]">
-                            <BookOpen className="w-8 h-8 stroke-1" />
-                          </div>
-                        )}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={resolveImageSrc(article.image) || FALLBACK_IMAGES.news}
+                          alt={info?.title || 'Gambar berita'}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          loading="lazy"
+                          onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.news)}
+                        />
                         {article.category && (
                           <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-[var(--accent)] text-white shadow-sm">
                             {article.category}

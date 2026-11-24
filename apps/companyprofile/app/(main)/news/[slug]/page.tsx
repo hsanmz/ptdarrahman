@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getNewsBySlug, getNewsCached } from '@/app/lib/api'
 import { mergeNewsArticles, fallbackNews } from '@/app/lib/news'
 import { fetchActivePpdbWave } from '@/app/lib/ppdb'
-import { resolveImageSrc } from '@/app/lib/image-file'
+import { resolveImageSrc, getSafeImageSrc } from '@/app/lib/image-file'
 import type { NewsArticle } from '@/app/lib/types'
 import NewsDetailClient from './_components/NewsDetailClient'
 
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return { title: 'Berita Tidak Ditemukan' }
   }
 
-  const imageUrl = resolveImageSrc(article.image || '', '')
+  const imageUrl = getSafeImageSrc(article.image, 'news')
 
   return {
     title: article.content?.title,
@@ -84,7 +84,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
 
   const sanitizedArticle: NewsArticle = {
     ...article,
-    image: resolveImageSrc(article.image || '', ''),
+    image: getSafeImageSrc(article.image, 'news'),
     content: articleContent,
   }
 

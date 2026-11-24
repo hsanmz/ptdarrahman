@@ -11,7 +11,7 @@ import PageHeader from '@/app/components/layout/PageHeader'
 import LeadershipBoards from './_components/LeadershipBoards'
 import type { AboutContent, AboutContentData, LeadershipBoard } from '@/app/lib/types'
 import { resolvePortalUrl } from '@repo/ui'
-import { resolveImageSrc } from '@/app/lib/image-file'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 import { API_BASE } from '@/app/lib/api'
 
 const ICONS: Record<string, LucideIcon> = {
@@ -161,18 +161,19 @@ export default function AboutClient({
             </div>
             <div className="group relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-white shadow-[0_20px_50px_-30px_rgba(26,107,71,0.45)] transition-all duration-300 hover:shadow-[0_25px_60px_-25px_rgba(26,107,71,0.5)]">
               <div className="relative overflow-hidden bg-[var(--accent-subtle)]">
-                {heroImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- URL gambar dikelola admin CMS.
-                  <img
-                    src={resolveImageSrc(heroImage, API_BASE)}
-                    alt={text(hero.image_alt) || `${text(hero.image_name) || 'Eko Santoso'} — ${text(hero.image_role) || 'Ketua Yayasan Generasi Cerdas Akhlak Mulia'}`}
-                    className="aspect-[4/3] w-full object-cover object-[center_top] transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex aspect-[4/3] items-center justify-center bg-[var(--accent-subtle)] text-sm text-[var(--text-muted)]">
-                    Gambar profil belum diatur.
-                  </div>
-                )}
+                {(() => {
+                  const fallbackPortrait = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'
+                  const src = resolveImageSrc(heroImage, API_BASE) || fallbackPortrait
+                  return (
+                    // eslint-disable-next-line @next/next/no-img-element -- URL gambar dikelola admin CMS.
+                    <img
+                      src={src}
+                      alt={text(hero.image_alt) || `${text(hero.image_name) || 'Eko Santoso'} — ${text(hero.image_role) || 'Ketua Yayasan Generasi Cerdas Akhlak Mulia'}`}
+                      className="aspect-[4/3] w-full object-cover object-[center_top] transition-transform duration-700 group-hover:scale-105"
+                      onError={(e) => handleImageFallback(e, fallbackPortrait)}
+                    />
+                  )
+                })()}
               </div>
 
               {/* Posisi Eko Santoso & Ketua Yayasan Generasi Cerdas Akhlak Mulia di bawah gambar */}

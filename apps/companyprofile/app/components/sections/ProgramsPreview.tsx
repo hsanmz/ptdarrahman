@@ -16,7 +16,7 @@ import MagneticButton from '../ui/MagneticButton'
 
 import type { Program } from '@/app/lib/types'
 import { API_BASE } from '@/app/lib/api'
-import { resolveImageSrc } from '@/app/lib/image-file'
+import { resolveImageSrc, FALLBACK_IMAGES, PROGRAM_FALLBACK_IMAGES } from '@/app/lib/image-file'
 
 const CARD_GAP = 24
 // Durasi per item dibuat seimbang (7 detik) agar pergerakan berjalan sangat halus (smooth) dan terus berulang tanpa jeda
@@ -285,34 +285,39 @@ export default function ProgramsPreview({ programs = [] }: { programs?: Program[
                     }}
                     className="glass-card card-spotlight rounded-2xl overflow-hidden !no-underline flex flex-col h-full border border-[var(--color-border)] hover:border-[var(--accent)]/50 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 bg-[var(--bg-elevated)]"
                   >
-                    {prog.image ? (
-                      <div className="relative h-36 overflow-hidden bg-[var(--bg)] sm:h-40">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={resolveImageSrc(prog.image, API_BASE)}
-                          alt=""
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      </div>
-                    ) : (
-                      <div className="relative h-16 sm:h-18 overflow-hidden bg-gradient-to-r from-[var(--accent-subtle)]/70 via-[var(--bg-elevated)] to-[var(--bg)] border-b border-[var(--color-border)]/60 flex items-center px-5 sm:px-6">
-                        <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[var(--bg-elevated)] border border-[var(--color-border)] shadow-sm flex items-center justify-center text-[var(--accent)] group-hover:scale-110 group-hover:bg-[var(--accent)] group-hover:text-white transition-all duration-300">
-                          <Icon className="w-5 h-5" />
+                    {(() => {
+                      const progSlug =
+                        'slug' in prog && typeof (prog as { slug?: unknown }).slug === 'string' && (prog as { slug: string }).slug
+                          ? (prog as { slug: string }).slug
+                          : prog.id
+                      const programImg =
+                        resolveImageSrc(prog.image, API_BASE) ||
+                        PROGRAM_FALLBACK_IMAGES[progSlug] ||
+                        FALLBACK_IMAGES.program
+                      return (
+                        <div className="relative h-36 overflow-hidden bg-[var(--bg)] sm:h-40">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={programImg}
+                            alt={prog.title || 'Program Unggulan'}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                            onError={(e) => {
+                              const fallback = PROGRAM_FALLBACK_IMAGES[progSlug] || FALLBACK_IMAGES.program
+                              if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                         </div>
-                        <div className="absolute right-0 top-0 bottom-0 w-28 bg-gradient-to-l from-[var(--accent)]/5 to-transparent pointer-events-none" />
-                      </div>
-                    )}
+                      )
+                    })()}
 
                     <div className="p-5 sm:p-6 flex flex-col flex-1">
-                      {prog.image && (
-                        <div className="flex items-center justify-end -mt-8 sm:-mt-9 mb-2 relative z-10">
-                          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[var(--bg-elevated)] border border-[var(--color-border)] shadow-md flex items-center justify-center group-hover:scale-110 transition-transform text-[var(--accent)]">
-                            <Icon className="w-5 h-5" />
-                          </div>
+                      <div className="flex items-center justify-end -mt-8 sm:-mt-9 mb-2 relative z-10">
+                        <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[var(--bg-elevated)] border border-[var(--color-border)] shadow-md flex items-center justify-center group-hover:scale-110 transition-transform text-[var(--accent)]">
+                          <Icon className="w-5 h-5" />
                         </div>
-                      )}
+                      </div>
 
                       <h3 className="font-[var(--font-display)] text-lg sm:text-xl font-bold text-[var(--text)] mb-2 group-hover:text-[var(--accent)] group-hover:translate-x-1 transition-all duration-300 leading-snug">
                         {prog.title}

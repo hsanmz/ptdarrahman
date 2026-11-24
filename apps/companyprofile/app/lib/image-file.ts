@@ -1,15 +1,37 @@
 /**
- * Aturan unggah gambar yang dipakai bersama oleh form admin.
- *
- * Nilai di sini sengaja mencerminkan `apps/api/src/core/uploads.py` supaya
- * admin melihat batas yang sama dengan yang ditegakkan backend:
- * JPEG/PNG/WebP/GIF, maksimal 10 MB, dan URL kolom `image` selebar 255 karakter.
+ * Aturan unggah gambar yang dipakai bersama oleh form admin dan utilitas
+ * resolusi gambar publik di seluruh Company Profile.
  */
 
 export const IMAGE_MAX_BYTES = 10 * 1024 * 1024 // 10 MB — samakan dengan uploads.py
 export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] as const
 export const IMAGE_ACCEPT = IMAGE_TYPES.join(',')
 export const IMAGE_URL_MAX_LENGTH = 255
+
+/** Koleksi gambar fallback berkualitas tinggi resmi bertema Pesantren Tahfidz & Digital */
+export const FALLBACK_IMAGES = {
+  hero: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1920&auto=format&fit=crop',
+  about: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop',
+  program: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop',
+  facility: 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?q=80&w=1200&auto=format&fit=crop',
+  news: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop',
+  achievement: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
+  gallery: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop',
+  staff: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
+  testimonial: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=400&auto=format&fit=crop',
+} as const
+
+export const PROGRAM_FALLBACK_IMAGES: Record<string, string> = {
+  'tahfidz-al-quran': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop',
+  'tahfidz': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop',
+  'teknologi-digital': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop',
+  'digital': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop',
+  bilingual: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop',
+  'akademi-kepemimpinan': 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop',
+  leadership: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop',
+  'dirasah-islamiyah': 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop',
+}
 
 /** Validasi file sebelum dikirim ke `/companyprofile/upload`. */
 export function validateImageFile(file: File): string | null {
@@ -36,8 +58,6 @@ export function formatFileSize(bytes: number): string {
 
 /**
  * URL gambar boleh absolut (http/https) atau path unggahan lokal (`/uploads/...`).
- * Path relatif diterima karena `UPLOAD_PROVIDER=local|db` mengembalikan URL
- * seperti itu, dan data lama mungkin sudah memakainya.
  */
 export function validateImageUrl(value: string): string | null {
   const url = value.trim()
@@ -61,16 +81,15 @@ export function validateImageUrl(value: string): string | null {
 }
 
 /**
- * Gambar `/uploads/...` disajikan oleh API, bukan origin frontend. Untuk
- * pratinjau admin, path tersebut perlu diarahkan ke API agar tidak 404.
- * Nilai yang disimpan tetap apa adanya.
+ * Normalisasi dan resolusi URL gambar untuk seluruh aplikasi Company Profile.
+ * Menangani path relatif, domain nonaktif (arrahmanic.org), dan localhost mismatch.
  */
-export function resolveImageSrc(value: string, apiBase: string): string {
+export function resolveImageSrc(value: string | null | undefined, apiBase = ''): string {
   const src = (value ?? '').trim()
-  if (!src) return ''
+  if (!src || src === 'null' || src === 'undefined') return ''
 
-  // Ganti domain lama webbackend.arrahmanic.org yang sudah tidak aktif dengan foto Unsplash relevan
-  if (src.includes('webbackend.arrahmanic.org')) {
+  // Ganti domain lama arrahmanic.org / webbackend.arrahmanic.org yang tidak aktif dengan foto Unsplash relevan
+  if (src.includes('arrahmanic.org')) {
     if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) {
       return 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop'
     }
@@ -89,20 +108,58 @@ export function resolveImageSrc(value: string, apiBase: string): string {
     if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) {
       return 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop'
     }
+    if (src.includes('news') || src.includes('berita')) {
+      return 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('galeri') || src.includes('gallery')) {
+      return 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('fasilitas') || src.includes('facility')) {
+      return 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('staff') || src.includes('guru') || src.includes('ustadz')) {
+      return 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop'
+    }
     return 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop'
   }
 
-  if (src.startsWith('/') && !src.startsWith('//')) {
-    return `${apiBase.replace(/\/+$/, '')}${src}`
+  // Normalisasi URL /uploads/... dari host manapun (localhost, IP server, atau path relatif)
+  let normalized = src
+  if (normalized.startsWith('uploads/')) {
+    normalized = `/${normalized}`
   }
+  const uploadsIdx = normalized.indexOf('/uploads/')
+  if (uploadsIdx !== -1) {
+    // Kembalikan path relatif /uploads/... agar di-proxy secara transparan oleh Next.js rewrites
+    return normalized.slice(uploadsIdx)
+  }
+
   return src
 }
 
+/** Ambil URL gambar aman dengan fallback otomatis per kategori jika nilai kosong atau gagal */
+export function getSafeImageSrc(
+  value: string | null | undefined,
+  category: keyof typeof FALLBACK_IMAGES = 'about',
+  apiBase = ''
+): string {
+  const resolved = resolveImageSrc(value, apiBase)
+  return resolved || FALLBACK_IMAGES[category]
+}
+
+/** Handler onError standar untuk elemen <img> agar beralih mulus ke gambar fallback */
+export function handleImageFallback(
+  event: React.SyntheticEvent<HTMLImageElement, Event>,
+  fallbackSrc: string
+): void {
+  const target = event.currentTarget
+  if (target && target.src !== fallbackSrc) {
+    target.src = fallbackSrc
+  }
+}
+
 /**
- * Pratinjau lokal via Object URL — fitur standar browser, tetapi TIDAK ada di
- * jsdom. Bila API tidak tersedia, kembalikan string kosong supaya form tetap
- * berfungsi (berkas tetap terunggah; hanya pratinjau instan yang tidak tampil)
- * daripada melempar error saat admin memilih berkas.
+ * Pratinjau lokal via Object URL.
  */
 export function createObjectPreviewUrl(file: File): string {
   try {
@@ -113,13 +170,13 @@ export function createObjectPreviewUrl(file: File): string {
   }
 }
 
-/** Lepas pratinjau Object URL — aman dipanggil untuk string kosong/jadul. */
+/** Lepas pratinjau Object URL. */
 export function disposeObjectPreviewUrl(url: string): void {
   if (!url) return
   try {
     if (typeof URL.revokeObjectURL !== 'function') return
     URL.revokeObjectURL(url)
   } catch {
-    // Buang diam-diam: pembersihan tidak boleh mengganggu form.
+    // Buang diam-diam
   }
 }

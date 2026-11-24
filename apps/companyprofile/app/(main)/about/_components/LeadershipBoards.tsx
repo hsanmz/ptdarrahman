@@ -1,7 +1,7 @@
 import { ShieldCheck, Users, Award } from 'lucide-react'
 import SectionTitle from '@/app/components/ui/SectionTitle'
 import type { AboutContentData, LeadershipBoard } from '@/app/lib/types'
-import { resolveImageSrc } from '@/app/lib/image-file'
+import { resolveImageSrc, FALLBACK_IMAGES } from '@/app/lib/image-file'
 import { API_BASE } from '@/app/lib/api'
 
 function monogram(name: string): string {
@@ -99,9 +99,14 @@ export default function LeadershipBoards({
                               <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-2xl overflow-hidden border-2 border-[var(--accent)]/30 group-hover:border-[var(--accent)] shadow-md transition-all duration-300">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
-                                  src={resolveImageSrc(photo, API_BASE)}
+                                  src={resolveImageSrc(photo, API_BASE) || FALLBACK_IMAGES.staff}
                                   alt={member.name}
                                   className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                  onError={(e) => {
+                                    if (e.currentTarget.src !== FALLBACK_IMAGES.staff) {
+                                      e.currentTarget.src = FALLBACK_IMAGES.staff
+                                    }
+                                  }}
                                 />
                               </div>
                             ) : (

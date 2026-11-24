@@ -12,6 +12,7 @@ import EmptyState from '@/app/components/ui/EmptyState'
 import GalleryPhotoGrid from './GalleryPhotoGrid'
 import GalleryAlbumModal from './GalleryAlbumModal'
 import { galleryCategoryLabel, galleryFilterOptions } from '@/app/lib/gallery-categories'
+import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
 
 function BodyLock({ onClose }: { onClose: () => void }) {
   useEffect(() => {
@@ -286,25 +287,17 @@ export default function GalleryClient({ gallery }: { gallery: GalleryItem[] }) {
               aria-label={selected.content?.title || 'Pratinjau galeri'}
               onClick={(event) => event.stopPropagation()}
             >
-              {/* Gambar FULL Mengisi Seluruh Modal Lightbox */}
-              {selected.image ? (
                 <div className="absolute inset-0">
-                  <Image
-                    src={selected.image}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resolveImageSrc(selected.image) || FALLBACK_IMAGES.gallery}
                     alt={selected.content?.title || ''}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 1200px"
-                    priority
+                    className="w-full h-full object-cover"
+                    onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.gallery)}
                   />
                   {/* Gradasi halus di atas dan bawah agar tombol & teks tetap tajam dan kontras */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
                 </div>
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-white/60">
-                  <span className="text-base">Tidak ada gambar</span>
-                </div>
-              )}
 
               {/* Header Atas: Badge Kategori & Tombol Tutup (Close Button) */}
               <div className="relative z-30 flex items-center justify-between p-4 sm:p-5 pointer-events-none">
