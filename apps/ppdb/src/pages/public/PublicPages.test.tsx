@@ -52,10 +52,10 @@ describe('PPDB Public Pages', () => {
       </BrowserRouter>
     )
     expect(screen.getAllByText(/Penerimaan Santri Baru/i)[0]).toBeInTheDocument()
+    expect(screen.getByText(/Jenjang SMK — Khusus Lulusan SMP \/ MTs/i)).toBeInTheDocument()
     expect(screen.getByText(/Daftar Santri Baru/i)).toBeInTheDocument()
-    expect(screen.getByText(/Kurikulum & Fasilitas/i)).toBeInTheDocument()
-    expect(screen.getByText(/Biaya & Beasiswa/i)).toBeInTheDocument()
-    expect(screen.getByText(/Syarat & Ketentuan/i)).toBeInTheDocument()
+    expect(screen.getByText(/Prestasi Gemilang Santri PTDARRAHMAN/i)).toBeInTheDocument()
+    expect(screen.getByText(/Biaya Pendidikan Santri Baru/i)).toBeInTheDocument()
   })
 
   it('renders KurikulumFasilitasPage with tabs and curriculum items', async () => {

@@ -1,25 +1,29 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { fetchPublicFees, type FeesSummary } from '@/services/feeService'
+import { fetchPublicFees, FALLBACK_FEES_SUMMARY, type FeesSummary } from '@/services/feeService'
+import { BIAYA_PENDIDIKAN, TOTAL_ESTIMASI_BIAYA } from '@/data/admissionData'
 import { Button } from '@/components/ui'
 import {
   CheckCircle2, QrCode, CreditCard,
   GraduationCap, UserPlus, LogIn,
-  Coins, Tag, Info
+  Coins, Tag, Info, Receipt
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function BiayaBeasiswaPage() {
   const navigate = useNavigate()
-  const [fees, setFees] = useState<FeesSummary | null>(null)
+  const [fees, setFees] = useState<FeesSummary>(FALLBACK_FEES_SUMMARY)
   const [selectedDiscountView, setSelectedDiscountView] = useState<'regular' | 'early'>('regular')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     fetchPublicFees()
-      .then((data) => setFees(data))
+      .then((data) => {
+        if (data && data.items && data.items.length > 0) {
+          setFees(data)
+        }
+      })
       .catch((err) => console.error('Failed to load public fees', err))
-      .finally(() => setLoading(false))
   }, [])
 
   const formatRupiah = (val: number) => {
@@ -85,10 +89,16 @@ export default function BiayaBeasiswaPage() {
       {/* ── Page Header ── */}
       <section className="relative overflow-hidden px-4 py-12 bg-gradient-to-b from-amber-50/50 via-white to-background border-b border-slate-100">
         <div className="container mx-auto max-w-5xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3.5 py-1 text-xs font-bold text-amber-900 border border-amber-200">
-            <Coins className="h-3.5 w-3.5 text-amber-700" />
-            <span>Transparansi Finansial PPDB</span>
-          </span>
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3.5 py-1 text-xs font-bold text-amber-900 border border-amber-200">
+              <Coins className="h-3.5 w-3.5 text-amber-700" />
+              <span>Transparansi Finansial PPDB</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-900 border border-emerald-200">
+              <GraduationCap className="h-3.5 w-3.5 text-emerald-700" />
+              <span>Jenjang SMK — Calon Santri Lulusan SMP / MTs</span>
+            </span>
+          </div>
 
           <h1 className="mt-4 font-heading text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
             Rincian Biaya Pendidikan &amp; Beasiswa
@@ -255,24 +265,24 @@ export default function BiayaBeasiswaPage() {
                 {/* Total Row */}
                 <tr className="bg-slate-50/90 border-t-2 border-slate-200 font-bold text-slate-900">
                   <td colSpan={2} className="py-5 px-4 sm:px-6 font-heading text-base">
-                    Total Biaya Masuk Pendidikan
+                    Total Estimasi Biaya Pendidikan
                   </td>
                   <td className="py-5 px-4 sm:px-6 text-right font-medium text-slate-400 line-through">
-                    {formatRupiah(fees?.totalOriginal || 16500000)}
+                    {formatRupiah(fees?.totalOriginal || TOTAL_ESTIMASI_BIAYA)}
                   </td>
                   <td className="py-5 px-4 sm:px-6 text-right text-emerald-600 font-extrabold">
                     -
                     {formatRupiah(
                       selectedDiscountView === 'regular'
-                        ? fees?.totalRegularDiscount || 1500000
-                        : fees?.totalEarlyDiscount || 2500000
+                        ? fees?.totalRegularDiscount || 2000000
+                        : fees?.totalEarlyDiscount || 3500000
                     )}
                   </td>
                   <td className="py-5 px-4 sm:px-6 text-right font-heading text-lg sm:text-xl font-extrabold text-emerald-primary whitespace-nowrap">
                     {formatRupiah(
                       selectedDiscountView === 'regular'
-                        ? fees?.totalRegularFinal || 15000000
-                        : fees?.totalEarlyFinal || 14000000
+                        ? fees?.totalRegularFinal || 23000000
+                        : fees?.totalEarlyFinal || 21500000
                     )}
                   </td>
                 </tr>

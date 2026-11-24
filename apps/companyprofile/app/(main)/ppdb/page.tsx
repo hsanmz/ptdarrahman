@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import PpdbClientView from './PpdbClientView'
 import { fetchActivePpdbWave } from '@/app/lib/ppdb'
 import { getPublicSettings } from '@/app/lib/server-settings'
 import { getPpdbContentRows } from '@/app/lib/api'
+import { resolvePortalUrl } from '@repo/ui'
 
 export const metadata: Metadata = {
   title: 'Penerimaan Santri Baru (PPDB) | PTDARRAHMAN',
@@ -39,14 +41,25 @@ export default async function PPDBPage() {
     getPpdbContentRows().catch(() => []),
   ])
 
-  const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL || 'http://localhost:5174'
+  const portalUrl = resolvePortalUrl(process.env.NEXT_PUBLIC_PORTAL_URL)
+
+  let siteUrl = process.env.NEXT_PUBLIC_SITE_URL ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, '') : ''
+  if (!siteUrl) {
+    try {
+      const h = await headers()
+      const host = h.get('x-forwarded-host') || h.get('host')
+      const isLocalOrIp = host && (/^localhost(:\d+)?$/i.test(host) || /^(?:\d{1,3}\.){3}\d{1,3}(:\d+)?$/.test(host))
+      const proto = h.get('x-forwarded-proto') || (isLocalOrIp ? 'http' : 'https')
+      if (host) siteUrl = `${proto}://${host}`
+    } catch {}
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
     name: "Pesantren Tahfidz Qur'an dan Digital Ar-Rahman",
     alternateName: 'PTDARRAHMAN',
-    url: 'https://ptdarrahman.sch.id/ppdb',
+    url: siteUrl ? `${siteUrl}/ppdb` : '/ppdb',
     description:
       "Pesantren putra terpadu yang memadukan hafalan Al-Qur'an 30 juz bersanad dengan pendidikan teknologi digital modern.",
     address: {

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @source "../../../packages/ui/src";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --font-display: 'Playfair Display', serif;
@@ -18,7 +19,7 @@
   --color-secondary: var(--bg-secondary);
   --color-secondary-foreground: var(--text);
   --color-muted: var(--bg-secondary);
-  --color-muted-foreground: hsl(43 20% 42%);
+  --color-muted-foreground: #6B6B6B;
   --color-accent: var(--accent-subtle);
   --color-accent-foreground: var(--text);
   --color-destructive: #ef4444;
@@ -901,7 +902,3 @@ h1, h2, h3, h4, h5, h6 {
   animation: textFadeBreathe 4s ease-in-out infinite;
   display: inline-block;
 }
-
-
-
-

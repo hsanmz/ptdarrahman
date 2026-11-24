@@ -24,9 +24,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime
 from pathlib import Path
-from typing import Any
 from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -59,7 +57,7 @@ NEWS_ARTICLES = [
         "slug": "seminar-keislaman-ustaz-ahmad-kainama-kupas-kristologi-dan-perbandingan-agama",
         "category": "Tahfidz & Syar'i",
         "date": "2025-03-10",
-        "image": "https://webbackend.arrahmanic.org/storage/posts/t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx.jpg",
+        "image": "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop",
         "title": "Seminar Keislaman: Ustaz Ahmad Kainama Kupas Kristologi dan Perbandingan Agama",
         "excerpt": "Kajian Kristologi diadakan di Pesantren Tahfidz Qur'an dan Digital Ar-Rahman menghadirkan Ustadz Ahmad Kainama untuk memperdalam ilmu agama dan perbandingan keyakinan.",
         "author": "Humas PTDARRAHMAN",
@@ -82,7 +80,7 @@ NEWS_ARTICLES = [
         "slug": "upacara-hut-kemerdekaan-ke-80-di-ptd-arrahman",
         "category": "Kegiatan Santri",
         "date": "2025-08-17",
-        "image": "https://webbackend.arrahmanic.org/storage/posts/ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ.jpg",
+        "image": "https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=1200&auto=format&fit=crop",
         "title": "Upacara HUT Kemerdekaan ke-80 di PTDARRAHMAN",
         "excerpt": "Peringatan Hari Ulang Tahun (HUT) Kemerdekaan Republik Indonesia ke-80 berlangsung khidmat dan penuh semangat di Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.",
         "author": "Kesiswaan PTDARRAHMAN",
@@ -99,7 +97,7 @@ NEWS_ARTICLES = [
         "slug": "ptd-ar-rahman-gelar-lomba-hut-ri-ke-80",
         "category": "Kegiatan Santri",
         "date": "2025-08-17",
-        "image": "https://webbackend.arrahmanic.org/storage/posts/BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1.jpg",
+        "image": "https://images.unsplash.com/photo-1576767475305-ce65f5cbb67e?q=80&w=1200&auto=format&fit=crop",
         "title": "PTDARRAHMAN Gelar Semarak Lomba Kemerdekaan HUT RI ke-80",
         "excerpt": "Dalam rangka memeriahkan HUT RI ke-80, Pesantren Tahfidz Qur'an dan Digital Ar-Rahman menggelar serangkaian perlombaan seru yang memupuk sportivitas dan ukhuwah santri.",
         "author": "Kesiswaan PTDARRAHMAN",
@@ -114,7 +112,7 @@ NEWS_ARTICLES = [
         "slug": "sharing-session-ptd-arrahman-hadirkan-senior-engineer-gojek-kupas-tuntas-next-js",
         "category": "Teknologi Digital",
         "date": "2025-09-14",
-        "image": "https://webbackend.arrahmanic.org/storage/posts/FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8.jpg",
+        "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop",
         "title": "Sharing Session PTDARRAHMAN Hadirkan Senior Engineer Gojek, Kupas Tuntas Next.js",
         "excerpt": "Senior Software Engineer Gojek berbagi wawasan praktis seputar arsitektur Next.js modern, optimasi aplikasi skala industri, dan integrasi API kepada santri PTDARRAHMAN.",
         "author": "Tim IT PTDARRAHMAN",
@@ -130,7 +128,7 @@ NEWS_ARTICLES = [
         "slug": "santri-ptd-ar-rahman-tunjukkan-semangat-juang-di-porseni-pontren-2025-kabupaten-bekasi",
         "category": "Prestasi",
         "date": "2025-10-16",
-        "image": "https://webbackend.arrahmanic.org/storage/posts/wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97.jpg",
+        "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
         "title": "Santri PTDARRAHMAN Tunjukkan Semangat Juang di PORSENI PONTREN 2025 Kabupaten Bekasi",
         "excerpt": "Sebanyak 19 santri delegasi PTDARRAHMAN bertanding pada 6 cabang perlombaan di PORSENI PONTREN 2025 tingkat Kabupaten Bekasi bersama 73 pesantren.",
         "author": "Kesiswaan PTDARRAHMAN",
@@ -147,7 +145,7 @@ NEWS_ARTICLES = [
         "slug": "menjemput-keberkahan-ramadhan-santri-ptd-ar-rahman-gotong-royong-bersihkan-pesantren",
         "category": "Kehidupan Pesantren",
         "date": "2025-02-27",
-        "image": "https://webbackend.arrahmanic.org/storage/posts/MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k.png",
+        "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop",
         "title": "Menjemput Keberkahan Ramadhan, Santri PTDARRAHMAN Gotong Royong Bersihkan Pesantren",
         "excerpt": "Menyambut bulan suci Ramadhan, santri dan asatidz PTDARRAHMAN melaksanakan Gerakan Lingkungan Indah (GLI) membersihkan seluruh area asrama dan fasilitas belajar.",
         "author": "Humas PTDARRAHMAN",
@@ -534,10 +532,25 @@ def seed_facilities() -> None:
 
 STAFF_MEMBERS = [
     {"role": "Mudir", "name": "Ustadz Ziyad Khairy", "level": 1, "image": None},
-    {"role": "Administrator", "name": "Ustadz Mahrozal Mizan", "level": 2, "image": None},
-    {"role": "Kepala Kepegawaian", "name": "Ustadz Murtadho Tumari", "level": 2, "image": None},
+    {
+        "role": "Administrator",
+        "name": "Ustadz Mahrozal Mizan",
+        "level": 2,
+        "image": None,
+    },
+    {
+        "role": "Kepala Kepegawaian",
+        "name": "Ustadz Murtadho Tumari",
+        "level": 2,
+        "image": None,
+    },
     {"role": "Guru IT & Pemrograman", "name": "Ustadz Ian", "level": 3, "image": None},
-    {"role": "Musrif & Pengajar Bahasa Arab", "name": "Ustadz Nur Fatoni", "level": 3, "image": None},
+    {
+        "role": "Musrif & Pengajar Bahasa Arab",
+        "name": "Ustadz Nur Fatoni",
+        "level": 3,
+        "image": None,
+    },
 ]
 
 
@@ -547,7 +560,9 @@ def seed_staff() -> None:
     now = utcnow()
     for s in STAFF_MEMBERS:
         existing = get_by_column("staff", "role", s["role"])
-        content_json = json.dumps({"name": s["name"], "level": s["level"]}, ensure_ascii=False)
+        content_json = json.dumps(
+            {"name": s["name"], "level": s["level"]}, ensure_ascii=False
+        )
         payload = {
             "role": s["role"],
             "image": s["image"],
@@ -570,30 +585,168 @@ def seed_staff() -> None:
 
 LEADERSHIP_MEMBERS = [
     # Dewan Pembina & Pengawas Yayasan
-    {"board": "yayasan", "order": 1, "name": "Indra Setiawan", "position": "Pembina Yayasan", "image": None},
-    {"board": "yayasan", "order": 2, "name": "Tri Indra Basoeki", "position": "Pembina Yayasan", "image": None},
-    {"board": "yayasan", "order": 3, "name": "Rini Widiastuti Rahayu", "position": "Pengawas Yayasan", "image": None},
-    {"board": "yayasan", "order": 4, "name": "Eko Santoso", "position": "Ketua Yayasan", "image": "/images/pak-eko.jpg"},
-    {"board": "yayasan", "order": 5, "name": "Chandra Sari Nugraheni", "position": "Bendahara Yayasan", "image": None},
-    {"board": "yayasan", "order": 6, "name": "Noor Kartika Muliawati", "position": "Sekretaris Yayasan", "image": None},
-    {"board": "yayasan", "order": 7, "name": "Rachmania Kurniawati", "position": "Sekretaris Yayasan", "image": None},
+    {
+        "board": "yayasan",
+        "order": 1,
+        "name": "Indra Setiawan",
+        "position": "Pembina Yayasan",
+        "image": None,
+    },
+    {
+        "board": "yayasan",
+        "order": 2,
+        "name": "Tri Indra Basoeki",
+        "position": "Pembina Yayasan",
+        "image": None,
+    },
+    {
+        "board": "yayasan",
+        "order": 3,
+        "name": "Rini Widiastuti Rahayu",
+        "position": "Pengawas Yayasan",
+        "image": None,
+    },
+    {
+        "board": "yayasan",
+        "order": 4,
+        "name": "Eko Santoso",
+        "position": "Ketua Yayasan",
+        "image": "/images/pak-eko.jpg",
+    },
+    {
+        "board": "yayasan",
+        "order": 5,
+        "name": "Chandra Sari Nugraheni",
+        "position": "Bendahara Yayasan",
+        "image": None,
+    },
+    {
+        "board": "yayasan",
+        "order": 6,
+        "name": "Noor Kartika Muliawati",
+        "position": "Sekretaris Yayasan",
+        "image": None,
+    },
+    {
+        "board": "yayasan",
+        "order": 7,
+        "name": "Rachmania Kurniawati",
+        "position": "Sekretaris Yayasan",
+        "image": None,
+    },
     # Pimpinan & Manajemen Lembaga PTDARRAHMAN
-    {"board": "islamic-center", "order": 1, "name": "Chandra Sari Nugraheni", "position": "President Director", "image": None},
-    {"board": "islamic-center", "order": 2, "name": "Fathya Irsalina M", "position": "AVP Performance Management", "image": None},
-    {"board": "islamic-center", "order": 3, "name": "Mira Susanti", "position": "AVP Internal Auditor", "image": None},
-    {"board": "islamic-center", "order": 4, "name": "Leo Latul Agusta", "position": "Director of Education Center", "image": None},
-    {"board": "islamic-center", "order": 5, "name": "Ahmad Mahfud", "position": "Director of Support & Development", "image": None},
-    {"board": "islamic-center", "order": 6, "name": "Dewi Nareswari", "position": "Vice President of Branding & Development", "image": None},
-    {"board": "islamic-center", "order": 7, "name": "Dahniar", "position": "Vice President of Finance & Support", "image": None},
-    {"board": "islamic-center", "order": 8, "name": "Ruswandri", "position": "Head of Lembaga Pengelolaan Ziswaf", "image": None},
-    {"board": "islamic-center", "order": 9, "name": "Silvi Laeli Kodaria", "position": "Head of Sekolah Alam Qurani Ar Rahman", "image": None},
-    {"board": "islamic-center", "order": 10, "name": "Ziyad Khairy", "position": "Head of Pesantren Tahfidz Qur'an dan Digital Ar-Rahman", "image": None},
-    {"board": "islamic-center", "order": 11, "name": "Ahmad Khaeruddin", "position": "Head of Lembaga Pendidikan Al Quran", "image": None},
-    {"board": "islamic-center", "order": 12, "name": "Susilawati", "position": "Head of Lembaga Pembinaan Masyarakat", "image": None},
-    {"board": "islamic-center", "order": 13, "name": "Ustadz Mahrozal Mizan", "position": "Administrator Pesantren", "image": None},
-    {"board": "islamic-center", "order": 14, "name": "Ustadz Murtadho Tumari", "position": "Kepala Kepegawaian", "image": None},
-    {"board": "islamic-center", "order": 15, "name": "Ustadz Ian", "position": "Guru IT & Pemrograman", "image": None},
-    {"board": "islamic-center", "order": 16, "name": "Ustadz Nur Fatoni", "position": "Musrif & Pengajar Bahasa Arab", "image": None},
+    {
+        "board": "islamic-center",
+        "order": 1,
+        "name": "Chandra Sari Nugraheni",
+        "position": "President Director",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 2,
+        "name": "Fathya Irsalina M",
+        "position": "AVP Performance Management",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 3,
+        "name": "Mira Susanti",
+        "position": "AVP Internal Auditor",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 4,
+        "name": "Leo Latul Agusta",
+        "position": "Director of Education Center",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 5,
+        "name": "Ahmad Mahfud",
+        "position": "Director of Support & Development",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 6,
+        "name": "Dewi Nareswari",
+        "position": "Vice President of Branding & Development",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 7,
+        "name": "Dahniar",
+        "position": "Vice President of Finance & Support",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 8,
+        "name": "Ruswandri",
+        "position": "Head of Lembaga Pengelolaan Ziswaf",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 9,
+        "name": "Silvi Laeli Kodaria",
+        "position": "Head of Sekolah Alam Qurani Ar Rahman",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 10,
+        "name": "Ziyad Khairy",
+        "position": "Head of Pesantren Tahfidz Qur'an dan Digital Ar-Rahman",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 11,
+        "name": "Ahmad Khaeruddin",
+        "position": "Head of Lembaga Pendidikan Al Quran",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 12,
+        "name": "Susilawati",
+        "position": "Head of Lembaga Pembinaan Masyarakat",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 13,
+        "name": "Ustadz Mahrozal Mizan",
+        "position": "Administrator Pesantren",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 14,
+        "name": "Ustadz Murtadho Tumari",
+        "position": "Kepala Kepegawaian",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 15,
+        "name": "Ustadz Ian",
+        "position": "Guru IT & Pemrograman",
+        "image": None,
+    },
+    {
+        "board": "islamic-center",
+        "order": 16,
+        "name": "Ustadz Nur Fatoni",
+        "position": "Musrif & Pengajar Bahasa Arab",
+        "image": None,
+    },
 ]
 
 
@@ -601,7 +754,9 @@ def seed_leadership_members() -> None:
     if not _table_exists("leadership_members"):
         return
     now = utcnow()
-    existing_rows = execute_raw("SELECT id, board, `order`, content FROM leadership_members")
+    existing_rows = execute_raw(
+        "SELECT id, board, `order`, content FROM leadership_members"
+    )
     existing_map = {}
     for row in existing_rows:
         try:
@@ -638,6 +793,51 @@ def seed_leadership_members() -> None:
 
 ACHIEVEMENTS = [
     {
+        "year": 2025,
+        "image": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?q=80&w=1200&auto=format&fit=crop",
+        "content": {
+            "title": "Alvito Syarman S — Meraih Medali Emas (Bidang Lomba: Tafsir Al-Qur'an & Hadits)",
+            "desc": (
+                "Santri PTDARRAHMAN berhasil meraih Medali Emas pada ajang Kejuaraan Tafsir Al-Qur'an & Hadits, "
+                "membuktikan kedalaman pemahaman ayat suci dan sanad hadits nabawi."
+            ),
+            "category": "Tahfidz & Tafsir Al-Qur'an",
+        },
+    },
+    {
+        "year": 2025,
+        "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop",
+        "content": {
+            "title": "Rasyid Anwar Arief — Meraih Medali Perak (Bidang Lomba: Teknik Informatika)",
+            "desc": (
+                "Prestasi gemilang santri PTDARRAHMAN meraih Medali Perak dalam kompetisi sains dan komputasi rekayasa teknik informatika."
+            ),
+            "category": "Teknik Informatika & Coding",
+        },
+    },
+    {
+        "year": 2025,
+        "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop",
+        "content": {
+            "title": "Hudzaifah Ali Miftah — Meraih Medali Perunggu (Bidang Lomba: Teknik Informatika)",
+            "desc": (
+                "Meraih Medali Perunggu dalam kejuaraan teknologi informasi dan logika pemrograman komputer terapan."
+            ),
+            "category": "Teknik Informatika & Coding",
+        },
+    },
+    {
+        "year": 2025,
+        "image": "https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=1200&auto=format&fit=crop",
+        "content": {
+            "title": "Rahmatullah Yusuf I — Meraih Medali Perunggu (Bidang Lomba: Bahasa Inggris)",
+            "desc": (
+                "Meraih Medali Perunggu dalam kompetisi Bahasa Inggris (English Olympiad & Speech Contest) berdaya saing global."
+            ),
+            "category": "Bilingual & Bahasa Asing",
+        },
+    },
+    {
         "year": 2024,
         "image": "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop",
         "content": {
@@ -647,42 +847,6 @@ ACHIEVEMENTS = [
                 "menuntaskan ujian setoran hafalan 30 Juz Bil Ghoib sekali duduk, disiarkan langsung dan disaksikan dewan asatidz."
             ),
             "category": "Tahfidz Al-Qur'an",
-        },
-    },
-    {
-        "year": 2024,
-        "image": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?q=80&w=1200&auto=format&fit=crop",
-        "content": {
-            "title": "Medali Emas Olimpiade Tafsir Qur'an Tingkat Nasional",
-            "desc": (
-                "Santri PTDARRAHMAN berhasil meraih Medali Emas pada ajang Olimpiade Tafsir Al-Qur'an Nasional, "
-                "membuktikan kedalaman pemahaman ayat suci melampaui hafalan lafadz semata."
-            ),
-            "category": "Olimpiade Sains & Qur'an",
-        },
-    },
-    {
-        "year": 2025,
-        "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop",
-        "content": {
-            "title": "Pengembangan Prototipe Web dan Presentasi Proyek Digital Santri",
-            "desc": (
-                "Tim santri sukses mengembangkan aplikasi web fungsional menggunakan Next.js dan basis data relasional, "
-                "serta mempresentasikannya di hadapan praktisi software engineer industri teknologi."
-            ),
-            "category": "Teknologi Digital & Coding",
-        },
-    },
-    {
-        "year": 2025,
-        "image": "https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=1200&auto=format&fit=crop",
-        "content": {
-            "title": "Keikutsertaan Santri pada 6 Cabang Lomba PORSENI PONTREN 2025",
-            "desc": (
-                "19 santri delegasi PTDARRAHMAN berlaga dalam 6 cabang kompetisi di ajang PORSENI PONTREN Kabupaten Bekasi "
-                "bersama 73 pondok pesantren se-kabupaten."
-            ),
-            "category": "Seni & Olahraga Santri",
         },
     },
 ]
@@ -1014,6 +1178,21 @@ HERO_SLIDES = [
             "button_href": "/register",
         },
     },
+    {
+        "id": "heroslide-4",
+        "order": 4,
+        "image": "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1920&auto=format&fit=crop",
+        "content": {
+            "label": "Ekosistem Pesantren Asri & Pendampingan 24 Jam",
+            "title": "Membina Akidah, Adab Asrama,\ndan Kemandirian Santri\ndalam Fasilitas Modern",
+            "subtitle": (
+                "Lingkungan mukim representatif dengan pendampingan asatidz dan musyrif 24 jam, pembiasaan ibadah berjamaah di masjid, "
+                "laboratorium komputer modern, asrama nyaman, serta sarana olahraga kebugaran santri."
+            ),
+            "button_label": "Jelajahi Fasilitas",
+            "button_href": "/facilities",
+        },
+    },
 ]
 
 
@@ -1185,10 +1364,22 @@ ABOUT_SEEDS = [
             "eyebrow": "Nilai Utama",
             "title": "Nilai Luhur PTDARRAHMAN",
             "items": [
-                {"title": "Qur'ani", "desc": "Menjadikan Kalamullah sebagai ruh utama pembentukan karakter, etika, dan pola pikir santri."},
-                {"title": "Adaptif", "desc": "Cepat tanggap merespons perkembangan teknologi digital tanpa kehilangan prinsip dasar syariat."},
-                {"title": "Integritas", "desc": "Menjunjung kejujuran, amanah, dan komitmen tinggi dalam menuntut ilmu dan berkarya."},
-                {"title": "Mandiri", "desc": "Membina ketangguhan hidup, kepemimpinan pribadi, dan jiwa kewirausahaan islami."},
+                {
+                    "title": "Qur'ani",
+                    "desc": "Menjadikan Kalamullah sebagai ruh utama pembentukan karakter, etika, dan pola pikir santri.",
+                },
+                {
+                    "title": "Adaptif",
+                    "desc": "Cepat tanggap merespons perkembangan teknologi digital tanpa kehilangan prinsip dasar syariat.",
+                },
+                {
+                    "title": "Integritas",
+                    "desc": "Menjunjung kejujuran, amanah, dan komitmen tinggi dalam menuntut ilmu dan berkarya.",
+                },
+                {
+                    "title": "Mandiri",
+                    "desc": "Membina ketangguhan hidup, kepemimpinan pribadi, dan jiwa kewirausahaan islami.",
+                },
             ],
         },
     },
@@ -1594,7 +1785,9 @@ def seed_company_settings() -> None:
             )
             print(f"  setting created: {key}")
         elif not (existing.get("value") or "").strip():
-            update_record("site_settings", existing["key"], {"value": value, "updated_at": now})
+            update_record(
+                "site_settings", existing["key"], {"value": value, "updated_at": now}
+            )
             print(f"  setting backfilled: {key}")
 
 

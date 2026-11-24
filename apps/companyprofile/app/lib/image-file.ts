@@ -66,8 +66,32 @@ export function validateImageUrl(value: string): string | null {
  * Nilai yang disimpan tetap apa adanya.
  */
 export function resolveImageSrc(value: string, apiBase: string): string {
-  const src = value.trim()
+  const src = (value ?? '').trim()
   if (!src) return ''
+
+  // Ganti domain lama webbackend.arrahmanic.org yang sudah tidak aktif dengan foto Unsplash relevan
+  if (src.includes('webbackend.arrahmanic.org')) {
+    if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) {
+      return 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ')) {
+      return 'https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1')) {
+      return 'https://images.unsplash.com/photo-1576767475305-ce65f5cbb67e?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8')) {
+      return 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97')) {
+      return 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop'
+    }
+    if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) {
+      return 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop'
+    }
+    return 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop'
+  }
+
   if (src.startsWith('/') && !src.startsWith('//')) {
     return `${apiBase.replace(/\/+$/, '')}${src}`
   }

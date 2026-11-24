@@ -1,4 +1,5 @@
 import type { NewsArticle } from './types'
+import { resolveImageSrc } from './image-file'
 
 /**
  * Berita resmi cadangan PTDARRAHMAN agar halaman `/news` selalu menampilkan
@@ -130,8 +131,18 @@ export function mergeNewsArticles(articles: NewsArticle[]): NewsArticle[] {
     const key = article.slug || article.id
     const previous = merged.get(key)
 
+    const rawImg = article.image || previous?.image || ''
+    const cleanImg = resolveImageSrc(rawImg, '')
+
     if (!previous) {
-      merged.set(key, article)
+      const artContent = { ...(article.content ?? {}) }
+      if (!artContent.content && artContent.body) {
+        artContent.content = artContent.body
+      }
+      if (!artContent.body && artContent.content) {
+        artContent.body = artContent.content
+      }
+      merged.set(key, { ...article, image: cleanImg, content: artContent })
       continue
     }
 
@@ -139,17 +150,25 @@ export function mergeNewsArticles(articles: NewsArticle[]): NewsArticle[] {
       new Set([...(previous.gallery ?? []), ...(article.gallery ?? [])]),
     )
 
+    const mergedContent = {
+      ...(previous.content ?? {}),
+      ...(article.content ?? {}),
+    }
+    if (!mergedContent.content && mergedContent.body) {
+      mergedContent.content = mergedContent.body
+    }
+    if (!mergedContent.body && mergedContent.content) {
+      mergedContent.body = mergedContent.content
+    }
+
     merged.set(key, {
       ...previous,
       ...article,
-      image: article.image || previous.image,
+      image: cleanImg,
       category: article.category || previous.category,
       date: article.date || previous.date,
       gallery: gallery.length > 0 ? gallery : undefined,
-      content: {
-        ...(previous.content ?? {}),
-        ...(article.content ?? {}),
-      },
+      content: mergedContent,
     })
   }
 

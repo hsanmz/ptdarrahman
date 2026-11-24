@@ -34,40 +34,49 @@ export default function FeeTransparencySection({
 
   const feeCards = [
     {
-      icon: QrCode,
-      title: 'Biaya Formulir Pendaftaran',
-      badge: 'Tahap 1 — Online',
-      desc: 'Satu-satunya biaya yang dibayarkan melalui portal PPDB saat registrasi awal via QRIS instan.',
-      detail: formFeeFormatted,
-      subDetail: 'Kuitansi resmi ber-HMAC terbit seketika',
+      icon: Building,
+      title: 'Uang Pangkal',
+      badge: 'Satu Kali di Awal',
+      desc: 'Investasi sarana asrama modern, ranjang mukim santri, laboratorium programming, dan fasilitas pesantren.',
+      detail: 'Rp 15.000.000',
+      subDetail: 'Investasi fasilitas asrama & lab komputer',
       color: 'emerald',
     },
     {
-      icon: Building,
-      title: 'Uang Pangkal & Sarana',
-      badge: 'Pasca Kelulusan (LoA)',
-      desc: 'Pengembangan sarana asrama modern, laboratorium programming, perakitan IoT, dan kasur/lemari santri.',
-      detail: 'Investasi Awal Sarana',
-      subDetail: 'Termasuk fasilitas asrama & lab komputer',
+      icon: Sparkles,
+      title: 'Uang Kegiatan (per tahun)',
+      badge: 'Rutin Per Tahun',
+      desc: 'Rihlah tahunan, tasmi bil ghoib terbuka, kompetisi teknologi & olahraga santri, serta wisuda tahfidz.',
+      detail: 'Rp 6.000.000',
+      subDetail: 'Kegiatan santri 1 tahun penuh',
       color: 'amber',
     },
     {
       icon: Utensils,
-      title: 'SPP Bulanan Terpadu',
+      title: 'Uang SPP',
       badge: 'Rutin Per Bulan',
-      desc: 'Mencakup makan bergizi 3x sehari, laundry pakaian harian, halaqah tahfidz harian, dan pembinaan IT intensif.',
-      detail: 'Terpadu Tanpa Biaya Tersembunyi',
-      subDetail: 'Makan 3x, laundry, dan asrama lengkap',
+      desc: 'Pendidikan tahfidz 30 juz, asuhan muhaffidz, makan bergizi 3x sehari, laundry pakaian, dan praktikum IT.',
+      detail: 'Rp 2.000.000',
+      subDetail: 'Per bulan lengkap konsumsi 3x & asrama',
       color: 'sky',
     },
     {
       icon: BookOpen,
-      title: 'Perlengkapan & Kitab',
+      title: 'Uang Buku',
       badge: 'Satu Kali Awal Tahun',
-      desc: 'Paket seragam resmi pesantren, mushaf tahfidz standar pojok, buku modul programming, dan kitab kajian.',
-      detail: 'Paket Komplet Santri',
-      subDetail: 'Seragam lengkap, mushaf, dan kitab kajian',
+      desc: 'Mushaf Al-Qur\'an standar pojok, modul pemrograman IT & rekayasa web, dan kitab kajian dirosah islamiyah.',
+      detail: 'Rp 1.000.000',
+      subDetail: 'Paket mushaf tajwid & modul koding',
       color: 'violet',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Uang Seragam',
+      badge: 'Satu Kali Awal Masuk',
+      desc: 'Paket gamis putih shalat, seragam batik resmi PTDARRAHMAN, pramuka, kaos olahraga, dan jas santri resmi.',
+      detail: 'Rp 1.000.000',
+      subDetail: 'Paket 5 pasang seragam lengkap',
+      color: 'teal',
     },
   ]
 
@@ -90,12 +99,12 @@ export default function FeeTransparencySection({
         </h3>
         <p className="mt-4 text-[var(--text-secondary)] text-sm md:text-base leading-relaxed">
           Pesantren Tahfidz Qur’an dan Digital Ar-Rahman menjunjung tinggi transparansi tanpa biaya tersembunyi.
-          Seluruh rincian tertera jelas pada Surat Penerimaan (LoA) resmi santri baru.
+          Total estimasi biaya pendidikan santri baru adalah <strong>Rp 25.000.000</strong> yang terbagi ke dalam 5 komponen resmi berikut.
         </p>
       </motion.div>
 
-      {/* Grid 4 Kartu Biaya */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Grid 5 Kartu Komponen Biaya */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
         {feeCards.map((card, idx) => {
           const Icon = card.icon
           return (

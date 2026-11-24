@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, memo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Users, Shield, GraduationCap, Bell, Send, Activity, ChevronRight,
@@ -142,7 +143,7 @@ function entityMeta(entity: string) {
   return { icon: Settings, chip: 'bg-slate-100', iconCls: 'text-slate-500' }
 }
 
-function MiniSparkline({ data }: { data: TrendPoint[] }) {
+const MiniSparkline = memo(function MiniSparkline({ data }: { data: TrendPoint[] }) {
   return (
     <div className="mt-3 h-10 w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -158,7 +159,7 @@ function MiniSparkline({ data }: { data: TrendPoint[] }) {
       </ResponsiveContainer>
     </div>
   )
-}
+})
 
 function SegmentedBar({ items, max }: { items: ColorItem[]; max?: number }) {
   const totalIsh = max !== undefined ? max : items.reduce((s, i) => s + i.value, 0)
@@ -184,8 +185,7 @@ function SegmentedBar({ items, max }: { items: ColorItem[]; max?: number }) {
   )
 }
 
-function DonutCard({ title, description, icon: Icon, items, emptyText }: {
-  title: string
+const DonutCard = memo(function DonutCard({ title, description, icon: Icon, items, emptyText }: {  title: string
   description: string
   icon: LucideIcon
   items: ColorItem[]
@@ -236,9 +236,9 @@ function DonutCard({ title, description, icon: Icon, items, emptyText }: {
       </CardContent>
     </Card>
   )
-}
+})
 
-function WaveQuotaCard({ wave }: { wave: Stats['active_wave'] }) {
+const WaveQuotaCard = memo(function WaveQuotaCard({ wave }: { wave: Stats['active_wave'] }) {
   return (
     <Card className="flex flex-col rounded-2xl border-slate-100 shadow-sm">
       <CardHeader className="border-b border-slate-50 bg-slate-50/50 pb-4">
@@ -283,13 +283,13 @@ function WaveQuotaCard({ wave }: { wave: Stats['active_wave'] }) {
       </CardContent>
     </Card>
   )
-}
+})
 
 /**
  * Rincian pendaftar per periode dan per gelombang — inilah yang memberi
  * konteks asal data ketika dashboard tidak difilter (mode global).
  */
-function BreakdownCard({ title, description, icon: Icon, rows, total }: {
+const BreakdownCard = memo(function BreakdownCard({ title, description, icon: Icon, rows, total }: {
   title: string
   description: string
   icon: LucideIcon
@@ -343,78 +343,58 @@ function BreakdownCard({ title, description, icon: Icon, rows, total }: {
       </CardContent>
     </Card>
   )
-}
+})
 
 export default function DashboardPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [data, setData] = useState<Stats | null>(null)
-  const [loading, setLoading] = useState(true)
-  // Error load stats yang tampil sebagai banner — jangan pernah menyamar
-  // jadi angka 0 seolah backend bilang "tidak ada data".
-  const [loadError, setLoadError] = useState<string | null>(null)
-  const [periods, setPeriods] = useState<ApplicantPeriod[]>([])
-  const [waves, setWaves] = useState<ApplicantWave[]>([])
   const [periodFilter, setPeriodFilter] = useState(ALL)
   const [waveFilter, setWaveFilter] = useState(ALL)
 
-  const load = useCallback((periodId: string, waveId: string) => {
-    setLoading(true)
-    const params =
-      periodId === ALL && waveId === ALL
-        ? undefined
-        : {
-            ...(periodId !== ALL ? { period_id: periodId } : {}),
-            ...(waveId !== ALL ? { wave_id: waveId } : {}),
-          }
-    api
-      .getDashboardStats(params)
-      .then((res: any) => {
-        setLoadError(null)
-        if (res?.stats) {
-          setData(res)
-        } else {
-          // Bentuk lama (tanpa wrapper `stats`) — tetap ditampilkan.
-          setData({
-            stats: {
-              ...emptyStats(),
-              total_users: res?.total_users || 0,
-              total_roles: res?.total_roles || 0,
-              total_applicants: res?.total_applicants || 0,
-            },
-            notifications: null,
-            active_wave: null,
-            recent_logs: [],
-            trend: [],
-            trend_delta: null,
-          })
-        }
-      })
-      .catch((e) => {
-        // Pertahankan data lama bila ada; tanpa data, banner error tampil
-        // menggantikan kartu statistik angka 0 yang menyesatkan.
-        setLoadError(api.getErrorMessage(e, 'Gagal memuat statistik dashboard.'))
-      })
-      .finally(() => setLoading(false))
-  }, [])
+  // Cache filter options (periods + waves) dengan TanStack Query
+  const { data: filters } = useQuery({
+    queryKey: ['dashboard-filters'],
+    queryFn: async () => {
+      const [p, w] = await Promise.all([api.getPeriods(), api.getWaves()])
+      return { periods: p, waves: w }
+    },
+    staleTime: 5 * 60_000,
+  })
+  const periods = filters?.periods ?? []
+  const waves = filters?.waves ?? []
 
-  useEffect(() => {
-    // Opsi filter periode & gelombang.
-    ;(async () => {
-      try {
-        const [p, w] = await Promise.all([api.getPeriods(), api.getWaves()])
-        setPeriods(p)
-        setWaves(w)
-      } catch {
-        // Filter bersifat opsional.
+  // Cache statistik dashboard dengan TanStack Query
+  const { data, isLoading: loading, error, refetch } = useQuery<Stats | null>({
+    queryKey: ['dashboard-stats', periodFilter, waveFilter],
+    queryFn: async () => {
+      const params =
+        periodFilter === ALL && waveFilter === ALL
+          ? undefined
+          : {
+              ...(periodFilter !== ALL ? { period_id: periodFilter } : {}),
+              ...(waveFilter !== ALL ? { wave_id: waveFilter } : {}),
+            }
+      const res: any = await api.getDashboardStats(params)
+      if (!res) return null
+      if (res?.stats) return res as Stats
+      return {
+        stats: {
+          ...emptyStats(),
+          total_users: res?.total_users || 0,
+          total_roles: res?.total_roles || 0,
+          total_applicants: res?.total_applicants || 0,
+        },
+        notifications: null,
+        active_wave: null,
+        recent_logs: [],
+        trend: [],
+        trend_delta: null,
       }
-    })()
-  }, [])
+    },
+    staleTime: 60_000,
+  })
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    load(periodFilter, waveFilter)
-  }, [load, periodFilter, waveFilter])
+  const loadError = error ? api.getErrorMessage(error, 'Gagal memuat statistik dashboard.') : null
 
   const waveOptions = [
     { value: ALL, label: 'Semua Gelombang' },
@@ -604,7 +584,7 @@ export default function DashboardPage() {
             </p>
           </div>
           <button
-            onClick={() => load(periodFilter, waveFilter)}
+            onClick={() => refetch()}
             className="inline-flex items-center gap-1.5 self-start rounded-lg border border-red-300 px-4 py-2 text-xs font-bold text-red-700 transition-colors hover:bg-red-100 sm:self-auto"
           >
             <RotateCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} /> Muat Ulang

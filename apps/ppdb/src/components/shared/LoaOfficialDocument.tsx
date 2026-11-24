@@ -60,7 +60,7 @@ export default function LoaOfficialDocument({ data, page = 'both' }: LoaOfficial
   const discountName = data.discount_name
 
   // Verification URL for QR Codes
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://ptdarrahman.sch.id'
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
   const officialVerifyUrl = `${baseUrl}/loa/${regNo}?verify=official`
   const parentVerifyUrl = `${baseUrl}/loa/${regNo}?verify=parent&token=${data.loa_signature_token || ''}`
 
@@ -515,7 +515,7 @@ export default function LoaOfficialDocument({ data, page = 'both' }: LoaOfficial
       {/* Footer Info */}
       <div className="border-t border-slate-200 pt-1 mt-auto flex justify-between items-center text-[10px] text-slate-400 font-mono">
         <span>Letter of Acceptance (LoA) Resmi - PTDARRAHMAN</span>
-        <span>Dokumen Sah Dihasilkan oleh Sistem PPDB</span>
+        <span>{typeof window !== 'undefined' && window.location.host ? window.location.host : 'Dokumen Sah Dihasilkan oleh Sistem PPDB'}</span>
       </div>
     </div>
   )

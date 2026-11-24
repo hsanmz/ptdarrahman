@@ -53,10 +53,10 @@ describe('programMenuLinks — isi dropdown "Program" (navbar & footer)', () => 
       { id: '', slug: '', icon: '', image: '', content: { title: 'Hantu' } } as unknown as Program,
     ])
     expect(links).toEqual([
-      { href: '/programs/tahfidz-al-quran', label: "Tahfidz Al-Qur'an 30 Juz & Ulumul Qur'an" },
-      { href: '/programs/teknologi-digital', label: 'Rekayasa Teknologi Digital, Web & IoT' },
-      { href: '/programs/bilingual', label: 'Program Bilingual (Bahasa Arab & Inggris Aktif)' },
-      { href: '/programs/akademi-kepemimpinan', label: 'Akademi Kepemimpinan, Karakter & Kemandirian Santri' },
+      { href: '/programs/tahfidz-al-quran', label: "Tahfidz Al-Qur'an 30 Juz" },
+      { href: '/programs/teknologi-digital', label: 'Rekayasa Teknologi Digital & IoT' },
+      { href: '/programs/bilingual', label: 'Program Bilingual Arab & Inggris' },
+      { href: '/programs/akademi-kepemimpinan', label: 'Akademi Kepemimpinan & Karakter' },
       { href: '/programs/dirasah-islamiyah', label: 'Dirasah Islamiyah (Studi Keislaman)' },
     ])
   })

@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "eslint --cache",
         "test": "vitest run --passWithNoTests",
-        "seed": "cd ../api && python3 -m scripts.seed_companyprofile"
+        "seed": "cd ../api && python3 -m scripts.seed_companyprofile",
+        "seed:hero": "cd ../api && python3 -m scripts.seed_hero"
     },
     "dependencies": {
         "@gsap/react": "^2.1.2",

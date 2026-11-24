@@ -27,6 +27,8 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
+      staleTime: 60_000,    // data segar 1 menit
+      gcTime: 300_000,      // cache bertahan 5 menit
     },
   },
 })

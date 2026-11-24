@@ -16,12 +16,13 @@ async function getSiteUrl(): Promise<string> {
   try {
     const h = await headers()
     const host = h.get('x-forwarded-host') || h.get('host')
-    const proto = h.get('x-forwarded-proto') || 'https'
+    const isLocalOrIp = host && (/^localhost(:\d+)?$/i.test(host) || /^(?:\d{1,3}\.){3}\d{1,3}(:\d+)?$/.test(host))
+    const proto = h.get('x-forwarded-proto') || (isLocalOrIp ? 'http' : 'https')
     if (host) return `${proto}://${host}`
   } catch {
     // fallback if headers() not available in static prerender
   }
-  return 'https://ptdarrahman.sch.id'
+  return 'http://localhost:3000'
 }
 
 const inter = Inter({

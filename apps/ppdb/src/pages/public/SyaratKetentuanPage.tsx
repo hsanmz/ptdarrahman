@@ -10,8 +10,8 @@ export default function SyaratKetentuanPage() {
 
   const generalRequirements = [
     {
-      title: "Lulusan Jenjang Dasar (SD / MI)",
-      desc: "Telah lulus atau sedang duduk di kelas 6 SD/MI/sederajat dan siap melanjutkan pendidikan menengah di pesantren.",
+      title: "Lulusan SMP / MTs / Sederajat (Calon Santri SMK)",
+      desc: "Telah lulus atau sedang duduk di kelas 9 SMP/MTs/sederajat dan siap melanjutkan pendidikan kejuruan SMK Teknologi Digital serta Tahfidz 30 Juz di Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.",
     },
     {
       title: "Komitmen Mukim di Asrama Penuh",
@@ -59,7 +59,7 @@ export default function SyaratKetentuanPage() {
     },
     {
       name: "Buku Rapor 4 Semester Terakhir",
-      format: "Scan nilai rapor semester ganjil-genap kelas 4 dan kelas 5 yang telah dilegalisir",
+      format: "Scan nilai rapor SMP/MTs 4 semester terakhir (kelas 7 dan kelas 8 ganjil-genap) yang telah dilegalisir",
       type: "PDF (Maks 5MB)",
     },
   ]

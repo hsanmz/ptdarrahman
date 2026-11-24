@@ -232,18 +232,41 @@ def get_dashboard(
 
     month_start = (datetime.now(WIB) - timedelta(days=29)).strftime("%Y-%m-%d")
 
+    # Agregasi metrik users dan roles dalam 1 query masing-masing untuk performa
+    user_agg = (
+        execute_raw(
+            "SELECT "
+            "COUNT(*) AS `total`, "
+            "COALESCE(SUM(CASE WHEN `is_active` = 1 THEN 1 ELSE 0 END), 0) AS `active`, "
+            "COALESCE(SUM(CASE WHEN `is_active` = 0 THEN 1 ELSE 0 END), 0) AS `inactive`, "
+            "COALESCE(SUM(CASE WHEN `created_at` >= :start THEN 1 ELSE 0 END), 0) AS `new_30d` "
+            "FROM `users`",
+            {"start": month_start},
+        )
+        or [{}]
+    )[0]
+
+    role_agg = (
+        execute_raw(
+            "SELECT "
+            "COUNT(*) AS `total`, "
+            "COALESCE(SUM(CASE WHEN `is_system` = 1 THEN 1 ELSE 0 END), 0) AS `system`, "
+            "COALESCE(SUM(CASE WHEN `is_system` = 0 THEN 1 ELSE 0 END), 0) AS `custom` "
+            "FROM `roles`"
+        )
+        or [{}]
+    )[0]
+
     stats = {
-        "total_users": total_users,
-        "total_roles": total_roles,
+        "total_users": int(user_agg.get("total") or total_users),
+        "total_roles": int(role_agg.get("total") or total_roles),
         "total_applicants": total_applicants,
         "users_by_type": _group_counts("users", "user_type"),
-        "users_active": _count_where("users", "`is_active` = 1"),
-        "users_inactive": _count_where("users", "`is_active` = 0"),
-        "users_new_30d": _count_where(
-            "users", "`created_at` >= :start", {"start": month_start}
-        ),
-        "system_roles": _count_where("roles", "`is_system` = 1"),
-        "custom_roles": _count_where("roles", "`is_system` = 0"),
+        "users_active": int(user_agg.get("active") or 0),
+        "users_inactive": int(user_agg.get("inactive") or 0),
+        "users_new_30d": int(user_agg.get("new_30d") or 0),
+        "system_roles": int(role_agg.get("system") or 0),
+        "custom_roles": int(role_agg.get("custom") or 0),
         "applicants_by_payment": applicants_by_payment,
         "applicants_by_status": applicants_by_status,
         "applicants_new_30d": delta["current"],

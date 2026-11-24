@@ -4,7 +4,7 @@ import { apiFetch } from '@/api/client'
 import { Button } from '@/components/ui'
 import {
   CalendarCheck, Clock, UserPlus, QrCode, FileUp, Laptop, Users,
-  Award, MessageSquare, CheckCircle2, BellRing, LogIn
+  Award, MessageSquare, CheckCircle2, BellRing, LogIn, GraduationCap
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -118,10 +118,16 @@ export default function AlurJadwalPage() {
       {/* ── Page Header ── */}
       <section className="relative overflow-hidden px-4 py-12 bg-gradient-to-b from-teal-50/50 via-white to-background border-b border-slate-100">
         <div className="container mx-auto max-w-5xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-100 px-3.5 py-1 text-xs font-bold text-teal-900 border border-teal-200">
-            <CalendarCheck className="h-3.5 w-3.5 text-teal-700" />
-            <span>Alur Sistem &amp; Linimasa Seleksi</span>
-          </span>
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-100 px-3.5 py-1 text-xs font-bold text-teal-900 border border-teal-200">
+              <CalendarCheck className="h-3.5 w-3.5 text-teal-700" />
+              <span>Alur Sistem &amp; Linimasa Seleksi</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-900 border border-emerald-200">
+              <GraduationCap className="h-3.5 w-3.5 text-emerald-700" />
+              <span>Jenjang SMK — Calon Santri Lulusan SMP / MTs</span>
+            </span>
+          </div>
 
           <h1 className="mt-4 font-heading text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
             Alur Pendaftaran &amp; Jadwal Penting
@@ -170,11 +176,51 @@ export default function AlurJadwalPage() {
       </section>
 
       <div className="container mx-auto max-w-5xl px-4 py-12 space-y-16">
+        {/* ── 5 Langkah Utama Alur Pendaftaran (Resmi Flyer) ── */}
+        <section className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/70 via-white to-amber-50/40 p-6 sm:p-8 shadow-sm">
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-800 px-3 py-0.5 text-xs font-bold uppercase tracking-wider">
+              Ringkasan 5 Tahap Seleksi
+            </span>
+            <h2 className="mt-2 font-heading text-2xl font-extrabold text-slate-900">
+              Alur Pendaftaran Santri Baru
+            </h2>
+            <p className="mt-1 text-xs sm:text-sm text-slate-600">
+              Lima langkah terpadu pendaftaran santri baru Pesantren Tahfidz Qur'an dan Digital Ar-Rahman
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            {[
+              { num: 1, title: 'Pendaftaran', desc: 'Isi biodata online & bayar formulir via QRIS resmi' },
+              { num: 2, title: 'Verifikasi Berkas', desc: 'Pemeriksaan 6 berkas persyaratan pendaftaran' },
+              { num: 3, title: 'Seleksi Penerimaan', desc: 'CBT Akademik, CBT Psikologi, Uji Tahfidz & Wawancara' },
+              { num: 4, title: 'Pengumuman', desc: 'Rilis hasil kelulusan & pengunduhan LoA resmi' },
+              { num: 5, title: 'Daftar Ulang', desc: 'Tanda tangan digital LoA & penyetoran biaya pendidikan' },
+            ].map((st) => (
+              <div
+                key={st.num}
+                className="relative rounded-2xl border border-white bg-white/90 p-4 shadow-xs text-center flex flex-col items-center justify-between transition-all hover:shadow-md hover:border-emerald-300"
+              >
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-primary text-white font-mono text-sm font-bold mb-2 shadow-xs">
+                  {st.num}
+                </div>
+                <div className="font-heading text-sm font-bold text-slate-900 mb-1">
+                  {st.title}
+                </div>
+                <p className="text-[11px] text-slate-500 leading-snug">
+                  {st.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ── 7 Langkah Alur PPDB Terpadu ── */}
         <section>
           <div className="text-center max-w-xl mx-auto mb-12">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-primary">
-              Prosedur Resmi Pendaftaran
+              Prosedur Rinci Pendaftaran
             </span>
             <h2 className="mt-1 font-heading text-2xl sm:text-3xl font-extrabold text-slate-900">
               7 Tahap Menuju Santri PTDARRAHMAN

@@ -61,7 +61,7 @@ export default function ApplicantFormDocument({
   const schoolEmail =
     contactInfo.email_admission || contactInfo.email_primary || 'info@ptdarrahman.sch.id'
 
-  const activeOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://ptdarrahman.sch.id'
+  const activeOrigin = typeof window !== 'undefined' ? window.location.origin : ''
   const verifyUrl = `${activeOrigin}/receipt/${applicant.id || regNo}`
 
   const createdDateStr = applicant.created_at
@@ -125,7 +125,7 @@ export default function ApplicantFormDocument({
       <div className="flex flex-col xs:flex-row justify-between items-center gap-1 text-[9px] text-slate-500">
         <p className="truncate max-w-[500px]">{schoolAddress}</p>
         <p className="font-mono text-slate-600 font-semibold shrink-0">
-          WhatsApp: 0815-1004-0999 &nbsp;|&nbsp; {schoolEmail}
+          {typeof window !== 'undefined' && window.location.host ? `${window.location.host}  |  ` : ''}WhatsApp: 0815-1004-0999 &nbsp;|&nbsp; {schoolEmail}
         </p>
       </div>
       <div className="flex justify-between items-center text-[8px] text-slate-400 font-mono mt-0.5">

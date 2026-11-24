@@ -92,7 +92,7 @@ const AVAILABLE_VARS = [
 
 const VAR_GROUPS = [...new Set(AVAILABLE_VARS.map(v => v.group))]
 
-const activeOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://ppdb.ptdarrahman.sch.id'
+const activeOrigin = typeof window !== 'undefined' ? window.location.origin : ''
 
 const PREVIEW_CONTEXT: Record<string, string> = {
   '{nama_peserta}': 'Ahmad Fauzi',

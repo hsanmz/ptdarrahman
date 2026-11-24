@@ -1,12 +1,75 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { gsap } from '@/app/lib/gsap'
+import { useEffect, useRef, useState } from 'react'
 import { prefersReducedMotion } from '@/app/lib/motion'
 import type { AboutContentData } from '@/app/lib/types'
 
+interface StatItem {
+  value: number
+  suffix: string
+  label: string
+}
+
+const DEFAULT_STATS: StatItem[] = [
+  { value: 350, suffix: '+', label: 'Santri Aktif' },
+  { value: 40, suffix: '+', label: 'Guru & Staff' },
+  { value: 30, suffix: ' Juz', label: 'Hafalan Al-Quran' },
+  { value: 15, suffix: '+', label: 'Ekstrakurikuler' },
+]
+
+function AnimatedCounter({ target, suffix, isVisible }: { target: number; suffix: string; isVisible: boolean }) {
+  const [count, setCount] = useState(() => (prefersReducedMotion() ? target : 0))
+  const countRef = useRef(0)
+
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      setCount(target)
+      return
+    }
+
+    if (!isVisible) return
+
+    const startTime = performance.now()
+    const duration = 1800 // 1.8s
+
+    let animFrame: number
+
+    const step = (now: number) => {
+      const elapsed = now - startTime
+      const progress = Math.min(1, elapsed / duration)
+      // Ease out quad
+      const eased = 1 - Math.pow(1 - progress, 2)
+      const current = Math.round(eased * target)
+
+      if (countRef.current !== current) {
+        countRef.current = current
+        setCount(current)
+      }
+
+      if (progress < 1) {
+        animFrame = requestAnimationFrame(step)
+      } else {
+        setCount(target)
+      }
+    }
+
+    animFrame = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(animFrame)
+  }, [target, isVisible])
+
+  return (
+    <span>
+      {count}
+      {suffix}
+    </span>
+  )
+}
+
 export default function StatsSection({ content = null }: { settings?: Record<string, string>; content?: AboutContentData | null }) {
-  const displayStats = Array.from({ length: 4 }, (_, index) => {
+  const rootRef = useRef<HTMLElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const parsedStats: StatItem[] = Array.from({ length: 4 }, (_, index) => {
     const position = index + 1
     const rawValue = content?.[`stat_${position}_value`]
     const rawLabel = content?.[`stat_${position}_label`]
@@ -17,44 +80,48 @@ export default function StatsSection({ content = null }: { settings?: Record<str
       suffix: String(content?.[`stat_${position}_suffix`] ?? ''),
       label: rawLabel,
     }
-  }).filter((stat): stat is { value: number; suffix: string; label: string } => stat !== null)
-  const rootRef = useRef<HTMLElement>(null)
+  }).filter((stat): stat is StatItem => stat !== null)
+
+  const displayStats = parsedStats.length > 0 ? parsedStats : DEFAULT_STATS
 
   useEffect(() => {
-    if (prefersReducedMotion()) return
-    const root = rootRef.current
-    if (!root) return
-    const ctx = gsap.context(() => {
-      root.querySelectorAll<HTMLElement>('[data-stat]').forEach((el) => {
-        const target = Number(el.dataset.stat ?? '0')
-        const obj = { n: 0 }
-        gsap.to(obj, {
-          n: target,
-          duration: 1.6,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-          onUpdate: () => { el.textContent = String(Math.round(obj.n)) },
-        })
-      })
-      const cards = root.querySelectorAll('[data-card]')
-      gsap.fromTo(cards, { opacity: 0, y: 30 }, {
-        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1,
-        scrollTrigger: { trigger: root, start: 'top 80%', once: true },
-      })
-    }, root)
-    return () => ctx.revert()
-  }, [])
+    const el = rootRef.current
+    if (!el) {
+      setIsVisible(true)
+      return
+    }
 
-  if (displayStats.length === 0) return null
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <section ref={rootRef} className="py-16 sm:py-20 bg-[var(--bg)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {displayStats.map((s) => (
-            <div key={s.label} data-card className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-6 text-center">
+            <div
+              key={s.label}
+              data-card
+              className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-6 text-center shadow-xs transition-all duration-300 hover:shadow-md hover:border-[var(--accent)]/30"
+            >
               <p className="font-[var(--font-display)] text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--accent)] tracking-tight">
-                <span data-stat={s.value}>0</span>{s.suffix}
+                <AnimatedCounter target={s.value} suffix={s.suffix} isVisible={isVisible} />
               </p>
               <p className="mt-2 text-xs sm:text-sm font-medium text-[var(--text-secondary)] uppercase tracking-wider">{s.label}</p>
             </div>

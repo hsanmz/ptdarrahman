@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import PublicNavbar from '@/components/layout/PublicNavbar'
 import Footer from '@/components/layout/Footer'
+import SupportFab from '@/components/shared/SupportFab'
 
 export default function PublicLayout() {
   const { pathname } = useLocation()
@@ -18,6 +19,7 @@ export default function PublicLayout() {
         <Outlet />
       </main>
       <Footer />
+      <SupportFab />
     </div>
   )
 }

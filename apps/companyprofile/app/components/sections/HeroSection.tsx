@@ -11,11 +11,69 @@ import { prefersReducedMotion } from '@/app/lib/motion'
 
 const AUTOPLAY_MS = 5000
 
+const FALLBACK_SLIDES: HeroSlide[] = [
+  {
+    id: 'hero-fallback-1',
+    order: 1,
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1920&auto=format&fit=crop',
+    content: {
+      label: 'Pesantren Tahfidz & Digital Khusus Putra • Berdiri Sejak 2021',
+      title: 'Mencetak Hafidz\nAl-Qur\'an 30 Juz\nyang Ahli di Bidang\nTeknologi Digital',
+      subtitle:
+        'Pendidikan pesantren putra terpadu 6 tahun yang memadukan ketangguhan hafalan lewat tradisi Tasmi\' 30 Juz Bil Ghoib dengan penguasaan rekayasa perangkat lunak modern.',
+      button_label: 'Daftar PPDB Online',
+      button_href: '/ppdb',
+    },
+  },
+  {
+    id: 'hero-fallback-2',
+    order: 2,
+    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1920&auto=format&fit=crop',
+    content: {
+      label: 'Terbukti Melahirkan Hafidz 30 Juz & Juara Nasional',
+      title: 'Dari Majelis Tasmi\' Bil Ghoib\nhingga Ruang Programming\nBersama Praktisi Industri',
+      subtitle:
+        'Santri PTDARRAHMAN ditempa menyetorkan hafalan 10 hingga 30 juz sekali duduk, menjuarai Olimpiade Tafsir Nasional, sekaligus belajar teknologi web langsung bersama Senior Software Engineer industri.',
+      button_label: 'Lihat Program Pendidikan',
+      button_href: '/programs',
+    },
+  },
+  {
+    id: 'hero-fallback-3',
+    order: 3,
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1920&auto=format&fit=crop',
+    content: {
+      label: 'PPDB Pesantren Tahfidz Qur\'an dan Digital Ar-Rahman Dibuka',
+      title: 'Daftarkan Putra Anda\nSecara 100% Online\nMelalui Portal Resmi',
+      subtitle:
+        'Proses seleksi terintegrasi mulai dari pendaftaran akun calon santri, pembayaran QRIS dinamis, ujian seleksi terpadu CBT & Tahfidz, hingga terbit LoA digital resmi.',
+      button_label: 'Mulai Pendaftaran',
+      button_href: '/register',
+    },
+  },
+  {
+    id: 'hero-fallback-4',
+    order: 4,
+    image: 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1920&auto=format&fit=crop',
+    content: {
+      label: 'Ekosistem Pesantren Asri & Pendampingan 24 Jam',
+      title: 'Membina Akidah, Adab Asrama,\ndan Kemandirian Santri\ndalam Fasilitas Modern',
+      subtitle:
+        'Lingkungan mukim representatif dengan pendampingan asatidz dan musyrif 24 jam, pembiasaan ibadah berjamaah di masjid, laboratorium komputer modern, asrama nyaman, serta sarana olahraga.',
+      button_label: 'Jelajahi Fasilitas',
+      button_href: '/facilities',
+    },
+  },
+]
+
 export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
-  const items = useMemo(
-    () => slides.filter((slide) => typeof slide.image === 'string' && slide.image.trim() !== ''),
-    [slides],
-  )
+  const items = useMemo(() => {
+    const valid = slides.filter(
+      (slide) => typeof slide.image === 'string' && slide.image.trim() !== '',
+    )
+    return valid.length > 0 ? valid : FALLBACK_SLIDES
+  }, [slides])
+
   const [active, setActive] = useState(0)
   const [isHoveredControls, setIsHoveredControls] = useState(false)
   const touchStartX = useRef<number | null>(null)
@@ -43,15 +101,6 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
       if (timerRef.current) clearInterval(timerRef.current)
     }
   }, [items.length, isHoveredControls, goToNext, active])
-
-  if (items.length === 0) {
-    return (
-      <section
-        aria-label="Area banner beranda"
-        className="mt-16 h-[calc(100vh-4rem)] w-full bg-[var(--bg-secondary)] md:mt-20 md:h-[calc(100vh-5rem)]"
-      />
-    )
-  }
 
   // Handle Touch Swipe untuk mobile
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -88,7 +137,7 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
 
           return (
             <div
-              key={slide.id}
+              key={slide.id || index}
               className={`w-full transition-opacity duration-700 ease-in-out ${
                 isCurrent
                   ? 'opacity-100 relative z-10'
@@ -100,6 +149,13 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
                 alt="Banner Pesantren Tahfidz Qur'an dan Digital Ar-Rahman"
                 className="block h-auto w-full object-contain object-center"
                 loading={index === 0 ? 'eager' : 'lazy'}
+                onError={(e) => {
+                  // Fallback jika image link gagal
+                  const target = e.currentTarget
+                  if (!target.src.includes('unsplash.com')) {
+                    target.src = FALLBACK_SLIDES[index % FALLBACK_SLIDES.length].image
+                  }
+                }}
               />
             </div>
           )
@@ -116,7 +172,7 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
             onMouseEnter={() => setIsHoveredControls(true)}
             onMouseLeave={() => setIsHoveredControls(false)}
             aria-label="Banner sebelumnya"
-            className="absolute left-3 sm:left-4 top-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-lg"
+            className="absolute left-3 sm:left-4 top-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-lg cursor-pointer"
           >
             <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
           </button>
@@ -128,7 +184,7 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
             onMouseEnter={() => setIsHoveredControls(true)}
             onMouseLeave={() => setIsHoveredControls(false)}
             aria-label="Banner berikutnya"
-            className="absolute right-3 sm:right-4 top-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-lg"
+            className="absolute right-3 sm:right-4 top-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-lg cursor-pointer"
           >
             <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
           </button>
@@ -143,15 +199,13 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
               const isCurrent = index === active
               return (
                 <button
-                  key={slide.id}
+                  key={slide.id || index}
                   type="button"
                   onClick={() => setActive(index)}
                   aria-label={`Tampilkan banner ${index + 1}`}
                   aria-current={isCurrent}
-                  className={`relative h-2 rounded-full transition-all duration-500 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                    isCurrent
-                      ? 'w-8 bg-white/40'
-                      : 'w-2 bg-white/50 hover:bg-white/80'
+                  className={`relative h-2 rounded-full transition-all duration-500 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer ${
+                    isCurrent ? 'w-8 bg-white/40' : 'w-2 bg-white/50 hover:bg-white/80'
                   }`}
                 >
                   {isCurrent && (

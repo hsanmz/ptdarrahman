@@ -140,10 +140,10 @@ export interface KnownProgram {
 }
 
 export const KNOWN_PROGRAMS: KnownProgram[] = [
-  { id: 'tahfidz', label: "Tahfidz Al-Qur'an 30 Juz & Ulumul Qur'an", fallbackSlug: 'tahfidz-al-quran', keywords: ['tahfidz', 'al-quran', 'quran'] },
-  { id: 'digital', label: 'Rekayasa Teknologi Digital, Web & IoT', fallbackSlug: 'teknologi-digital', keywords: ['digital', 'teknologi', 'it'] },
-  { id: 'bilingual', label: 'Program Bilingual (Bahasa Arab & Inggris Aktif)', fallbackSlug: 'bilingual', keywords: ['bilingual'] },
-  { id: 'leadership', label: 'Akademi Kepemimpinan, Karakter & Kemandirian Santri', fallbackSlug: 'akademi-kepemimpinan', keywords: ['kepemimpinan', 'leadership'] },
+  { id: 'tahfidz', label: "Tahfidz Al-Qur'an 30 Juz", fallbackSlug: 'tahfidz-al-quran', keywords: ['tahfidz', 'al-quran', 'quran'] },
+  { id: 'digital', label: 'Rekayasa Teknologi Digital & IoT', fallbackSlug: 'teknologi-digital', keywords: ['digital', 'teknologi', 'it'] },
+  { id: 'bilingual', label: 'Program Bilingual Arab & Inggris', fallbackSlug: 'bilingual', keywords: ['bilingual'] },
+  { id: 'leadership', label: 'Akademi Kepemimpinan & Karakter', fallbackSlug: 'akademi-kepemimpinan', keywords: ['kepemimpinan', 'leadership'] },
   { id: 'dirasah', label: 'Dirasah Islamiyah (Studi Keislaman)', fallbackSlug: 'dirasah-islamiyah', keywords: ['dirasah', 'islami'] },
 ]
 
@@ -191,11 +191,28 @@ export interface ProgramMenuLink {
  * sebagai cadangan saat API kosong/gagal: menu tidak boleh kosong, dan
  * tautannya tetap hidup karena halaman detail punya konten cadangan sendiri.
  */
+export function normalizeProgramLabel(title: string): string {
+  const trimmed = title.trim()
+  if (trimmed === "Tahfidz Al-Qur'an 30 Juz & Ulumul Qur'an") {
+    return "Tahfidz Al-Qur'an 30 Juz"
+  }
+  if (trimmed === 'Rekayasa Teknologi Digital, Web & IoT') {
+    return 'Rekayasa Teknologi Digital & IoT'
+  }
+  if (trimmed === 'Program Bilingual (Bahasa Arab & Inggris Aktif)') {
+    return 'Program Bilingual Arab & Inggris'
+  }
+  if (trimmed === 'Akademi Kepemimpinan, Karakter & Kemandirian Santri') {
+    return 'Akademi Kepemimpinan & Karakter'
+  }
+  return trimmed
+}
+
 export function programMenuLinks(programs: Program[]): ProgramMenuLink[] {
   const fromCms = programs
     .map((p) => ({
       href: `/programs/${p.slug || p.id}`,
-      label: (p.content?.title ?? '').trim(),
+      label: normalizeProgramLabel(p.content?.title ?? ''),
     }))
     .filter((l) => l.label && l.href !== '/programs/')
 
@@ -222,7 +239,7 @@ export function siblingProgramLinks(programs: Program[], currentSlug: string): P
   return programs
     .map((p) => ({
       href: `/programs/${p.slug || p.id}`,
-      label: (p.content?.title ?? '').trim(),
+      label: normalizeProgramLabel(p.content?.title ?? ''),
     }))
     .filter((l) => l.label && l.href !== '/programs/' && l.href !== current)
     .slice(0, MAX_PROGRAM_MENU_LINKS)

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ppdbService } from '@/services'
 import { useToast } from '@/components/Toast'
 import { cn } from '@/lib/utils'
+import SupportFab from '@/components/shared/SupportFab'
 import {
   Card, CardContent, CardHeader, CardTitle, CardDescription,
   Button, Input, Label, Alert,
@@ -694,11 +695,11 @@ export default function RegisterPage() {
                     id="previous_school"
                     required
                     maxLength={150}
-                    placeholder="Contoh: SDIT Al-Ihsan / SMP Negeri 1..."
+                    placeholder="Contoh: SMP Negeri 1 Cikarang / MTs Al-Falah..."
                     value={formData.previous_school}
                     onChange={(e) => setFormData(prev => ({ ...prev, previous_school: e.target.value }))}
                   />
-                  <p className="text-[11px] text-slate-400">Nama sekolah asal jenjang sebelumnya.</p>
+                  <p className="text-[11px] text-slate-400">Nama sekolah asal jenjang SMP / MTs / sederajat.</p>
                 </div>
 
                 {/* Tahun Kelulusan */}
@@ -2185,6 +2186,7 @@ export default function RegisterPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        <SupportFab whatsappMessage="Assalamu’alaikum Panitia PPDB PTDARRAHMAN, saya membutuhkan bantuan terkait pengisian formulir pendaftaran." />
       </div>
     </div>
   )

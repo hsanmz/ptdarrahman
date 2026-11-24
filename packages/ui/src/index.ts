@@ -39,6 +39,7 @@ export * from "./components/dashboard/semantic-search/semantic-engine";
 // ── Shared composite components ───────────────────────────────────────────────
 export * from "./components/ui/avatar-editor";
 export * from "./components/ui/section-card";
+export * from "./components/ui/support-fab";
 export * from "./components/ui/error-state";
 export * from "./components/ui/success-state";
 export * from "./components/ui/confirm-dialog";
@@ -52,4 +53,3 @@ export * from "./components/profile";
 
 // ── Text Animation Components ────────────────────────────────────────────────
 export * from "./components/text-animations";
-

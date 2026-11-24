@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui'
+import { apiFetch } from '@/api/client'
 import {
   HelpCircle, Search, ChevronDown, MessageCircle, Mail,
   UserPlus, LogIn, Bus, Clock, Laptop, CreditCard,
@@ -17,6 +18,13 @@ interface FaqItem {
 
 const FAQS_DATA: FaqItem[] = [
   {
+    id: 'faq-0',
+    category: 'curriculum',
+    question: 'Jenjang pendidikan apa yang dibuka pada PPDB PTDARRAHMAN dan siapa sasaran pendaftarnya?',
+    answer:
+      'PPDB Pesantren Tahfidz Qur\'an dan Digital Ar-Rahman dibuka khusus untuk jenjang Sekolah Menengah Kejuruan (SMK) dengan kompetensi keahlian Teknologi Informasi / Rekayasa Perangkat Lunak (RPL) terintegrasi Tahfidz Al-Qur\'an 30 Juz Bersanad. Sasaran pendaftar adalah calon santri putra lulusan SMP / MTs / sederajat (bukan lulusan SD/MI).',
+  },
+  {
     id: 'faq-1',
     category: 'transport',
     question: 'Apakah ada fasilitas atau layanan antar-jemput santri?',
@@ -28,7 +36,7 @@ const FAQS_DATA: FaqItem[] = [
     category: 'daily',
     question: 'Jam berapa kegiatan harian santri dimulai dan bagaimana jadwalnya?',
     answer:
-      'Aktivitas harian santri dimulai pukul 04.15 WIB untuk persiapan shalat Subuh berjamaah di musholla pesantren, dilanjutkan Halaqah Ziyadah Tahfidz pertama (05.00 - 06.30 WIB). Setelah sarapan pagi dan persiapan kelas, santri mengikuti Kegiatan Belajar Mengajar (KBM) akademik serta praktikum rekayasa teknologi digital di Ruang Programming (07.30 - 15.00 WIB) yang diselingi istirahat shalat Dhuhur dan makan siang. Sore hari ba\'da Ashar diisi halaqah muraja\'ah dan olahraga, dilanjutkan kegiatan keislaman malam ba\'da Maghrib/Isya, hingga istirahat tidur malam pada pukul 21.30 WIB.',
+      'Aktivitas santri terstruktur dalam 18 rutinitas harian penuh berkah: Dimulai pukul 03.30 WIB untuk Shalat Tahajud, 04.30 Shalat Subuh berjamaah, 05.15 Halaqoh Subuh (ziyadah), 06.15 Olahraga Pagi, 06.45 Sarapan, 07.15 Shalat Dhuha, Dzikir Pagi & Ta\'lim, 08.00 Halaqoh Dhuha (muroja\'ah kubro), 09.30 KBM Dirosah Islamiyah, 10.45 KBM Lughoh (Arab & Inggris), 12.00 Shalat Dzuhur, 12.45 KBM Information Technology (Coding Lab & IoT), 14.00 Makan Siang & Tidur Siang (Qailulah), 15.00 Shalat Ashar & Dzikir Petang, 15.45 Halaqoh Ashar, 17.00 Olahraga Sore (Futsal, Badminton, dll.), 17.45 Shalat Maghrib, Makan Malam & Shalat Isya, 19.45 Muhadhoroh (Public Speaking 3 Bahasa), hingga 20.45-21.30 Muthola\'ah (Belajar Mandiri) sebelum istirahat malam.',
   },
   {
     id: 'faq-3',
@@ -82,9 +90,9 @@ const FAQS_DATA: FaqItem[] = [
   {
     id: 'faq-10',
     category: 'finance',
-    question: 'Bagaimana mekanisme pembayaran biaya masuk dan SPP pendidikan santri?',
+    question: 'Bagaimana rincian dan mekanisme pembayaran biaya pendidikan santri baru?',
     answer:
-      'Di dalam portal web PPDB, pendaftar hanya menyelesaikan biaya formulir secara online melalui QRIS. Setelah dinyatakan lulus dan menandatangani Letter of Acceptance (LoA) resmi, penyetoran Uang Muka (DP) dan pelunasan biaya pendidikan dilakukan di luar aplikasi melalui transfer ke rekening bank resmi PTDARRAHMAN atau pembayaran tunai langsung di kantor bendahara pesantren.',
+      'Total estimasi biaya pendidikan santri baru adalah Rp 25.000.000, yang mencakup 5 komponen transparan: (1) Uang Pangkal Rp 15.000.000, (2) Uang Kegiatan per tahun Rp 6.000.000, (3) Uang SPP Rp 2.000.000/bulan, (4) Uang Buku Rp 1.000.000, dan (5) Uang Seragam Rp 1.000.000. Di dalam portal web PPDB pendaftar hanya melunasi biaya formulir pendaftaran via QRIS resmi (Rp 350.000). Penyetoran biaya pendidikan dilakukan di luar sistem via transfer rekening resmi PTDARRAHMAN setelah santri dinyatakan lulus seleksi dan menandatangani Letter of Acceptance (LoA) resmi.',
   },
   {
     id: 'faq-11',
@@ -100,6 +108,17 @@ export default function FaqPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [openFaqId, setOpenFaqId] = useState<string | null>('faq-1')
+  const [contactEmail, setContactEmail] = useState('')
+
+  useEffect(() => {
+    apiFetch<Record<string, any>>('/companyprofile/contact-info')
+      .then((info) => {
+        if (info?.email_admission || info?.email_primary) {
+          setContactEmail(info.email_admission || info.email_primary)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const categories = [
     { id: 'all', label: 'Semua Pertanyaan', icon: HelpCircle },
@@ -265,7 +284,7 @@ export default function FaqPage() {
               </a>
 
               <a
-                href="mailto:info@ptdarrahman.sch.id"
+                href={`mailto:${contactEmail || 'info@ptdarrahman.sch.id'}`}
                 className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 transition-all"
               >
                 <Mail className="h-4 w-4" />

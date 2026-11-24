@@ -150,14 +150,14 @@ const OfficialAssessmentSheet = forwardRef<HTMLDivElement, OfficialAssessmentShe
     const regNo = applicant?.registration_number || applicant?.id?.slice(0, 8).toUpperCase() || 'REG-PENDARRAHMAN'
     const officialVerifyUrl = typeof window !== 'undefined'
       ? `${window.location.origin}/loa/${regNo}?verify=official`
-      : `https://ptdarrahman.sch.id/loa/${regNo}?verify=official`
+      : `/loa/${regNo}?verify=official`
 
     // Info kontak dari database companyprofile
     const schoolAddress =
       contactInfo.address || 'Rukan Hexa Green Kalimalang, Jl. Inspeksi Kalimalang C8-C9, Jatimulya, Tambun Selatan, Bekasi 17510'
     const schoolEmail =
       contactInfo.email_admission || contactInfo.email_primary || 'ppdb@ptdarrahman.sch.id'
-    const activeDomain = typeof window !== 'undefined' ? window.location.host : 'ptdarrahman.sch.id'
+    const activeDomain = typeof window !== 'undefined' ? window.location.host : ''
 
     return (
       <div
@@ -545,7 +545,7 @@ const OfficialAssessmentSheet = forwardRef<HTMLDivElement, OfficialAssessmentShe
           </div>
 
           <div className="mt-1 text-center text-[8px] text-slate-400 font-mono">
-            {schoolAddress} &nbsp;|&nbsp; {activeDomain} &nbsp;|&nbsp; {schoolEmail}
+            {schoolAddress} {activeDomain ? ` |  ${activeDomain}` : ''} &nbsp;|&nbsp; {schoolEmail}
           </div>
         </div>
       </div>

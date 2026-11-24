@@ -80,8 +80,8 @@ export function pickAccent(value: unknown): AccentKey {
 export const STATIC_PPDB_COPY: PpdbCopyContent = {
   hero_title: `Hafidz 30 Juz\nAhli Teknologi`,
   hero_desc:
-    "Pendidikan pesantren putra terpadu: memadukan hafalan Al-Qur'an mutqin 30 juz bersanad dengan rekayasa teknologi digital modern.",
-  hero_proof: '30 Juz Bersanad | Coding & Web | Asrama Modern',
+    "Pendidikan pesantren jenjang SMK khusus lulusan SMP / MTs sederajat: memadukan hafalan Al-Qur'an mutqin 30 juz bersanad dengan kejuruan rekayasa perangkat lunak dan teknologi digital modern.",
+  hero_proof: 'Jenjang SMK | Lulusan SMP/MTs | 30 Juz Bersanad | IT & Coding',
   hero_cta_label: 'Daftar Online Sekarang',
   hero_cta_href: '/register',
   hero_register_label: 'Daftar PPDB',
@@ -222,48 +222,40 @@ const STATIC_STEPS: PpdbStep[] = [
     id: 'static-step-1',
     content: {
       order: 1,
-      title: 'Pendaftaran Akun & Data Lengkap',
-      desc: 'Pengisian identitas santri, data orang tua/wali lengkap, domisili, dan 10 kuesioner kesehatan mandiri secara transparan.',
+      title: 'Pendaftaran',
+      desc: 'Pengisian biodata santri & data orang tua/wali lengkap, 10 kuesioner kesehatan mandiri, dan pembayaran biaya formulir via QRIS resmi.',
     },
   },
   {
     id: 'static-step-2',
     content: {
       order: 2,
-      title: 'Pembayaran Formulir Instan',
-      desc: 'Pembayaran biaya formulir via QRIS otomatis (Midtrans). Kuitansi resmi ber-HMAC terbit otomatis dan kuota tercatat akurat.',
+      title: 'Verifikasi Berkas',
+      desc: 'Pemeriksaan 6 berkas persyaratan wajib (NISN, KK, Akta Kelahiran, Pas Foto, KTP Wali, dan 4 rapor semester terakhir) oleh panitia.',
     },
   },
   {
     id: 'static-step-3',
     content: {
       order: 3,
-      title: 'Unggah Dokumen Persyaratan',
-      desc: 'Unggah 6 berkas utama: NISN, Kartu Keluarga, Akta Kelahiran, Pas Foto, KTP Orang Tua/Wali, dan 4 rapor semester terakhir.',
+      title: 'Seleksi Penerimaan Santri Baru',
+      desc: 'Pelaksanaan ujian seleksi terpadu CBT (Akademik & Psikologi), tes hafalan Al-Qur’an (Tahfidz & Tahsin), dan wawancara santri & wali.',
     },
   },
   {
     id: 'static-step-4',
     content: {
       order: 4,
-      title: 'Ujian Seleksi Terpadu (CBT & Tahfidz)',
-      desc: 'Pelaksanaan ujian seleksi terpadu CBT (Akademik & Psikologi) serta tes kemampuan membaca & menghafal Al-Qur’an sesuai kloter jadwal.',
+      title: 'Pengumuman',
+      desc: 'Penerbitan hasil kelulusan resmi, pengunduhan Letter of Acceptance (LoA) digital resmi ber-QR verifikasi HMAC.',
     },
   },
   {
     id: 'static-step-5',
     content: {
       order: 5,
-      title: 'Wawancara Terpadu Santri & Wali',
-      desc: 'Wawancara terpadu komitmen pendidikan pesantren bagi calon santri dan orang tua/wali dalam satu sesi bersamaan.',
-    },
-  },
-  {
-    id: 'static-step-6',
-    content: {
-      order: 6,
-      title: 'Pengumuman Kelulusan & LoA Digital',
-      desc: 'Penerbitan hasil kelulusan, unduh Letter of Acceptance (LoA) resmi ber-QR verifikasi, dan tanda tangan digital santri & orang tua.',
+      title: 'Daftar Ulang',
+      desc: 'Penandatanganan digital LoA resmi bersama orang tua/wali, penyetoran biaya pendidikan masuk resmi, dan terbit Nomor Registrasi santri baru.',
     },
   },
 ]

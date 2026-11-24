@@ -20,6 +20,10 @@ import {
   Users,
   LogIn,
   MessageCircle,
+  Trophy,
+  Star,
+  Clock,
+  Compass,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -457,6 +461,162 @@ export default function PpdbClientView({
           formFee={wave?.form_fee}
           earlyDiscountQuota={wave?.early_discount_quota}
         />
+
+        {/* Prestasi Santri Section */}
+        <div className="mt-20 md:mt-28">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center max-w-xl mx-auto mb-14"
+          >
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-700">
+              <Trophy className="h-3.5 w-3.5 text-amber-600" />
+              Torehan Prestasi Santri
+            </span>
+            <h3 className="mt-3 font-heading! text-2xl md:text-3xl font-bold tracking-tight text-[var(--text)]">
+              Prestasi Kejuaraan Santri PTDARRAHMAN
+            </h3>
+            <p className="mt-2 text-xs md:text-sm text-[var(--text-secondary)]">
+              Bukti nyata sinergi pendidikan tahfidz 30 juz, keahlian teknik informatika, dan kecakapan bahasa santri.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                name: 'Alvito Syarman S',
+                medal: 'Medali Emas',
+                field: 'Tafsir Al-Qur\'an & Hadits',
+                desc: 'Meraih Medali Emas membuktikan kedalaman hafalan dan pemahaman tafsir Al-Qur\'an serta hadits.',
+                badge: 'bg-amber-100 text-amber-900 border-amber-300',
+              },
+              {
+                name: 'Rasyid Anwar Arief',
+                medal: 'Medali Perak',
+                field: 'Teknik Informatika',
+                desc: 'Meraih Medali Perak dalam kejuaraan sains komputer dan problem solving pemrograman digital.',
+                badge: 'bg-slate-100 text-slate-800 border-slate-300',
+              },
+              {
+                name: 'Hudzaifah Ali Miftah',
+                medal: 'Medali Perunggu',
+                field: 'Teknik Informatika',
+                desc: 'Meraih Medali Perunggu dalam kompetisi logika pemrograman dan rekayasa teknologi digital.',
+                badge: 'bg-amber-50 text-amber-800 border-amber-200',
+              },
+              {
+                name: 'Rahmatullah Yusuf I',
+                medal: 'Medali Perunggu',
+                field: 'Bahasa Inggris',
+                desc: 'Meraih Medali Perunggu dalam olimpiade kecakapan literasi dan pidato Bahasa Inggris bertaraf global.',
+                badge: 'bg-blue-50 text-blue-800 border-blue-200',
+              },
+            ].map((p, idx) => (
+              <motion.div
+                key={p.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.15 }}
+                transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--bg-elevated)] p-6 shadow-sm hover:shadow-md transition-all"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${p.badge}`}>
+                      {p.medal}
+                    </span>
+                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                  </div>
+                  <h4 className="text-base font-bold text-[var(--text)]">
+                    {p.name}
+                  </h4>
+                  <div className="text-xs font-semibold text-emerald-700 mt-1">
+                    Bidang Lomba: {p.field}
+                  </div>
+                  <p className="mt-3 text-xs leading-relaxed text-[var(--text-secondary)]">
+                    {p.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Program Harian & Ekskul Section */}
+        <div className="mt-20 md:mt-28">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center max-w-xl mx-auto mb-14"
+          >
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
+              <Clock className="h-3.5 w-3.5 text-emerald-600" />
+              Rutinitas Santri &amp; Eksplorasi Minat
+            </span>
+            <h3 className="mt-3 font-heading! text-2xl md:text-3xl font-bold tracking-tight text-[var(--text)]">
+              18 Program Harian &amp; Ekstrakurikuler
+            </h3>
+            <p className="mt-2 text-xs md:text-sm text-[var(--text-secondary)]">
+              Rutinitas harian teratur dari Tahajud hingga Muthola'ah dipadu kegiatan olahraga dan outing class berkala.
+            </p>
+          </motion.div>
+
+          {/* Ekskul Pills */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {[
+              'Futsal', 'Badminton', 'Hadroh', 'Hiking', 'Renang',
+              'Car Free Day', 'Mosque Tour', 'Rihlah', 'Dan Lain-lain'
+            ].map((ek) => (
+              <span
+                key={ek}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--bg-secondary)] px-3.5 py-1.5 text-xs font-medium text-[var(--text)] shadow-xs"
+              >
+                <Compass className="h-3.5 w-3.5 text-emerald-600" />
+                {ek}
+              </span>
+            ))}
+          </div>
+
+          {/* Program Harian Grid Preview */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+            {[
+              { num: 1, name: 'Tahajud' },
+              { num: 2, name: 'Shalat Subuh' },
+              { num: 3, name: 'Halaqoh Subuh' },
+              { num: 4, name: 'Olahraga Pagi' },
+              { num: 5, name: 'Sarapan' },
+              { num: 6, name: 'Dhuha & Ta\'lim' },
+              { num: 7, name: 'Halaqoh Dhuha' },
+              { num: 8, name: 'KBM Dirosah' },
+              { num: 9, name: 'KBM Lughoh' },
+              { num: 10, name: 'Shalat Dzuhur' },
+              { num: 11, name: 'KBM IT & Coding' },
+              { num: 12, name: 'Makan & Tidur Siang' },
+              { num: 13, name: 'Ashar & Dzikir' },
+              { num: 14, name: 'Halaqoh Ashar' },
+              { num: 15, name: 'Olahraga Sore' },
+              { num: 16, name: 'Maghrib & Isya' },
+              { num: 17, name: 'Muhadhoroh' },
+              { num: 18, name: 'Muthola\'ah' },
+            ].map((ph) => (
+              <div
+                key={ph.num}
+                className="rounded-xl border border-[var(--color-border)] bg-[var(--bg-elevated)] p-3 text-center shadow-xs"
+              >
+                <span className="inline-block text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md mb-1">
+                  #{ph.num}
+                </span>
+                <div className="text-xs font-bold text-[var(--text)] line-clamp-1">
+                  {ph.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* FAQ Accordion Section */}
         <PpdbFaqSection

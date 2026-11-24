@@ -334,7 +334,9 @@ export function SettingsEditor({ settings, canCrud }: Props) {
               </p>
               <div className="space-y-1">
                 <p className="text-sm text-[#1a0dab]">Pesantren Tahfidz Qur&apos;an dan Digital Ar-Rahman</p>
-                <p className="text-xs text-[#006621]">https://ptdarrahman.sch.id</p>
+                <p className="text-xs text-[#006621]">
+                  {typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'}
+                </p>
                 <p className="text-sm text-[#545454] line-clamp-2">{siteDesc}</p>
               </div>
             </div>
@@ -360,7 +362,7 @@ export function SettingsEditor({ settings, canCrud }: Props) {
               value={values.to_email ?? ''}
               onChange={(e) => markDirty('to_email', e.target.value)}
               disabled={!canCrud || saving === 'to_email'}
-              placeholder="kontak@ptdarrahman.sch.id"
+              placeholder="kontak@domain.com"
             />
             {canCrud && dirty.has('to_email') && (
               <div className="flex justify-end">

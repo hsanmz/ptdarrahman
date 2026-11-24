@@ -716,7 +716,7 @@ export function ProfilePage({
                     onFocus={handleInputFocus}
                     onChange={(e) => handleProfileChange('email', e.target.value)}
                     onBlur={handleInputBlur}
-                    placeholder="email@ptdarrahman.sch.id"
+                    placeholder="email@domain.com"
                     disabled={!isSuper}
                     className="h-9 text-xs"
                   />

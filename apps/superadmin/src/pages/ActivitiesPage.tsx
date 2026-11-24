@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import * as api from '../api/client'
 import { useToast } from '../components/Toast'
 import { Card, CardContent } from "@/components/ui"
@@ -42,22 +43,17 @@ function actionBadge(action: string) {
 export default function ActivitiesPage() {
   const { toast } = useToast()
 
-  const [logs, setLogs] = useState<AuditRow[]>([])
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [entityType, setEntityType] = useState('')
   const [action, setAction] = useState('')
-  const [entityTypes, setEntityTypes] = useState<string[]>([])
-  const [actions, setActions] = useState<string[]>([])
   const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
   const [selected, setSelected] = useState<AuditRow | null>(null)
   const perPage = 20
 
-  const fetchLogs = async () => {
-    setLoading(true)
-    try {
+  const { data: logsData, isLoading: loading, refetch: fetchLogs } = useQuery({
+    queryKey: ['audit-logs', page, search, entityType, action],
+    queryFn: async () => {
       const params: Record<string, any> = {
         page,
         per_page: perPage,
@@ -66,23 +62,16 @@ export default function ActivitiesPage() {
       if (entityType) params.entity_type = entityType
       if (action) params.action = action
 
-      const res = await api.getAuditLogs(params)
-      setLogs(res?.data || [])
-      setTotal(res?.total ?? 0)
-      if (res?.entity_types) setEntityTypes(res.entity_types)
-      if (res?.actions) setActions(res.actions)
-    } catch (e: any) {
-      toast('error', api.getErrorMessage(e, 'Gagal memuat riwayat aktivitas'))
-    } finally {
-      setLoading(false)
-    }
-  }
+      return api.getAuditLogs(params)
+    },
+    staleTime: 30_000,
+    placeholderData: (prev) => prev,
+  })
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchLogs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, search, entityType, action])
+  const logs: AuditRow[] = logsData?.data || []
+  const total: number = logsData?.total ?? 0
+  const entityTypes: string[] = logsData?.entity_types || []
+  const actions: string[] = logsData?.actions || []
 
   // Debounce pencarian ~400ms — bukan 1 request per ketukan.
   useEffect(() => {
