@@ -40,6 +40,9 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            # Pastikan hak akses direktori kerja dimiliki oleh user aktif
+            sudo -n chown -R "$USER:$USER" . 2>/dev/null || true
+
             # Deteksi command docker (dengan atau tanpa sudo)
             DOCKER_CMD="docker"
             if ! docker ps >/dev/null 2>&1; then
@@ -52,11 +55,19 @@ jobs:
 
             echo "=== [CI/CD] 2. Re-build dan perbarui container yang berubah ==="
             if [ -f .env.ip ]; then
-              if ! grep -q "WA_SERVICE_API_KEY=" .env.ip; then
+              sudo -n chown "$USER:$USER" .env.ip 2>/dev/null || true
+              sudo -n chmod 664 .env.ip 2>/dev/null || true
+
+              if ! grep -q "WA_SERVICE_API_KEY=" .env.ip 2>/dev/null; then
                 WA_KEY=$(openssl rand -hex 32)
                 WA_SECRET=$(openssl rand -hex 32)
-                echo "WA_SERVICE_API_KEY=${WA_KEY}" >> .env.ip
-                echo "WA_WEBHOOK_SECRET=${WA_SECRET}" >> .env.ip
+                {
+                  echo "WA_SERVICE_API_KEY=${WA_KEY}"
+                  echo "WA_WEBHOOK_SECRET=${WA_SECRET}"
+                } >> .env.ip 2>/dev/null || {
+                  echo "WA_SERVICE_API_KEY=${WA_KEY}" | sudo -n tee -a .env.ip >/dev/null 2>&1 || true
+                  echo "WA_WEBHOOK_SECRET=${WA_SECRET}" | sudo -n tee -a .env.ip >/dev/null 2>&1 || true
+                } || true
               fi
 
               $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
@@ -74,6 +85,20 @@ jobs:
               $DOCKER_CMD cp apps/api/scripts/. ptd-api:/app/scripts/ 2>/dev/null || true
               $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml exec -T -w /app api python -m scripts.seed || true
             elif [ -f .env.prod ]; then
+              sudo -n chown "$USER:$USER" .env.prod 2>/dev/null || true
+              sudo -n chmod 664 .env.prod 2>/dev/null || true
+
+              if ! grep -q "WA_SERVICE_API_KEY=" .env.prod 2>/dev/null; then
+                WA_KEY=$(openssl rand -hex 32)
+                WA_SECRET=$(openssl rand -hex 32)
+                {
+                  echo "WA_SERVICE_API_KEY=${WA_KEY}"
+                  echo "WA_WEBHOOK_SECRET=${WA_SECRET}"
+                } >> .env.prod 2>/dev/null || {
+                  echo "WA_SERVICE_API_KEY=${WA_KEY}" | sudo -n tee -a .env.prod >/dev/null 2>&1 || true
+                  echo "WA_WEBHOOK_SECRET=${WA_SECRET}" | sudo -n tee -a .env.prod >/dev/null 2>&1 || true
+                } || true
+              fi
               $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml up -d --build --force-recreate
               
               echo "Menunggu service API siap..."
