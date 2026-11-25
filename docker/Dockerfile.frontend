@@ -59,7 +59,9 @@ ARG VITE_API_URL=http://localhost:8080
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV VITE_API_URL=${VITE_API_URL}
 
-RUN pnpm build
+RUN pnpm build && \
+    rm -rf apps/companyprofile/.next/cache && \
+    rm -rf /root/.local/share/pnpm/store /root/.npm
 
 # ── Stage: runtime — serve UI only ──────────────────────────────────────────
 FROM node:${NODE_VERSION}-slim AS runtime
@@ -70,6 +72,7 @@ COPY --from=builder /workspace/node_modules ./node_modules
 COPY --from=builder /workspace/pnpm-workspace.yaml /workspace/pnpm-lock.yaml /workspace/package.json /workspace/turbo.json ./
 COPY --from=builder /workspace/packages ./packages
 COPY --from=builder /workspace/apps ./apps
+RUN rm -rf /workspace/apps/companyprofile/.next/cache
 
 COPY docker/frontend-entrypoint.sh /usr/local/bin/frontend-entrypoint.sh
 RUN sed -i 's/\r$//' /usr/local/bin/frontend-entrypoint.sh && chmod +x /usr/local/bin/frontend-entrypoint.sh

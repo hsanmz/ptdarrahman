@@ -37,12 +37,6 @@ jobs:
             fi
             cd "$TARGET_DIR"
 
-            git fetch origin main
-            git reset --hard origin/main
-
-            # Pastikan hak akses direktori kerja dimiliki oleh user aktif
-            sudo -n chown -R "$USER:$USER" . 2>/dev/null || true
-
             # Deteksi command docker (dengan atau tanpa sudo)
             DOCKER_CMD="docker"
             if ! docker ps >/dev/null 2>&1; then
@@ -52,6 +46,24 @@ jobs:
                 DOCKER_CMD="sudo docker"
               fi
             fi
+
+            echo "=== [CI/CD] 0. Membersihkan disk & cache Docker sebelum build ==="
+            $DOCKER_CMD builder prune -af >/dev/null 2>&1 || true
+            $DOCKER_CMD image prune -f >/dev/null 2>&1 || true
+            $DOCKER_CMD container prune -f >/dev/null 2>&1 || true
+            sudo -n journalctl --vacuum-size=20M >/dev/null 2>&1 || true
+            sudo -n apt-get clean >/dev/null 2>&1 || true
+            sudo -n rm -rf /tmp/* /var/tmp/* 2>/dev/null || true
+
+            echo "Kapasitas disk sebelum pembaruan:"
+            df -h /
+
+            echo "=== [CI/CD] 1. Mengambil pembaruan kode terbaru dari Git ==="
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Pastikan hak akses direktori kerja dimiliki oleh user aktif
+            sudo -n chown -R "$USER:$USER" . 2>/dev/null || true
 
             echo "=== [CI/CD] 2. Re-build dan perbarui container yang berubah ==="
             if [ -f .env.ip ]; then
@@ -69,6 +81,10 @@ jobs:
                   echo "WA_WEBHOOK_SECRET=${WA_SECRET}" | sudo -n tee -a .env.ip >/dev/null 2>&1 || true
                 } || true
               fi
+
+              # Build frontend secara terpisah lalu rapikan cache agar puncak disk minimal
+              $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml build frontend
+              $DOCKER_CMD builder prune -f >/dev/null 2>&1 || true
 
               $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
               
@@ -99,6 +115,10 @@ jobs:
                   echo "WA_WEBHOOK_SECRET=${WA_SECRET}" | sudo -n tee -a .env.prod >/dev/null 2>&1 || true
                 } || true
               fi
+
+              $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml build frontend
+              $DOCKER_CMD builder prune -f >/dev/null 2>&1 || true
+
               $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml up -d --build --force-recreate
               
               echo "Menunggu service API siap..."
@@ -116,6 +136,9 @@ jobs:
 
             echo "=== [CI/CD] 3. Membersihkan cache Docker agar storage 20GB tetap lega ==="
             $DOCKER_CMD image prune -f >/dev/null 2>&1 || true
-            $DOCKER_CMD builder prune -f >/dev/null 2>&1 || true
+            $DOCKER_CMD builder prune -af >/dev/null 2>&1 || true
+
+            echo "Kapasitas disk setelah selesai:"
+            df -h /
 
             echo "=== [CI/CD] 4. Deploy Berhasil! ==="
