@@ -24,7 +24,7 @@ export default function QrPanel({
   const sseRef = useRef<EventSource | null>(null)
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     setLocalStatus(status)
   }, [status])
 
@@ -56,7 +56,7 @@ export default function QrPanel({
       }
       if (localStatus !== 'qr' && status !== 'qr') {
         // QR yang sudah usang dibersihkan begitu keluar dari mode 'qr'
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+         
         setQrRaw(null)
       }
       return
@@ -96,7 +96,7 @@ export default function QrPanel({
 
   useEffect(() => {
     if (localStatus !== 'qr' || qrRaw) return
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     fetchQrRaw()
     const id = setInterval(() => { fetchQrRaw() }, 4_000)
     return () => clearInterval(id)

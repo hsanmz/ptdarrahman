@@ -13,6 +13,7 @@ from zoneinfo import ZoneInfo
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.exc import IntegrityError
 
+from src.core.cache import invalidate_user_cache
 from src.core.notif_service import send_notification, send_notifications
 from src.core.security import hash_password
 from src.models.auth import User
@@ -967,7 +968,8 @@ class PPDBService:
                     status_code=400,
                     detail="Email sudah dipakai pendaftar lain.",
                 )
-            if self.repository.get_user_by_email(email):
+            existing_user = self.repository.get_user_by_email(email)
+            if existing_user and existing_user.id != applicant.user_id:
                 raise HTTPException(
                     status_code=400, detail="Email sudah dipakai akun lain."
                 )
@@ -995,8 +997,22 @@ class PPDBService:
                 user.full_name = full_name
                 user.updated_at = datetime.now(WIB)
 
+        non_nullable_str_fields = {
+            "full_name",
+            "email",
+            "phone",
+            "province",
+            "city",
+            "district",
+            "village",
+            "address",
+            "status",
+            "payment_status",
+        }
         for key, value in data.items():
             if hasattr(applicant, key):
+                if key in non_nullable_str_fields and value is None:
+                    continue
                 setattr(applicant, key, value)
 
         applicant.updated_at = datetime.now(WIB)
@@ -1052,11 +1068,14 @@ class PPDBService:
         if not applicant:
             raise HTTPException(status_code=404, detail="Pendaftar tidak ditemukan")
 
+        user_id = applicant.user_id
         full_name = applicant.full_name
         # Kumpulkan seluruh path berkas fisik (dokumen + avatar)
         # SEBELUM baris DB dihapus.
         files = self.repository.get_applicant_all_files(applicant)
         self.repository.delete_applicant_permanent(applicant)
+        if user_id:
+            invalidate_user_cache(user_id)
 
         # Berkas fisik dihapus setelah transaksi DB selesai. `delete_upload`
         # sudah menangani local / cloudinary / db:// beserta error-nya.

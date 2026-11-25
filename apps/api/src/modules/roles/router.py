@@ -17,7 +17,8 @@ def get_roles_service(db: Session = Depends(get_db)) -> RolesService:
     return RolesService(repo)
 
 
-@router.get("/")
+@router.get("")
+@router.get("/", include_in_schema=False)
 def get_roles(
     user: dict[str, Any] = Depends(require_superadmin),
     service: RolesService = Depends(get_roles_service),
@@ -34,7 +35,8 @@ def get_role(
     return service.get_role(id)
 
 
-@router.post("/", status_code=201)
+@router.post("", status_code=201)
+@router.post("/", status_code=201, include_in_schema=False)
 def create_role(
     body: RoleCreate,
     user: dict[str, Any] = Depends(require_superadmin),

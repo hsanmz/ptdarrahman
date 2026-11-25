@@ -295,20 +295,12 @@ def test_contact_info_round_trip(cp: TestClient) -> None:
     assert cast(dict[str, Any], reread.json())["phone_primary"] == "08123456789"
 
     # Restore so the seeded fixture stays usable for other tests.
-    restore = {k: v for k, v in original.items() if k != "id"}
+    restore = {
+        k: v for k, v in original.items() if k not in {"id", "created_at", "updated_at"}
+    }
     assert cp.put("/companyprofile/contact-info", json=restore).status_code == 200
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "BUG: ContactInfoUpdateReq is a plain BaseModel, so Pydantic silently "
-        "drops unknown keys instead of rejecting them. A mistyped field name in "
-        "the CMS form returns 200 and saves nothing. The generic /{entity} route "
-        "rejects unknown fields with 422, so the two disagree. Fix by setting "
-        "model_config = ConfigDict(extra='forbid') on ContactInfoUpdateReq."
-    ),
-)
 def test_contact_info_rejects_unknown_field(cp: TestClient) -> None:
     assert (
         cp.put("/companyprofile/contact-info", json={"not_a_column": "x"}).status_code

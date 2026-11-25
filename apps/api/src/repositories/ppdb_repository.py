@@ -4,9 +4,10 @@ from typing import Any, cast
 from sqlalchemy import case, func, or_, text
 from sqlalchemy.orm import Session
 
-from src.models.auth import User
+from src.models.auth import AuditLog, RefreshToken, User, UserPagePermission
 from src.models.ppdb import (
     FileUpload,
+    NotificationLog,
     PPDBApplicant,
     PPDBPaymentTransaction,
     PPDBPeriod,
@@ -521,6 +522,9 @@ class PPDBRepository:
                 f"dalam buku besar keuangan pesantren."
             )
             tx.notes = f"{tx.notes}\n\n{archive_note}" if tx.notes else archive_note
+        # Flush detach update BEFORE deleting applicant/user so autoflush=False
+        # never allows DELETE to collide with paid transaction FK references.
+        self.db.flush()
 
         # 2. Hapus transaksi yang BELUM LUNAS (pending, failed, expired, cancelled)
         self.db.query(PPDBPaymentTransaction).filter(
@@ -562,10 +566,28 @@ class PPDBRepository:
             synchronize_session=False
         )
 
-        # 6. Hapus pendaftar
-        self.db.delete(applicant)
+        # 6. Putuskan/bersihkan relasi akun login sebelum hapus applicant & user
+        if user_id:
+            self.db.query(RefreshToken).filter(
+                RefreshToken.user_id == user_id
+            ).delete(synchronize_session=False)
+            self.db.query(UserPagePermission).filter(
+                UserPagePermission.user_id == user_id
+            ).delete(synchronize_session=False)
+            self.db.query(AuditLog).filter(AuditLog.user_id == user_id).update(
+                {"user_id": None}, synchronize_session=False
+            )
+            self.db.query(NotificationLog).filter(
+                NotificationLog.recipient_user_id == user_id
+            ).update({"recipient_user_id": None}, synchronize_session=False)
 
-        # 7. Hapus user (cascades refresh_tokens & permissions)
+        # 7. Hapus pendaftar terlebih dahulu & flush BEFORE hapus User,
+        # agar ON DELETE CASCADE dari users->ppdb_applicants di MySQL tidak memicu
+        # StaleDataError pada instance ORM `applicant`.
+        self.db.delete(applicant)
+        self.db.flush()
+
+        # 8. Hapus user
         if user_id:
             self.db.query(User).filter(User.id == user_id).delete(
                 synchronize_session=False

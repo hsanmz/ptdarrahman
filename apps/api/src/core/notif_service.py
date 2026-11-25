@@ -20,7 +20,9 @@ from __future__ import annotations
 import asyncio
 import datetime
 import logging
+import os
 import random
+import threading
 import uuid
 from typing import Any, cast
 from zoneinfo import ZoneInfo
@@ -247,10 +249,13 @@ async def _async_send_notifications(
                 )
                 continue
 
+            phone = (applicant or {}).get("phone") or user.get("phone", "")
             ctx: dict[str, Any] = {
                 "nama_peserta": (applicant or {}).get("full_name")
                 or user.get("full_name", ""),
                 "username": user.get("username", ""),
+                "email": user.get("email", ""),
+                "phone": phone,
                 **context,
             }
 
@@ -264,7 +269,6 @@ async def _async_send_notifications(
                     raw_channel,
                     channel,
                 )
-            phone = (applicant or {}).get("phone") or user.get("phone", "")
             template_id = template.get("id")
 
             log_id = _log_notification(
@@ -483,14 +487,32 @@ async def _async_send_custom_notifications(
 # ── Public API (fire-and-forget) ──────────────────────────────────────────────
 
 
+def _run_coro_isolated(coro) -> None:
+    try:
+        asyncio.run(coro)
+    except Exception:
+        logger.exception("Background notification task failed")
+
+
 def _fire(coro) -> None:
     """Schedule *coro* as an asyncio Task if an event loop is running."""
     try:
         loop = asyncio.get_running_loop()
         loop.create_task(coro)
     except RuntimeError:
-        # Fallback: no running loop (e.g. during tests / scripts)
-        asyncio.run(coro)
+        # Sync worker thread without an event loop: run inline under pytest
+        # (avoids SQLite cross-thread teardown), and offload to a daemon
+        # thread in runtime so sync HTTP endpoints never block on WA I/O.
+        if os.getenv("PYTEST_CURRENT_TEST"):
+            asyncio.run(coro)
+        else:
+            t = threading.Thread(
+                target=_run_coro_isolated,
+                args=(coro,),
+                daemon=True,
+                name="notif-dispatch",
+            )
+            t.start()
 
 
 def send_notification(

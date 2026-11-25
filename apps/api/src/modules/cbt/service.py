@@ -13,8 +13,8 @@ import json
 import logging
 import random
 import string
-from datetime import datetime
-from typing import Any
+from datetime import UTC, datetime
+from typing import Any, cast
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
@@ -47,6 +47,10 @@ from src.modules.cbt.schemas import (
     ScheduleResponse,
     ScheduleUpdate,
 )
+
+
+def _utcnow() -> datetime:
+    return datetime.now(UTC).replace(tzinfo=None)
 
 # Batas keamanan import bank soal (production-safety caps)
 MAX_IMPORT_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
@@ -608,8 +612,8 @@ class CBTService:
             total_points=total_points,
             is_active=True,
             created_by=user_id,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
+            created_at=_utcnow(),
+            updated_at=_utcnow(),
         )
         db.add(bank)
 
@@ -621,7 +625,7 @@ class CBTService:
                 question_number=q_data["question_number"],
                 question_text=q_data["question_text"],
                 points=q_data["points"],
-                created_at=datetime.utcnow(),
+                created_at=_utcnow(),
             )
             db.add(question)
 
@@ -643,7 +647,7 @@ class CBTService:
     @classmethod
     def list_bank_soal(cls, db: Session, category: str) -> list[ExamBank]:
         period = cls.get_active_period(db)
-        rows: list[ExamBank] = (
+        rows: list[ExamBank] = list(
             db.execute(
                 select(ExamBank)
                 .where(ExamBank.period_id == period.id, ExamBank.category == category)
@@ -803,7 +807,7 @@ class CBTService:
                     bank.description = None
                     continue
             setattr(bank, field, value)
-        bank.updated_at = datetime.utcnow()
+        bank.updated_at = _utcnow()
         db.commit()
         db.refresh(bank)
         return bank
@@ -826,7 +830,7 @@ class CBTService:
                 id=str(uuid4()),
                 bank_id=bank.id,
                 question_number=question_number,
-                created_at=datetime.utcnow(),
+                created_at=_utcnow(),
             )
             db.add(question)
 
@@ -850,7 +854,7 @@ class CBTService:
         total_q, total_pts = cls._recompute_bank_totals(db, bank.id)
         bank.total_questions = total_q
         bank.total_points = total_pts
-        bank.updated_at = datetime.utcnow()
+        bank.updated_at = _utcnow()
         db.commit()
         db.refresh(question)
         return question
@@ -926,7 +930,7 @@ class CBTService:
         total_q, total_pts = cls._recompute_bank_totals(db, bank_id)
         bank.total_questions = total_q
         bank.total_points = total_pts
-        bank.updated_at = datetime.utcnow()
+        bank.updated_at = _utcnow()
         db.commit()
 
     # ── 2. Jadwal Ujian & Monitoring ──────────────────────────────────────
@@ -997,8 +1001,8 @@ class CBTService:
             access_token=access_token,
             notes=payload.notes.strip() if payload.notes else None,
             status="scheduled",
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
+            created_at=_utcnow(),
+            updated_at=_utcnow(),
         )
         db.add(schedule)
         db.commit()
@@ -1182,7 +1186,7 @@ class CBTService:
         for k, v in update_dict.items():
             if v is not None:
                 setattr(schedule, k, v)
-        schedule.updated_at = datetime.utcnow()
+        schedule.updated_at = _utcnow()
         db.commit()
         db.refresh(schedule)
 
@@ -1327,7 +1331,7 @@ class CBTService:
                     registration_number=app.registration_number,
                     full_name=app.full_name,
                     phone=app.phone,
-                    status=status_val,
+                    status=cast(Any, status_val),
                     started_at=started,
                     finished_at=finished,
                     remaining_seconds=rem,
@@ -1389,7 +1393,7 @@ class CBTService:
         attempt.remaining_seconds = bank.duration_minutes * 60
         attempt.answers_count = 0
         attempt.score = None
-        attempt.updated_at = datetime.utcnow()
+        attempt.updated_at = _utcnow()
         db.commit()
         db.refresh(attempt)
         return attempt
@@ -1456,7 +1460,7 @@ class CBTService:
             attempt.status = "not_started"
             attempt.started_at = None
             attempt.finished_at = None
-            attempt.updated_at = datetime.utcnow()
+            attempt.updated_at = _utcnow()
 
         # Update note in selection_results
         s_res = db.execute(
@@ -1468,7 +1472,7 @@ class CBTService:
             s_res.notes = f"{existing}\n{move_note}".strip()
             if target_sched.batch_name:
                 s_res.batch_name = target_sched.batch_name
-            s_res.updated_at = datetime.utcnow()
+            s_res.updated_at = _utcnow()
 
         db.commit()
 
@@ -1698,7 +1702,7 @@ class CBTService:
 
         if not attempt:
             # Create attempt
-            now = datetime.utcnow()
+            now = _utcnow()
             attempt = ExamAttempt(
                 id=str(uuid4()),
                 schedule_id=schedule_id,
@@ -1730,7 +1734,7 @@ class CBTService:
                 )
             if attempt.status == "not_started":
                 attempt.status = "in_progress"
-                attempt.started_at = datetime.utcnow()
+                attempt.started_at = _utcnow()
                 db.commit()
                 db.refresh(attempt)
 
@@ -1839,7 +1843,7 @@ class CBTService:
         if schedule and attempt.started_at:
             bank = cls.get_bank_soal_detail(db, schedule.bank_id)
             total_duration_seconds = bank.duration_minutes * 60
-            elapsed = (datetime.utcnow() - attempt.started_at).total_seconds()
+            elapsed = (_utcnow() - attempt.started_at).total_seconds()
             # Berikan toleransi 60 detik untuk latensi jaringan saat autosave
             if elapsed > (total_duration_seconds + 60):
                 cls.finish_exam(db, user, schedule_id)
@@ -1879,7 +1883,7 @@ class CBTService:
             existing_answer.option_key = option.option_key
             existing_answer.is_correct = is_correct
             existing_answer.score_awarded = score_awarded
-            existing_answer.answered_at = datetime.utcnow()
+            existing_answer.answered_at = _utcnow()
         else:
             new_answer = ExamAnswer(
                 id=str(uuid4()),
@@ -1889,7 +1893,7 @@ class CBTService:
                 option_key=option.option_key,
                 is_correct=is_correct,
                 score_awarded=score_awarded,
-                answered_at=datetime.utcnow(),
+                answered_at=_utcnow(),
             )
             db.add(new_answer)
 
@@ -1905,7 +1909,7 @@ class CBTService:
         if not existing_answer:
             total_answers += 1
         attempt.answers_count = total_answers
-        attempt.updated_at = datetime.utcnow()
+        attempt.updated_at = _utcnow()
 
         db.commit()
 
@@ -1957,8 +1961,8 @@ class CBTService:
         # Lock attempt and increment violations
         attempt.status = "locked"
         attempt.violations_count += 1
-        attempt.last_violation_at = datetime.utcnow()
-        attempt.updated_at = datetime.utcnow()
+        attempt.last_violation_at = _utcnow()
+        attempt.updated_at = _utcnow()
         db.commit()
         db.refresh(attempt)
 
@@ -1997,7 +2001,7 @@ class CBTService:
             if schedule and attempt.started_at:
                 bank = cls.get_bank_soal_detail(db, schedule.bank_id)
                 total_duration_seconds = bank.duration_minutes * 60
-                elapsed = (datetime.utcnow() - attempt.started_at).total_seconds()
+                elapsed = (_utcnow() - attempt.started_at).total_seconds()
                 server_remaining = max(0, int(total_duration_seconds - elapsed))
                 if server_remaining <= 0:
                     cls.finish_exam(db, user, schedule_id)
@@ -2006,7 +2010,7 @@ class CBTService:
                 attempt.remaining_seconds = min(server_remaining, max(0, remaining_seconds))
             else:
                 attempt.remaining_seconds = max(0, remaining_seconds)
-            attempt.updated_at = datetime.utcnow()
+            attempt.updated_at = _utcnow()
             db.commit()
 
         return {"status": attempt.status if attempt else "not_started"}
@@ -2057,7 +2061,7 @@ class CBTService:
         if final_percentage > 100.0:
             final_percentage = 100.0
 
-        now = datetime.utcnow()
+        now = _utcnow()
         attempt.status = "completed"
         attempt.finished_at = now
         attempt.remaining_seconds = 0

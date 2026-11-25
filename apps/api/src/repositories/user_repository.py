@@ -4,7 +4,8 @@ from typing import Any, cast
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
-from src.models.auth import Page, User, UserPagePermission
+from src.models.auth import AuditLog, Page, RefreshToken, User, UserPagePermission
+from src.models.ppdb import NotificationLog, PPDBApplicant
 
 
 class UserRepository:
@@ -40,6 +41,24 @@ class UserRepository:
     def get_by_id(self, user_id: str) -> User | None:
         return cast(User | None, self.db.query(User).filter(User.id == user_id).first())
 
+    def get_by_username(self, username: str) -> User | None:
+        return cast(
+            User | None, self.db.query(User).filter(User.username == username).first()
+        )
+
+    def get_by_email(self, email: str) -> User | None:
+        return cast(
+            User | None, self.db.query(User).filter(User.email == email).first()
+        )
+
+    def has_applicant(self, user_id: str) -> bool:
+        return (
+            self.db.query(PPDBApplicant.id)
+            .filter(PPDBApplicant.user_id == user_id)
+            .first()
+            is not None
+        )
+
     def create(self, user: User) -> User:
         self.db.add(user)
         self.db.commit()
@@ -52,6 +71,19 @@ class UserRepository:
         return user
 
     def delete(self, user: User) -> None:
+        self.db.query(RefreshToken).filter(RefreshToken.user_id == user.id).delete(
+            synchronize_session=False
+        )
+        self.db.query(UserPagePermission).filter(
+            UserPagePermission.user_id == user.id
+        ).delete(synchronize_session=False)
+        self.db.query(AuditLog).filter(AuditLog.user_id == user.id).update(
+            {"user_id": None}, synchronize_session=False
+        )
+        self.db.query(NotificationLog).filter(
+            NotificationLog.recipient_user_id == user.id
+        ).update({"recipient_user_id": None}, synchronize_session=False)
+        self.db.flush()
         self.db.delete(user)
         self.db.commit()
 

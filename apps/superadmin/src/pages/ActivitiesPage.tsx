@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import * as api from '../api/client'
-import { useToast } from '../components/Toast'
 import { Card, CardContent } from "@/components/ui"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui"
 import { Badge } from "@/components/ui"
@@ -41,8 +40,6 @@ function actionBadge(action: string) {
 }
 
 export default function ActivitiesPage() {
-  const { toast } = useToast()
-
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [entityType, setEntityType] = useState('')

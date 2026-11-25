@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import * as api from '../api/client'
-import type { ApplicantPeriod, ApplicantWave } from '../api/client'
+import type { ApplicantWave } from '../api/client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui"
 import { Skeleton } from "@/components/ui"
 import { Badge } from "@/components/ui"

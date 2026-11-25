@@ -63,7 +63,9 @@ export default function CbtExamPage() {
   const [blurWarningSeconds, setBlurWarningSeconds] = useState<number | null>(null)
   const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isExamActiveRef = useRef(false)
-  isExamActiveRef.current = stage === 'EXAM'
+  useEffect(() => {
+    isExamActiveRef.current = stage === 'EXAM'
+  }, [stage])
 
   // Gate Re-Auth Mutation
   const verifyMutation = useMutation({
@@ -134,6 +136,20 @@ export default function CbtExamPage() {
     return () => clearInterval(interval)
   }, [stage, scheduleId, toast])
 
+  // Handle Finish Exam
+  const handleFinishExam = useCallback(async () => {
+    if (!scheduleId) return
+    setShowFinishConfirm(false)
+    try {
+      const res = await cbtService.finishExam(scheduleId)
+      setFinalScore(res.score)
+      setStage('COMPLETED')
+      toast('success', 'Ujian berhasil diselesaikan!')
+    } catch (err: any) {
+      toast('error', err.message || 'Gagal mengirimkan ujian.')
+    }
+  }, [scheduleId, toast])
+
   // Countdown Timer & Periodic Server Sync
   useEffect(() => {
     if (stage !== 'EXAM') return
@@ -163,7 +179,7 @@ export default function CbtExamPage() {
       clearInterval(timer)
       if (syncTimerRef.current) clearInterval(syncTimerRef.current)
     }
-  }, [stage, scheduleId])
+  }, [stage, scheduleId, handleFinishExam])
 
   // ── Anti-Cheat: Tab Switch & Window Blur Detection (3s Warning & 5s Lock) ──
   const triggerViolation = useCallback(async () => {
@@ -243,7 +259,7 @@ export default function CbtExamPage() {
       window.removeEventListener('pagehide', handlePageHide)
       if (blurInterval) clearInterval(blurInterval)
     }
-  }, [stage, triggerViolation])
+  }, [stage, scheduleId, triggerViolation])
 
   // Prevent Keyboard Shortcuts & Context Menu
   useEffect(() => {
@@ -296,19 +312,6 @@ export default function CbtExamPage() {
     }
   }
 
-  // Handle Finish Exam
-  const handleFinishExam = async () => {
-    if (!scheduleId) return
-    setShowFinishConfirm(false)
-    try {
-      const res = await cbtService.finishExam(scheduleId)
-      setFinalScore(res.score)
-      setStage('COMPLETED')
-      toast('success', 'Ujian berhasil diselesaikan!')
-    } catch (err: any) {
-      toast('error', err.message || 'Gagal mengirimkan ujian.')
-    }
-  }
 
   const formatTimer = (seconds: number) => {
     const h = Math.floor(seconds / 3600)

@@ -47,7 +47,14 @@ export default function RoleFormPage() {
           })
           const perms: Record<string, AccessLevel> = {}
           for (const [mod, level] of Object.entries(role.permissions || {})) {
-            perms[mod] = level as AccessLevel
+            const rawLevel = String(level || '').toLowerCase()
+            perms[mod] = (
+              rawLevel === 'access' || rawLevel === 'full'
+                ? 'crud'
+                : rawLevel === 'view'
+                  ? 'read'
+                  : level
+            ) as AccessLevel
           }
           setPermissions(perms)
         }
@@ -234,7 +241,7 @@ export default function RoleFormPage() {
                             setPermissions((prev) => {
                               const next = { ...prev }
                               if (checked) {
-                                next[id] = 'access' as AccessLevel
+                                next[id] = 'crud' as AccessLevel
                               } else {
                                 delete next[id]
                               }

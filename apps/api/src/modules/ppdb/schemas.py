@@ -483,6 +483,46 @@ class ApplicantAdminUpdate(BaseModel):
     payment_status: str | None = None
     rejection_reason: str | None = None
 
+    @field_validator(
+        "wave_id",
+        "email",
+        "phone",
+        "gender",
+        "graduation_year",
+        "birth_place",
+        "birth_date",
+        "nisn",
+        "nik",
+        "parent_name",
+        "father_name",
+        "father_job",
+        "father_phone",
+        "mother_name",
+        "mother_job",
+        "mother_phone",
+        "guardian_name",
+        "guardian_job",
+        "parent_phone",
+        "parent_income",
+        "parent_email",
+        "previous_school",
+        "province",
+        "city",
+        "district",
+        "village",
+        "postal_code",
+        "address",
+        "status",
+        "payment_status",
+        "rejection_reason",
+        mode="before",
+    )
+    @classmethod
+    def empty_str_to_none(cls, v):
+        if isinstance(v, str) and not v.strip():
+            return None
+        return v
+
     @field_validator("phone")
     @classmethod
     def check_phone(cls, v: str | None) -> str | None:

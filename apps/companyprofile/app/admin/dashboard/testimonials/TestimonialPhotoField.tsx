@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, DragEvent } from 'react'
 import {
   AlertCircle,
+  CheckCircle2,
   Image as ImageIcon,
   Link2,
   Loader2,
@@ -56,6 +57,7 @@ export function TestimonialPhotoField({
   error,
 }: Props) {
   const [mode, setMode] = useState<'upload' | 'url'>('upload')
+  const [isReplacing, setIsReplacing] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [dragging, setDragging] = useState(false)
   const [fileError, setFileError] = useState('')
@@ -100,6 +102,7 @@ export function TestimonialPhotoField({
       const url = await api.uploadImage(file)
       onChange(url)
       setJustUploaded(true)
+      setIsReplacing(false)
       toast('success', 'Foto berhasil diunggah — tekan Simpan Testimoni untuk menerapkan')
     } catch (e) {
       setBlobUrl('')
@@ -144,6 +147,7 @@ export function TestimonialPhotoField({
     setBlobUrl('')
     setFileError('')
     setJustUploaded(false)
+    setIsReplacing(false)
     onChange('')
     inputRef.current?.focus()
   }
@@ -157,37 +161,112 @@ export function TestimonialPhotoField({
   }
 
   const previewSrc = blobUrl || resolveImageSrc(value, api.API_BASE)
+  const hasImage = Boolean(previewSrc)
+  const isFilledView = hasImage && !isReplacing
   const describedBy = [shownError ? errorId : null, helpId].filter(Boolean).join(' ')
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-2">
-        <div className="inline-flex items-center gap-0.5 rounded-lg bg-[var(--bg-secondary)] p-0.5">
-          {(['upload', 'url'] as const).map((m) => (
+        {isFilledView ? (
+          <span className="text-xs font-semibold text-[var(--text-secondary)]">Foto Profil Wali Santri</span>
+        ) : (
+          <div className="inline-flex items-center gap-0.5 rounded-lg bg-[var(--bg-secondary)] p-0.5">
+            {(['upload', 'url'] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => switchMode(m)}
+                aria-pressed={mode === m}
+                disabled={uploading}
+                className={cn(
+                  'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60',
+                  mode === m
+                    ? 'bg-white text-[var(--text)] shadow-sm'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
+                )}
+              >
+                {m === 'upload' ? <Upload className="h-3 w-3" /> : <Link2 className="h-3 w-3" />}
+                {m === 'upload' ? 'Unggah' : 'URL'}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="flex items-center gap-2">
+          {hasImage ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
+              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+              Sudah Terisi
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500 border border-zinc-200">
+              <AlertCircle className="h-3 w-3 text-zinc-400" />
+              Belum Ada Gambar
+            </span>
+          )}
+
+          {isReplacing && (
             <button
-              key={m}
               type="button"
-              onClick={() => switchMode(m)}
-              aria-pressed={mode === m}
-              disabled={uploading}
-              className={cn(
-                'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60',
-                mode === m
-                  ? 'bg-white text-[var(--text)] shadow-sm'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
-              )}
+              onClick={() => setIsReplacing(false)}
+              className="text-[11px] font-medium text-[var(--text-muted)] hover:text-[var(--text)]"
             >
-              {m === 'upload' ? <Upload className="h-3 w-3" /> : <Link2 className="h-3 w-3" />}
-              {m === 'upload' ? 'Unggah' : 'URL'}
+              Batal Ganti
             </button>
-          ))}
+          )}
+
+          {!isFilledView && (
+            <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[10px] font-semibold text-[var(--accent)]">
+              Opsional
+            </span>
+          )}
         </div>
-        <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[10px] font-semibold text-[var(--accent)]">
-          Opsional
-        </span>
       </div>
 
-      {mode === 'upload' ? (
+      {isFilledView ? (
+        <div className="relative aspect-4/5 max-h-[19rem] overflow-hidden rounded-2xl border border-[var(--border)] bg-white/70 shadow-xs">
+          <span className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--color-deep-navy)] text-white/80">
+            <UserRound className="h-12 w-12" aria-hidden="true" />
+          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element -- URL gambar bebas dari admin; lihat komentar komponen. */}
+          <img
+            src={previewSrc}
+            alt="Pratinjau foto wali santri"
+            className="absolute inset-0 h-full w-full object-cover"
+            onError={(event) => {
+              event.currentTarget.style.display = 'none'
+            }}
+          />
+
+          {!uploading && (
+            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 via-black/50 to-transparent px-3 pt-10 pb-2.5">
+              <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-white/90" title={value || undefined}>
+                {blobUrl ? 'Pratinjau file lokal' : value || 'Foto wali santri'}
+              </span>
+              <div className="flex shrink-0 items-center gap-1.5">
+                <button
+                  id={id}
+                  type="button"
+                  onClick={() => setIsReplacing(true)}
+                  className="inline-flex items-center gap-1 rounded-md bg-white/20 px-2 py-1 text-[11px] font-semibold text-white backdrop-blur-xs transition-colors hover:bg-white/30"
+                >
+                  <RefreshCw className="h-3 w-3" />
+                  Ganti
+                </button>
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="inline-flex items-center gap-1 rounded-md bg-red-500/20 px-2 py-1 text-[11px] font-semibold text-red-200 backdrop-blur-xs transition-colors hover:bg-red-500/30 hover:text-red-100"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  Hapus
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : mode === 'upload' ? (
         <div
           className={cn(
             'relative aspect-4/5 overflow-hidden rounded-2xl border border-dashed transition-colors',
@@ -196,102 +275,39 @@ export function TestimonialPhotoField({
               : 'border-[var(--border)] bg-white/60',
             shownError && 'border-destructive/60',
           )}
-          onDragEnter={previewSrc ? handleDragEnter : undefined}
-          onDragOver={previewSrc ? (event) => event.preventDefault() : undefined}
-          onDragLeave={previewSrc ? handleDragLeave : undefined}
-          onDrop={previewSrc ? handleDrop : undefined}
+          onDragEnter={handleDragEnter}
+          onDragOver={(event) => event.preventDefault()}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
         >
-          {previewSrc ? (
-            <>
-              <span className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--color-deep-navy)] text-white/80">
-                <UserRound className="h-12 w-12" aria-hidden="true" />
-              </span>
-              {/* eslint-disable-next-line @next/next/no-img-element -- URL gambar bebas dari admin; lihat komentar komponen. */}
-              <img
-                src={previewSrc}
-                alt="Pratinjau foto wali santri"
-                className="absolute inset-0 h-full w-full object-cover"
-                onError={(event) => {
-                  event.currentTarget.style.display = 'none'
-                }}
-              />
-
-              {!uploading && (
-                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 via-black/50 to-transparent px-3 pt-10 pb-2.5">
-                  <span className="min-w-0 flex-1 truncate text-[10px] text-white/85" title={value || undefined}>
-                    {blobUrl ? 'Pratinjau file lokal' : value || 'Foto wali santri'}
-                  </span>
-                  <div className="flex shrink-0 items-center gap-1">
-                    <button
-                      id={id}
-                      type="button"
-                      onClick={() => inputRef.current?.click()}
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-semibold text-white/90 transition-colors hover:bg-white/15 hover:text-white"
-                    >
-                      <RefreshCw className="h-3 w-3" />
-                      Ganti
-                    </button>
-                    <button
-                      type="button"
-                      onClick={removeImage}
-                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-semibold text-red-200 transition-colors hover:bg-red-500/20 hover:text-red-100"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                      Hapus
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {dragging && !uploading && (
-                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[var(--accent)]/85 text-white">
-                  <Upload className="h-7 w-7" aria-hidden="true" />
-                  <span className="text-xs font-semibold">Lepas untuk mengganti foto</span>
-                </div>
-              )}
-            </>
-          ) : (
-            <button
-              id={id}
-              type="button"
-              onClick={() => inputRef.current?.click()}
-              onDragEnter={handleDragEnter}
-              onDragOver={(event) => event.preventDefault()}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              aria-describedby={describedBy}
-              className="flex h-full w-full flex-col items-center justify-center gap-2 px-5 py-8 text-center focus-visible:ring-2 focus-visible:ring-[var(--accent)]/25 focus-visible:outline-none"
-            >
-              <span
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--accent-subtle)] text-[var(--accent)]"
-                aria-hidden="true"
-              >
-                <UserRound className="h-6 w-6" />
-              </span>
-              <span className="text-sm font-semibold text-[var(--text)]">
-                {dragging ? 'Lepas foto di sini' : 'Foto wali santri (opsional)'}
-              </span>
-              <span className="text-xs leading-relaxed text-[var(--text-secondary)]">
-                Tarik foto ke sini atau klik untuk memilih.
-              </span>
-              <span className="mt-1 max-w-[15rem] text-[11px] leading-relaxed text-[var(--text-muted)]">
+          <button
+            id={id}
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            aria-describedby={describedBy}
+            disabled={uploading}
+            className="flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center focus-visible:outline-none"
+          >
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent-subtle)] text-[var(--accent)]">
+              <Upload className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-xs font-semibold text-[var(--text)]">
+                {dragging ? 'Lepas foto di sini' : 'Tarik foto atau klik untuk memilih'}
+              </p>
+              <p className="mt-0.5 text-[11px] text-[var(--text-muted)]">
+                Otomatis dioptimasi ke WebP agar ringan.
+              </p>
+              <p className="mt-0.5 text-[10px] text-[var(--text-muted)]">
                 Testimoni tetap dapat ditampilkan tanpa foto.
-              </span>
-            </button>
-          )}
+              </p>
+            </div>
+          </button>
 
           {uploading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/50 px-6 text-white backdrop-blur-[1px]">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/60 text-white backdrop-blur-xs">
               <Loader2 className="h-6 w-6 animate-spin" />
-              <span className="text-xs font-semibold">Mengunggah foto…</span>
-              <span
-                role="progressbar"
-                aria-label="Progres unggah foto"
-                aria-valuetext="Sedang mengunggah"
-                className="h-1 w-32 overflow-hidden rounded-full bg-white/30"
-              >
-                <span className="block h-full w-1/2 animate-pulse rounded-full bg-white" />
-              </span>
+              <span className="text-xs font-semibold">Mengompresi ke WebP & Mengunggah…</span>
             </div>
           )}
         </div>
@@ -307,8 +323,6 @@ export function TestimonialPhotoField({
               onChange={(event) => {
                 setFileError('')
                 setJustUploaded(false)
-                // Nilai tetap dikirim ke form walau belum valid supaya ketikan
-                // admin tidak hilang; validasi final terjadi saat Simpan.
                 onChange(event.target.value)
               }}
               placeholder="https://contoh.com/foto-wali.jpg"
@@ -321,30 +335,6 @@ export function TestimonialPhotoField({
                 (error || urlError) && 'border-destructive focus:border-destructive focus:ring-destructive/20',
               )}
             />
-          </div>
-
-          <div className="relative aspect-4/5 max-h-[19rem] w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)]/40">
-            {previewSrc ? (
-              <>
-                <span className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--color-deep-navy)] text-white/80">
-                  <UserRound className="h-12 w-12" aria-hidden="true" />
-                </span>
-                {/* eslint-disable-next-line @next/next/no-img-element -- URL gambar bebas dari admin. */}
-                <img
-                  src={previewSrc}
-                  alt="Pratinjau foto wali santri"
-                  className="absolute inset-0 h-full w-full object-cover"
-                  onError={(event) => {
-                    event.currentTarget.style.display = 'none'
-                  }}
-                />
-              </>
-            ) : (
-              <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center text-[11px] leading-relaxed text-[var(--text-muted)]">
-                <ImageIcon className="h-5 w-5" aria-hidden="true" />
-                Pratinjau muncul setelah URL valid diisi.
-              </span>
-            )}
           </div>
         </div>
       )}

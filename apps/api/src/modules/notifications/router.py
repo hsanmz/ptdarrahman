@@ -86,6 +86,58 @@ def get_templates(user: dict = Depends(require_notification_read)):
     return rows
 
 
+@router.get("/recipients")
+def get_recipients(
+    search: str = Query(""),
+    limit: int = Query(200, ge=1, le=500),
+    user: dict = Depends(require_notification_read),
+):
+    """Daftar ringkas penerima notifikasi (admin & pendaftar) tanpa blob data."""
+    term = search.strip()
+    where_extra = ""
+    params: dict[str, Any] = {"limit": limit}
+    if term:
+        params["q"] = f"%{term}%"
+        where_extra = (
+            " AND (u.username LIKE :q OR u.full_name LIKE :q "
+            "OR u.email LIKE :q OR u.phone LIKE :q OR a.full_name LIKE :q)"
+        )
+
+    admin_rows = (
+        execute_raw(
+            "SELECT u.id AS user_id, COALESCE(NULLIF(u.full_name, ''), u.username) AS name, "
+            "u.username, COALESCE(u.email, '') AS email, COALESCE(u.phone, '') AS phone, "
+            "'Admin' AS type "
+            "FROM users u LEFT JOIN ppdb_applicants a ON a.user_id = u.id "
+            f"WHERE COALESCE(u.user_type, '') NOT IN ('superadmin', 'applicant') "
+            f"AND COALESCE(u.is_active, 1) = 1{where_extra} "
+            "ORDER BY u.created_at DESC LIMIT :limit",
+            params,
+        )
+        or []
+    )
+    applicant_rows = (
+        execute_raw(
+            "SELECT u.id AS user_id, COALESCE(NULLIF(a.full_name, ''), u.username) AS name, "
+            "u.username, COALESCE(a.email, u.email, '') AS email, "
+            "COALESCE(a.phone, u.phone, '') AS phone, 'Pendaftar' AS type "
+            "FROM ppdb_applicants a "
+            "INNER JOIN users u ON u.id = a.user_id "
+            "WHERE a.deleted_at IS NULL "
+            + (
+                "AND (a.full_name LIKE :q OR u.username LIKE :q OR a.email LIKE :q "
+                "OR a.phone LIKE :q OR a.registration_number LIKE :q) "
+                if term
+                else ""
+            )
+            + "ORDER BY a.created_at DESC LIMIT :limit",
+            params,
+        )
+        or []
+    )
+    return {"data": [*admin_rows, *applicant_rows]}
+
+
 @router.get("/templates/{id}")
 def get_template(id: str, user: dict = Depends(require_notification_read)):
     row = get_by_id("notification_templates", id)

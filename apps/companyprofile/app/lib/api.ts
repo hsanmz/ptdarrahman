@@ -18,6 +18,7 @@ import type {
   Testimonial,
 } from './types'
 import { groupLeadership } from '../data/leadership'
+import { convertToWebP } from './image-file'
 
 export const PRIMARY_API = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
 // Fallback API opsional (mis. darurat ke server kedua). Kosongkan untuk
@@ -522,10 +523,12 @@ export async function updateProfile(data: {
 }
 
 export async function uploadImage(file: File, purpose = 'general') {
+  const fileToUpload = await convertToWebP(file).catch(() => file)
   const form = new FormData()
-  form.append('file', file)
+  form.append('file', fileToUpload)
   form.append('purpose', purpose)
-  let res = await fetchWithFallback(`${getApiBase()}/companyprofile/upload`, {
+  const uploadUrl = `${getApiBase()}/companyprofile/upload`
+  let res = await fetchWithFallback(uploadUrl, {
     method: 'POST',
     body: form,
     credentials: 'include' as RequestCredentials,
@@ -533,16 +536,35 @@ export async function uploadImage(file: File, purpose = 'general') {
   if (res.status === 401) {
     const newToken = await tryRefresh()
     if (newToken) {
-      res = await fetchWithFallback(`${getApiBase()}/companyprofile/upload`, {
+      res = await fetchWithFallback(uploadUrl, {
         method: 'POST',
         body: form,
         credentials: 'include' as RequestCredentials,
       })
-      if (res.ok) return (await parseJsonSafe<{ url: string }>(res, 'Upload')).url as string
+    } else {
+      _redirectLogin(); throw new Error('Unauthorized')
     }
-    _redirectLogin(); throw new Error('Unauthorized')
+    if (res.status === 401) {
+      _redirectLogin(); throw new Error('Unauthorized')
+    }
   }
-  if (!res.ok) throw new Error(`Upload failed: ${res.status}`)
+  if (!res.ok) {
+    let msg = `Upload failed: ${res.status}`
+    const text = await res.text()
+    try {
+      const body = JSON.parse(text)
+      const detail = body?.detail ?? body?.message ?? body?.error
+      if (typeof detail === 'string' && detail) {
+        msg = detail
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        const first = detail[0]
+        if (typeof first?.msg === 'string' && first.msg) msg = first.msg
+      }
+    } catch {
+      if (text) msg = text.slice(0, 200)
+    }
+    throw new Error(msg)
+  }
   const data = await parseJsonSafe<{ url: string }>(res, 'Upload')
   return data.url as string
 }

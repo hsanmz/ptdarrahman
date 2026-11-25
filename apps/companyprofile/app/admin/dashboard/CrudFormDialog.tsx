@@ -4,12 +4,27 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, ReactNode } from 'react'
 import {
-  AlertTriangle, CalendarDays, FileText, Image as ImageIcon, Images, ListChecks, Link2, Loader2,
-  Plus, Save, ShieldCheck, Trash2, Upload, X,
+  AlertCircle,
+  AlertTriangle,
+  CalendarDays,
+  CheckCircle2,
+  FileText,
+  Image as ImageIcon,
+  Images,
+  ListChecks,
+  Link2,
+  Loader2,
+  Plus,
+  RefreshCw,
+  Save,
+  ShieldCheck,
+  Trash2,
+  Upload,
+  X,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import * as api from '@/app/lib/api'
-import { resolveImageSrc } from '@/app/lib/image-file'
+import { IMAGE_ACCEPT, resolveImageSrc, validateImageFile } from '@/app/lib/image-file'
 import { cn } from '@/app/lib/utils'
 import { isFormDirty, UNSAVED_CHANGES_CONFIRM } from '@/app/lib/form-dirty'
 import { looksLikeHtml, sanitizeRichHtml } from '@/app/lib/rich-text'
@@ -125,11 +140,10 @@ export function CrudFormDialog({
   }
 
   async function handleSave() {
-    // Penjaga anti-kehilangan-data: saat mode edit, `editingItem.content` wajib
-    // ada. Kalau null, form ini kemungkinan diisi dari baris list yang `content`
-    //‑nya sudah dilucuti backend — Menyimpan akan menimpa isi artikel & galeri
-    // dengan string kosong. Better ditolak daripada dihapus.
-    if (mode === 'edit' && HAS_CONTENT.includes(activeTab) && !editingItem?.content) {
+    // Penjaga anti-kehilangan-data: saat mode edit, `editingItem.content` tidak
+    // boleh undefined (indikasi gagal memuat detail penuh). Nilai `null` pada
+    // kolom opsional tetap diizinkan karena sudah dimuat via endpoint detail.
+    if (mode === 'edit' && HAS_CONTENT.includes(activeTab) && (!editingItem || editingItem.content === undefined)) {
       toast('error', 'Data artikel tidak lengkap dimuat. Tutup form dan buka kembali, atau muat ulang halaman.')
       return
     }
@@ -632,7 +646,7 @@ export function FormSection({
   label: string
   icon: LucideIcon
   tone?: 'emerald' | 'gold'
-  hint?: string
+  hint?: ReactNode
   className?: string
   contentClassName?: string
   children: ReactNode
@@ -711,15 +725,23 @@ function ModeToggle({
  */
 function ImageSection({ value, onChange }: { value: string; onChange: (url: string) => void }) {
   const [mode, setMode] = useState<'upload' | 'url'>('upload')
+  const [isReplacing, setIsReplacing] = useState(false)
   const [uploading, setUploading] = useState(false)
 
   async function handleUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+    const validation = validateImageFile(file)
+    if (validation) {
+      toast('error', validation)
+      return
+    }
     setUploading(true)
     try {
       const url = await api.uploadImage(file)
       onChange(url)
+      setIsReplacing(false)
       toast('success', 'Gambar diunggah — tekan Simpan untuk menyimpan')
     } catch (e) {
       toast('error', 'Upload gagal: ' + errorMessage(e))
@@ -728,57 +750,110 @@ function ImageSection({ value, onChange }: { value: string; onChange: (url: stri
     }
   }
 
+  const isFilled = Boolean(value) && !isReplacing
+
   return (
-    <FormSection label="Gambar Utama" icon={ImageIcon} tone="gold">
-      <div className="space-y-3.5">
-        <ModeToggle mode={mode} onMode={setMode} />
-
-        {mode === 'upload' ? (
-          <label className="group flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-[var(--border)] bg-white/60 px-4 py-7 text-center transition-colors hover:border-[var(--accent)]/50 hover:bg-[var(--accent-subtle)]/60">
-            <span className="mb-1 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--accent-subtle)] text-[var(--accent)] transition-transform group-hover:scale-105">
-              {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
-            </span>
-            <span className="text-sm font-semibold text-[var(--text)]">
-              {uploading ? 'Mengunggah…' : 'Klik untuk pilih gambar'}
-            </span>
-            <span className="text-xs text-[var(--text-muted)]">PNG, JPG, atau WEBP</span>
-            <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} />
-          </label>
+    <FormSection
+      label="Gambar Utama"
+      icon={ImageIcon}
+      tone="gold"
+      hint={
+        value ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
+            <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+            Sudah Terisi
+          </span>
         ) : (
-          <div className="relative">
-            <Link2 className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" />
-            <Input
-              className={cn(FIELD_CLASS, 'pl-9')}
-              type="url"
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder="https://example.com/image.jpg"
-            />
-          </div>
-        )}
-
-        {value && (
-          <div className="flex items-start gap-3.5 rounded-2xl border border-[var(--border)]/70 bg-white/70 p-3">
-            <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
+          <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-0.5 text-[10px] font-medium text-zinc-500 border border-zinc-200">
+            <AlertCircle className="h-3 w-3 text-zinc-400" />
+            Belum Ada Gambar
+          </span>
+        )
+      }
+    >
+      <div className="space-y-3.5">
+        {isFilled ? (
+          <div className="space-y-3">
+            <div className="relative aspect-video max-h-56 w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-black/5 shadow-xs">
               <img
-                src={resolveImageSrc(value, api.API_BASE)} alt="Pratinjau gambar"
+                src={resolveImageSrc(value, api.getApiBase?.() ?? api.API_BASE)}
+                alt="Pratinjau gambar utama"
                 className="h-full w-full object-cover"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                onError={(e) => {
+                  ;(e.target as HTMLImageElement).style.display = 'none'
+                }}
               />
+              <div className="absolute top-2 left-2 rounded-md bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-xs">
+                Gambar Utama Aktif
+              </div>
             </div>
-            <div className="min-w-0 flex-1 pt-0.5">
-              <p className="text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">Pratinjau</p>
-              <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed break-all text-[var(--text-secondary)]">{value}</p>
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)]/70 bg-white/70 p-3">
+              <p className="min-w-0 flex-1 truncate font-mono text-xs text-[var(--text-secondary)]" title={value}>
+                {value}
+              </p>
+              <div className="flex shrink-0 items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setIsReplacing(true)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-2.5 py-1.5 text-xs font-semibold text-[var(--text)] transition-colors hover:bg-[var(--accent-subtle)] hover:text-[var(--accent)] hover:border-[var(--accent)]/50"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  Ganti Gambar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange('')
+                    setIsReplacing(false)
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-100 hover:text-red-700"
+                  aria-label="Hapus URL gambar"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Hapus
+                </button>
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={() => onChange('')}
-              className="shrink-0 rounded-lg p-1.5 text-[var(--text-muted)] transition-colors hover:bg-red-50 hover:text-red-500"
-              aria-label="Hapus URL gambar"
-            >
-              <X className="h-4 w-4" />
-            </button>
           </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between gap-2">
+              <ModeToggle mode={mode} onMode={setMode} />
+              {isReplacing && (
+                <button
+                  type="button"
+                  onClick={() => setIsReplacing(false)}
+                  className="text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text)]"
+                >
+                  Batal Ganti
+                </button>
+              )}
+            </div>
+
+            {mode === 'upload' ? (
+              <label className="group flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-[var(--border)] bg-white/60 px-4 py-7 text-center transition-colors hover:border-[var(--accent)]/50 hover:bg-[var(--accent-subtle)]/60">
+                <span className="mb-1 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--accent-subtle)] text-[var(--accent)] transition-transform group-hover:scale-105">
+                  {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
+                </span>
+                <span className="text-sm font-semibold text-[var(--text)]">
+                  {uploading ? 'Mengompresi ke WebP & Mengunggah…' : 'Klik untuk pilih gambar'}
+                </span>
+                <span className="text-xs text-[var(--text-muted)]">Otomatis dioptimasi ke WebP · JPG, PNG, WEBP, atau GIF · Maks. 10 MB</span>
+                <input type="file" accept={IMAGE_ACCEPT} onChange={handleUpload} className="hidden" disabled={uploading} />
+              </label>
+            ) : (
+              <div className="relative">
+                <Link2 className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" />
+                <Input
+                  className={cn(FIELD_CLASS, 'pl-9')}
+                  type="url"
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
     </FormSection>
@@ -795,7 +870,13 @@ function GallerySection({ value, onChange }: { value: string[]; onChange: (urls:
 
   async function handleUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+    const validation = validateImageFile(file)
+    if (validation) {
+      toast('error', validation)
+      return
+    }
     setUploading(true)
     try {
       const url = await api.uploadImage(file)
@@ -833,7 +914,7 @@ function GallerySection({ value, onChange }: { value: string[]; onChange: (urls:
             {images.map((url, idx) => (
               <div key={`${url}-${idx}`} className="group relative aspect-4/3 overflow-hidden rounded-xl border border-[var(--border)]/70 bg-[var(--bg-secondary)]">
                 <img
-                  src={resolveImageSrc(url, api.API_BASE)} alt={`Galeri ${idx + 1}`}
+                  src={resolveImageSrc(url, api.getApiBase?.() ?? api.API_BASE)} alt={`Galeri ${idx + 1}`}
                   className="h-full w-full object-cover"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                 />
@@ -856,7 +937,7 @@ function GallerySection({ value, onChange }: { value: string[]; onChange: (urls:
               {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
             </span>
             {uploading ? 'Mengunggah…' : 'Tambah dari file'}
-            <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} />
+            <input type="file" accept={IMAGE_ACCEPT} onChange={handleUpload} className="hidden" disabled={uploading} />
           </label>
         ) : (
           <div className="flex items-center gap-2">

@@ -1,7 +1,9 @@
 import asyncio
 import json
+import logging
 import time
 import uuid
+from pathlib import Path
 from typing import Any
 
 from fastapi import (
@@ -15,7 +17,7 @@ from fastapi import (
     UploadFile,
 )
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Session
 
@@ -39,11 +41,12 @@ from src.core.rate_limit import rate_limit_dependency
 from src.core.request_body import read_refresh_token
 from src.core.security import hash_password, verify_password, verify_token
 from src.core.session_meta import get_session_context
-from src.core.uploads import delete_upload, upload_file
+from src.core.uploads import ALLOWED_COMPANYPROFILE_TYPES, delete_upload, upload_file
 from src.repositories.auth_repository import AuthRepository
 from src.services.auth_service import AuthService
 
 router = APIRouter()
+logger = logging.getLogger("ptdarrahman.companyprofile")
 
 TABLES = {
     "news": "news_articles",
@@ -573,47 +576,68 @@ async def cp_upload(
     file: UploadFile = File(...),
     purpose: str = Form("general"),
 ):
+    clean_purpose = (purpose or "general").strip().lower()
     record_id = str(uuid.uuid4())
     result = await upload_file(
         file,
         record_id,
-        max_size_bytes=5 * 1024 * 1024 if purpose == "hero" else 10 * 1024 * 1024,
-        allowed_types={"image/jpeg", "image/png", "image/webp"} if purpose == "hero" else None,
+        max_size_bytes=5 * 1024 * 1024 if clean_purpose == "hero" else 10 * 1024 * 1024,
+        allowed_types=(
+            {"image/jpeg", "image/png", "image/webp"}
+            if clean_purpose == "hero"
+            else ALLOWED_COMPANYPROFILE_TYPES
+        ),
     )
     if result.public_url.startswith("/uploads/"):
         stored_name = result.public_url.rsplit("/", 1)[-1]
     else:
-        stored_name = result.storage_path.split("/")[-1]
-    record = await asyncio.to_thread(
-        create_record,
-        "file_uploads",
-        {
-            "id": record_id,
-            "uploaded_by": user["id"],
-            "original_name": result.original_name,
-            "stored_name": stored_name,
-            "mime_type": result.mime_type,
-            "size_bytes": result.size_bytes,
-            "storage_path": result.storage_path,
-            "public_url": result.public_url,
-            "data": result.data,
-        },
-    )
+        stored_name = (result.storage_path or record_id).split("/")[-1]
+    try:
+        record = await asyncio.to_thread(
+            create_record,
+            "file_uploads",
+            {
+                "id": record_id,
+                "uploaded_by": user["id"],
+                "original_name": result.original_name[:255],
+                "stored_name": stored_name[:255],
+                "mime_type": result.mime_type[:100],
+                "size_bytes": result.size_bytes,
+                "storage_path": result.storage_path[:500],
+                "public_url": (result.public_url or "")[:500],
+                "data": result.data,
+            },
+        )
+    except (IntegrityError, DataError) as exc:
+        delete_upload(result.storage_path)
+        raise _data_violation(exc) from exc
     url = result.public_url
     if url.startswith("/"):
         url = f"{request.base_url}{url.lstrip('/')}"
+    write_audit(
+        user,
+        "upload",
+        "uploads",
+        record.get("id"),
+        {"purpose": clean_purpose, "filename": result.original_name},
+    )
     return {"url": url, "id": record.get("id")}
 
 
 @router.delete("/uploads/{filename}")
 def cp_delete_upload(filename: str, user: dict[str, Any] = Depends(require_cp_crud())):
-    if not filename or ".." in filename or "/" in filename:
+    if not filename or ".." in filename or "/" in filename or "\\" in filename:
         raise HTTPException(status_code=400, detail="Invalid filename")
     record = get_by_column("file_uploads", "stored_name", filename)
+    if not record and "." in filename:
+        record = get_by_column("file_uploads", "stored_name", Path(filename).stem)
+    if not record:
+        record = get_by_id("file_uploads", filename)
     if not record:
         raise HTTPException(status_code=404, detail="File not found")
     delete_upload(record["storage_path"])
     delete_record("file_uploads", record["id"])
+    write_audit(user, "delete", "uploads", record["id"])
     return {"message": "Deleted"}
 
 
@@ -714,21 +738,33 @@ def cp_settings_update(
 
 
 class ContactInfoUpdateReq(BaseModel):
-    phone_primary: str | None = None
-    phone_secondary: str | None = None
-    whatsapp: str | None = None
-    email_primary: str | None = None
-    email_admission: str | None = None
-    address: str | None = None
-    office_hours: str | None = None
-    maps_embed: str | None = None
+    model_config = ConfigDict(extra="forbid")
+
+    phone_primary: str | None = Field(default=None, max_length=50)
+    phone_secondary: str | None = Field(default=None, max_length=50)
+    whatsapp: str | None = Field(default=None, max_length=50)
+    email_primary: str | None = Field(default=None, max_length=255)
+    email_admission: str | None = Field(default=None, max_length=255)
+    address: str | None = Field(default=None, max_length=2000)
+    office_hours: str | None = Field(default=None, max_length=255)
+    maps_embed: str | None = Field(default=None, max_length=4000)
 
 
 @router.get("/contact-info")
 def cp_contact_info():
     info = get_first("contact_info")
     if not info:
-        raise HTTPException(status_code=404, detail="Not found")
+        return {
+            "id": None,
+            "address": None,
+            "phone_primary": None,
+            "phone_secondary": None,
+            "whatsapp": None,
+            "email_primary": None,
+            "email_admission": None,
+            "office_hours": None,
+            "maps_embed": None,
+        }
     return info
 
 
@@ -738,11 +774,14 @@ def cp_contact_update(
 ):
     existing = get_first("contact_info")
     data = body.model_dump(exclude_unset=True)
-    if existing:
-        update_record("contact_info", existing["id"], data)
-        record = get_by_id("contact_info", existing["id"])
-    else:
-        record = create_record("contact_info", data)
+    try:
+        if existing:
+            update_record("contact_info", existing["id"], data)
+            record = get_by_id("contact_info", existing["id"])
+        else:
+            record = create_record("contact_info", data)
+    except (IntegrityError, DataError) as exc:
+        raise _data_violation(exc) from exc
     if not record:
         raise HTTPException(status_code=404, detail="Contact info not found")
     # Previously this route was the one CMS write that did not broadcast, so

@@ -128,14 +128,13 @@ export default function ArsipDossierDetailPage() {
   })
 
   const applicant = dossier?.applicant
-  const documents: any[] = dossier?.documents || []
   const transcript = dossier?.transcript
   const loa = dossier?.loa
 
   // Filter valid uploaded documents (rejects are permanently pruned per system rule)
   const verifiedUploadDocs = useMemo(() => {
-    return documents.filter((doc) => doc.status !== 'rejected')
-  }, [documents])
+    return (dossier?.documents || []).filter((doc: any) => doc.status !== 'rejected')
+  }, [dossier?.documents])
 
   // Map LoA data to strict LoaData interface (ALWAYS generated, with fallback to applicant data)
   const loaData: LoaData = useMemo(() => {
@@ -296,7 +295,7 @@ export default function ArsipDossierDetailPage() {
     if (fileItems.length > 0 && selectedDocIds.length === 0) {
       setSelectedDocIds(fileItems.map((f) => f.id))
     }
-  }, [fileItems])
+  }, [fileItems, selectedDocIds.length])
 
   // Track active document during preview scroll
   const handleScroll = useCallback(() => {

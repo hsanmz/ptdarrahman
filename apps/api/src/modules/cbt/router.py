@@ -6,6 +6,8 @@ Handles:
   - Applicant CBT Engine (Re-authentication, Sheet, Autosave, Violation, Submit)
 """
 
+from typing import Any, cast
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -147,7 +149,7 @@ def get_bank_soal_detail(bank_id: str, db: Session = Depends(get_db)):
     return BankSoalDetailResponse(
         id=bank.id,
         period_id=bank.period_id,
-        category=bank.category,
+        category=cast(Any, bank.category),
         title=bank.title,
         description=bank.description,
         duration_minutes=bank.duration_minutes,

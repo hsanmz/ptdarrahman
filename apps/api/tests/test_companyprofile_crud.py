@@ -719,7 +719,7 @@ def test_hero_slides_are_seeded_and_ordered(cp: TestClient) -> None:
     rows = cast(list[dict[str, Any]], resp.json())
 
     seeded = [r for r in rows if str(r["id"]).startswith("heroslide-")]
-    assert len(seeded) == 3, "migrasi 0045 seharusnya menyemai 3 slide hero"
+    assert len(seeded) == 4, "seeder menyemai 4 slide hero"
 
     orders = [r["order"] for r in seeded]
     assert orders == sorted(orders), "list harus mengikuti `order` ASC"

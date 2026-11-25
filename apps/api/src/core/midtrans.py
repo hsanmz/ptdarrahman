@@ -42,6 +42,7 @@ STATUS_UNKNOWN = "unknown"
 _SUCCESS_STATUSES = {"completed", "paid", "success", "settlement", "lunas"}
 _PENDING_STATUSES = {"pending", "unpaid", "waiting", "menunggu", "processing", "authorize"}
 _CANCELED_STATUSES = {
+    "cancel",
     "canceled",
     "cancelled",
     "failed",
@@ -356,7 +357,7 @@ class MidtransClient:
         return bool(self.server_key)
 
     def _auth_header(self) -> str:
-        token = base64.b64encode(f"{self.server_key}:".encode("utf-8")).decode("utf-8")
+        token = base64.b64encode(f"{self.server_key}:".encode()).decode("utf-8")
         return f"Basic {token}"
 
     def _headers(self) -> dict[str, str]:

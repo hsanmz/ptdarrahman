@@ -112,6 +112,7 @@ ABOUT_SECTIONS: frozenset[str] = frozenset(
         "story",
         "vision",
         "mission",
+        "goals",
         "values-heading",
         "value",
         "student-profile",

@@ -34,7 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui'
-import { cn } from '@/lib/utils'
+import { cn, copyToClipboard } from '@/lib/utils'
 import { generateSecurePassword } from '../lib/password'
 import UserActivityPanel from '../components/users/UserActivityPanel'
 
@@ -225,11 +225,15 @@ export default function UserFormPage() {
     setValue('password', generateSecurePassword(8), { shouldValidate: true })
   }
 
-  function copyPassword() {
+  async function copyPassword() {
     if (!formPassword) return
-    navigator.clipboard.writeText(formPassword)
-    setCopiedPwd(true)
-    setTimeout(() => setCopiedPwd(false), 2000)
+    const ok = await copyToClipboard(formPassword)
+    if (ok) {
+      setCopiedPwd(true)
+      setTimeout(() => setCopiedPwd(false), 2000)
+    } else {
+      toast('error', 'Gagal menyalin password ke clipboard')
+    }
   }
 
   const initials = useMemo(() => {
@@ -319,7 +323,7 @@ export default function UserFormPage() {
     if (!isEdit) {
       setConfirmData({
         title: 'Konfirmasi Buat User',
-        message: `Sistem akan otomatis mengirimkan kredensial login ke:\n\n📱 WhatsApp: ${data.phone || 'Tidak diisi'}\n📧 Email: ${data.email || 'Tidak diisi'}\n\nUsername: ${data.username}\nPassword: [akan di-generate sistem]\n\nPastikan nomor WA dan email sudah benar sebelum melanjutkan.`,
+        message: `Sistem akan otomatis mengirimkan kredensial login ke:\n\n📱 WhatsApp: ${data.phone || 'Tidak diisi'}\n📧 Email: ${data.email || 'Tidak diisi'}\n\nUsername: ${data.username}\nPassword: •••••••• (sudah diisi)\n\nPastikan nomor WA dan email sudah benar sebelum melanjutkan.`,
         onConfirm: () => {
           setConfirmOpen(false)
           executeSubmit(data)
@@ -343,6 +347,7 @@ export default function UserFormPage() {
 
   async function executeSubmit(data: UserFormValues) {
     setLoading(true)
+    let createdUserId: string | undefined
     try {
       let targetUserId = id
       if (isEdit && id) {
@@ -351,7 +356,7 @@ export default function UserFormPage() {
           email: data.email || undefined,
           phone: data.phone || undefined,
           full_name: data.full_name || undefined,
-          role_id: data.role_id || undefined,
+          role_id: data.user_type === 'superadmin' ? undefined : (data.role_id || undefined),
           user_type: data.user_type,
           is_active: data.is_active,
         }
@@ -364,10 +369,11 @@ export default function UserFormPage() {
           phone: data.phone || undefined,
           full_name: data.full_name || undefined,
           password: data.password!,
-          role_id: data.role_id || undefined,
+          role_id: data.user_type === 'superadmin' ? undefined : (data.role_id || undefined),
           user_type: data.user_type,
         })
         targetUserId = newUser?.id
+        createdUserId = newUser?.id
       }
 
       if (targetUserId && data.user_type !== 'superadmin') {
@@ -393,6 +399,15 @@ export default function UserFormPage() {
       queryClient.invalidateQueries({ queryKey: ['users'] })
       navigate('/users')
     } catch (e: any) {
+      if (!isEdit && createdUserId) {
+        queryClient.invalidateQueries({ queryKey: ['users'] })
+        toast(
+          'error',
+          `User dibuat, tetapi gagal menyimpan hak akses: ${api.getErrorMessage(e, 'coba simpan ulang')}`
+        )
+        navigate(`/users/${createdUserId}`, { replace: true })
+        return
+      }
       if (api.isApiError(e) && e.status === 422 && e.fields) {
         let matched = false
         for (const [field, message] of Object.entries(e.fields)) {
@@ -561,7 +576,7 @@ export default function UserFormPage() {
 
               {/* ── 3. ACTION GROUP (KANAN) ── */}
               <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 justify-end">
-                {isEdit && formUserType !== 'superadmin' && (
+                {isEdit && formUserType !== 'superadmin' && !rawUser?.is_superadmin && rawUser?.id !== currentUser?.id && (
                   <Button
                     type="button"
                     variant="outline"

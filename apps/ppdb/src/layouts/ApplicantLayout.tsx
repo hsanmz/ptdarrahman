@@ -100,7 +100,7 @@ export default function ApplicantLayout({ children }: { children: ReactNode }) {
         {children}
       </DashboardShell>
 
-      {false && showProfile && applicant && (
+      {showProfile && applicant && (
         <ApplicantProfileModal
           open
           onOpenChange={setShowProfile}

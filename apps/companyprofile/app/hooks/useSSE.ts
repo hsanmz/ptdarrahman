@@ -1,6 +1,7 @@
 ﻿'use client'
 
 import { useEffect, useRef } from 'react'
+import * as api from '@/app/lib/api'
 import { eventBus } from '@/app/lib/event-bus'
 
 export function useSSE(module: string) {
@@ -12,8 +13,8 @@ export function useSSE(module: string) {
     let es: EventSource | null = null
 
     function connect() {
-      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-      const url = `${API_BASE.replace(/\/$/, '')}/companyprofile/events`
+      const apiBase = (api.getApiBase?.() ?? api.API_BASE).replace(/\/+$/, '')
+      const url = `${apiBase}/companyprofile/events`
       es = new EventSource(url)
 
       const handler = () => {

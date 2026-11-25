@@ -96,26 +96,27 @@ function formatPairingCode(code?: string) {
 }
 
 export default function SessionCard(props: Props) {
+  const { session, isReady, loginMethod, onRefreshStatus } = props
   const [qr, setQr] = useState('')
   const [phone, setPhone] = useState('')
   const [pairingLoading, setPairingLoading] = useState(false)
   const [pairingError, setPairingError] = useState('')
   const [copiedCode, setCopiedCode] = useState(false)
 
-  const isConfigured = props.session?.configured !== false
+  const isConfigured = Boolean(session && session.configured)
 
   useEffect(() => {
     let alive = true
-    const currentStatus = props.session?.status || ''
+    const currentStatus = session?.status || ''
     const isTransitional = ['initializing', 'authenticated', 'qr'].includes(currentStatus)
 
-    if (!isConfigured || props.isReady || !isTransitional) {
+    if (!isConfigured || isReady || !isTransitional) {
       if (!isTransitional) setQr('')
       return
     }
 
     // 1. One-shot fetch QR aktif langsung (mencegah delay menunggu SSE event pertama)
-    if (props.loginMethod === 'qr' && currentStatus === 'qr') {
+    if (loginMethod === 'qr' && currentStatus === 'qr') {
       waGetQrRaw()
         .then((result) => {
           if (alive && result.success && result.data?.raw) {
@@ -145,7 +146,7 @@ export default function SessionCard(props: Props) {
           const data = JSON.parse(e.data)
           if (alive) {
             if (data?.status === 'ready' || data?.status === 'authenticated') {
-              props.onRefreshStatus(true)
+              onRefreshStatus(true)
             }
             if (data?.qrCode) setQr(data.qrCode)
           }
@@ -157,7 +158,7 @@ export default function SessionCard(props: Props) {
       es.addEventListener('ready', () => {
         if (alive) {
           setQr('')
-          props.onRefreshStatus(true)
+          onRefreshStatus(true)
         }
       })
 
@@ -165,7 +166,7 @@ export default function SessionCard(props: Props) {
         try {
           const data = JSON.parse(e.data)
           if (alive && data?.code) {
-            props.onRefreshStatus(true)
+            onRefreshStatus(true)
           }
         } catch {
           /* ignore */
@@ -186,7 +187,7 @@ export default function SessionCard(props: Props) {
         es = null
       }
     }
-  }, [isConfigured, props.session?.status, props.loginMethod, props.isReady, props.onRefreshStatus])
+  }, [isConfigured, session?.status, loginMethod, isReady, onRefreshStatus])
 
   async function requestCode() {
     if (!isConfigured) {
@@ -308,17 +309,19 @@ export default function SessionCard(props: Props) {
                 ) : (
                   <div className="py-4 space-y-3">
                     <p className="text-xs text-slate-500">
-                      {isConfigured
+                      {props.sessionLoading
+                        ? 'Memuat status sesi WhatsApp...'
+                        : isConfigured
                         ? 'Sesi belum aktif. Klik tombol di bawah untuk memulai sesi WhatsApp.'
                         : 'Gateway WhatsApp belum dikonfigurasi pada backend server.'}
                     </p>
                     <Button
                       onClick={props.onInit}
-                      disabled={props.actionLoading || !isConfigured}
+                      disabled={props.actionLoading || props.sessionLoading || !isConfigured}
                       className="gap-2 h-9 text-xs"
                     >
-                      <RefreshCw className={`h-3.5 w-3.5 ${props.actionLoading ? 'animate-spin' : ''}`} />
-                      {props.actionLoading ? 'Memulai Sesi...' : 'Mulai Sesi WhatsApp'}
+                      <RefreshCw className={`h-3.5 w-3.5 ${props.actionLoading || props.sessionLoading ? 'animate-spin' : ''}`} />
+                      {props.actionLoading ? 'Memulai Sesi...' : props.sessionLoading ? 'Memeriksa...' : 'Mulai Sesi WhatsApp'}
                     </Button>
                   </div>
                 )}
@@ -344,12 +347,12 @@ export default function SessionCard(props: Props) {
                       onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
                       placeholder="6281234567890"
                       className="h-8.5 text-xs font-mono bg-white"
-                      disabled={pairingLoading || !isConfigured}
+                      disabled={pairingLoading || props.sessionLoading || !isConfigured}
                     />
                     <Button
                       size="sm"
                       onClick={() => void requestCode()}
-                      disabled={pairingLoading || !phone.trim() || props.isReady || !isConfigured}
+                      disabled={pairingLoading || props.sessionLoading || !phone.trim() || props.isReady || !isConfigured}
                       className="h-8.5 px-3 text-xs shrink-0 gap-1.5"
                     >
                       <KeyRound className={`h-3.5 w-3.5 ${pairingLoading ? 'animate-spin' : ''}`} />

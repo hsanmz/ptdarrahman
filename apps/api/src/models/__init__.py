@@ -8,16 +8,24 @@ from src.models.auth import (
     UserPagePermission,
 )
 from src.models.base import Base
+from src.models.cbt import (
+    ExamAnswer,
+    ExamAttempt,
+    ExamBank,
+    ExamOption,
+    ExamQuestion,
+    ExamSchedule,
+)
 from src.models.content import (
-    Achievement,
     AboutContent,
-    PpdbContentItem,
-    FaqItem,
+    Achievement,
     ContactInfo,
     Facility,
+    FaqItem,
     GalleryItem,
     LeadershipMember,
     NewsArticle,
+    PpdbContentItem,
     Program,
     SiteSetting,
     SocialLink,
@@ -43,14 +51,6 @@ from src.models.selection import (
     SelectionScore,
     SelectionSession,
 )
-from src.models.cbt import (
-    ExamBank,
-    ExamQuestion,
-    ExamOption,
-    ExamSchedule,
-    ExamAttempt,
-    ExamAnswer,
-)
 
 __all__ = [
     "Base",
@@ -63,6 +63,7 @@ __all__ = [
     "UserPagePermission",
     "Achievement",
     "AboutContent",
+    "PpdbContentItem",
     "FaqItem",
     "ContactInfo",
     "Facility",

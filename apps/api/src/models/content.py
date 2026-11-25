@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
@@ -14,8 +15,8 @@ class NewsArticle(Base):
     image: Mapped[str | None] = mapped_column(String(255))
     category: Mapped[str] = mapped_column(String(100), nullable=False)
     date: Mapped[str | None] = mapped_column(String(50))
-    gallery: Mapped[dict | None] = mapped_column(Text)
-    content: Mapped[dict | None] = mapped_column(Text)
+    gallery: Mapped[Any | None] = mapped_column(Text, nullable=True)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -31,7 +32,7 @@ class Program(Base):
     # NOT NULL tanpa server_default: nilai default create dikirim router lewat
     # `COLUMN_DEFAULTS` karena penulisan generik memakai INSERT mentah.
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -42,7 +43,7 @@ class Facility(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     image: Mapped[str | None] = mapped_column(String(255))
     category: Mapped[str] = mapped_column(String(100), nullable=False)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -53,7 +54,7 @@ class Staff(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     image: Mapped[str | None] = mapped_column(String(255))
     role: Mapped[str] = mapped_column(String(100), nullable=False)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -73,7 +74,7 @@ class LeadershipMember(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     board: Mapped[str] = mapped_column(String(50), nullable=False)
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -86,7 +87,7 @@ class AboutContent(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     section: Mapped[str] = mapped_column(String(50), nullable=False)
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -99,7 +100,7 @@ class PpdbContentItem(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     section: Mapped[str] = mapped_column(String(50), nullable=False)
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -124,7 +125,7 @@ class Achievement(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     year: Mapped[int] = mapped_column(Integer, nullable=False)
     image: Mapped[str | None] = mapped_column(String(255))
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -135,7 +136,7 @@ class GalleryItem(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     image: Mapped[str | None] = mapped_column(String(255))
     category: Mapped[str] = mapped_column(String(100), nullable=False)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -148,7 +149,7 @@ class Testimonial(Base):
     child: Mapped[str] = mapped_column(String(255), nullable=False)
     image: Mapped[str | None] = mapped_column(String(255))
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -178,7 +179,7 @@ class HeroSlide(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     image: Mapped[str | None] = mapped_column(String(255))
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    content: Mapped[dict | None] = mapped_column(Text)
+    content: Mapped[Any | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 

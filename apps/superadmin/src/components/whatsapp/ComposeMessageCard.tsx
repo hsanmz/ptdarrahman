@@ -61,7 +61,7 @@ export default function ComposeMessageCard({
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     load(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

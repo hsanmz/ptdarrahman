@@ -1,4 +1,4 @@
-import { useState, Fragment, useMemo } from 'react'
+import { useState, Fragment, useMemo, useCallback } from 'react'
 import { ppdbService } from '@/services'
 import { apiFetch } from '@/api/client'
 import { useToast } from '@/components/Toast'
@@ -184,33 +184,33 @@ export default function WavesSheet({ period, onClose }: { period: any, onClose: 
   // ---------------------------------------------------------------------------
   // Mesin Perhitungan Biaya Helpers
   // ---------------------------------------------------------------------------
-  const calcRegularDiscount = (item: any): number => {
+  const calcRegularDiscount = useCallback((item: any): number => {
     const nom = Number(item.nominal) || 0
     if (!item.discount_type || !item.discount_value) return 0
     if (item.discount_type === 'percent') {
       return Math.min(nom, Math.floor((nom * Number(item.discount_value)) / 100))
     }
     return Math.min(nom, Number(item.discount_value))
-  }
+  }, [])
 
-  const calcRegularNet = (item: any): number => {
+  const calcRegularNet = useCallback((item: any): number => {
     const nom = Number(item.nominal) || 0
     return Math.max(0, nom - calcRegularDiscount(item))
-  }
+  }, [calcRegularDiscount])
 
-  const calcEarlyDiscount = (item: any): number => {
+  const calcEarlyDiscount = useCallback((item: any): number => {
     const baseNominal = calcRegularNet(item)
     if (!item.early_discount_type || !item.early_discount_value) return 0
     if (item.early_discount_type === 'percent') {
       return Math.min(baseNominal, Math.floor((baseNominal * Number(item.early_discount_value)) / 100))
     }
     return Math.min(baseNominal, Number(item.early_discount_value))
-  }
+  }, [calcRegularNet])
 
-  const calcEarlyNet = (item: any): number => {
+  const calcEarlyNet = useCallback((item: any): number => {
     const baseNominal = calcRegularNet(item)
     return Math.max(0, baseNominal - calcEarlyDiscount(item))
-  }
+  }, [calcRegularNet, calcEarlyDiscount])
 
   const engineTotals = useMemo(() => {
     let totalGross = 0
@@ -241,7 +241,7 @@ export default function WavesSheet({ period, onClose }: { period: any, onClose: 
       totalEarlyNet,
       totalEarlyCombinedDiscount: totalRegDiscount + totalEarlyDiscount,
     }
-  }, [feeItems])
+  }, [feeItems, calcEarlyDiscount, calcEarlyNet, calcRegularDiscount, calcRegularNet])
 
   // ---------------------------------------------------------------------------
   // Gelombang Form Handlers

@@ -21,11 +21,12 @@ def get_user_service(db: Session = Depends(get_db)) -> UserService:
     return UserService(repo)
 
 
-@router.get("/")
+@router.get("")
+@router.get("/", include_in_schema=False)
 def get_users(
     search: str = Query(""),
-    page: int = Query(1),
-    per_page: int = Query(20),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=500),
     user_service: UserService = Depends(get_user_service),
     user: dict[str, Any] = Depends(require_superadmin),
 ):
@@ -41,7 +42,8 @@ def get_user(
     return user_service.get_user(id)
 
 
-@router.post("/", status_code=201)
+@router.post("", status_code=201)
+@router.post("/", status_code=201, include_in_schema=False)
 def create_user(
     body: UserCreate,
     user_service: UserService = Depends(get_user_service),

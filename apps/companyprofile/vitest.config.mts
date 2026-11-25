@@ -16,6 +16,7 @@ export default defineConfig({
     setupFiles: ['./setupTests.ts'],
     passWithNoTests: true,
     css: false,
+    include: ['app/**/*.{test,spec}.{ts,tsx}'],
   },
   resolve: {
     alias: {

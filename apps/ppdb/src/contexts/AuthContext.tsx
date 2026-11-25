@@ -116,7 +116,7 @@ export function usePermission() {
 }
 
 export function normalizeNavKey(href: string): string {
-  let key = href.replace(/^\/admin/, '').replace(/^\//, '') || ''
+  const key = href.replace(/^\/admin/, '').replace(/^\//, '') || ''
   if (key.startsWith('sessions') || key.startsWith('jadwal-wawancara')) return 'sessions'
   if (key.startsWith('bank-soal')) return 'bank-soal'
   if (key.startsWith('jadwal-seleksi') || key.startsWith('jadwal-ujian') || key.startsWith('monitoring')) return 'jadwal-seleksi'

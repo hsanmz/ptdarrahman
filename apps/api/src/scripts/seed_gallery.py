@@ -5,6 +5,7 @@ Run from the `apps/api` directory:
     python -m src.scripts.seed_gallery
 """
 
+import importlib
 import json
 import sys
 from datetime import datetime
@@ -19,8 +20,6 @@ from src.core.database import get_engine  # noqa: E402
 from src.models.content import GalleryItem  # noqa: E402
 
 engine = get_engine()
-
-import importlib
 
 _seed_mod = importlib.import_module("alembic.versions.0072_seed_gallery_items")
 GALLERY_SEEDS = _seed_mod.GALLERY_SEEDS

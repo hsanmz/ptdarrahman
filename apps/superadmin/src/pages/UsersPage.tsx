@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, UserCheck, UserX, UserRound, Users } from 'lucide-react'
+import { Pencil, Plus, Search, Trash2, UserCheck, UserX, UserRound, Users } from 'lucide-react'
 import PageHero from '../components/PageHero'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import * as api from '../api/client'
 import type { User } from '../types'
 import { useAuth } from '../contexts/AuthContext'
+import { useToast } from '../components/Toast'
+import { ConfirmDialog } from '../components/ui/confirmdialog'
 import { Button } from "@/components/ui"
 import { Input } from "@/components/ui"
 import { Card } from "@/components/ui"
@@ -19,6 +21,8 @@ import { ErrorState } from "@/components/ui"
 
 export default function UsersPage() {
   const navigate = useNavigate()
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
   const { user: currentUser, loading: authLoading } = useAuth()
 
   const canCrud = currentUser?.user_type === 'superadmin' || !!currentUser?.is_superadmin
@@ -26,7 +30,20 @@ export default function UsersPage() {
 
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [deleteTarget, setDeleteTarget] = useState<User | null>(null)
   const perPage = 20
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.deleteUser(id),
+    onSuccess: () => {
+      toast('success', 'User berhasil dihapus')
+      setDeleteTarget(null)
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+    },
+    onError: (e: unknown) => {
+      toast('error', api.getErrorMessage(e, 'Gagal menghapus user'))
+    },
+  })
 
   useEffect(() => {
     if (!authLoading && currentUser && !canView) {
@@ -63,7 +80,7 @@ export default function UsersPage() {
   // agar tidak tampil EmptyState palsu.
   useEffect(() => {
     if (totalPages >= 1 && page > totalPages) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setPage(totalPages)
     }
   }, [page, totalPages])
@@ -96,6 +113,16 @@ export default function UsersPage() {
 
   return (
     <>
+      <ConfirmDialog
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => { if (!deleteMutation.isPending) setDeleteTarget(null) }}
+        onConfirm={() => { if (deleteTarget) deleteMutation.mutate(deleteTarget.id) }}
+        title="Hapus User"
+        message={`Yakin ingin menghapus user "${deleteTarget?.username || ''}" secara permanen?`}
+        variant="danger"
+        confirmLabel="Ya, Hapus"
+        loading={deleteMutation.isPending}
+      />
       <div className="space-y-6 animate-fadeIn">
       <PageHero
         eyebrow="Manajemen Akses"
@@ -180,6 +207,7 @@ export default function UsersPage() {
                     <TableHead>Full Name</TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead>Status</TableHead>
+                    {canCrud && <TableHead className="text-right">Aksi</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -212,6 +240,39 @@ export default function UsersPage() {
                           </Badge>
                         )}
                       </TableCell>
+                      {canCrud && (
+                        <TableCell className="text-right">
+                          <div className="inline-flex items-center justify-end gap-1">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              aria-label={`Edit ${user.username}`}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                navigate(`/users/${user.id}`)
+                              }}
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            {user.user_type !== 'superadmin' && user.id !== currentUser?.id && (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                aria-label={`Hapus ${user.username}`}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setDeleteTarget(user)
+                                }}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -252,19 +313,36 @@ export default function UsersPage() {
                     <span className="text-muted-foreground">Role</span>
                     <div className="mt-0.5 font-medium text-foreground">{getRoleName(user.role_id)}</div>
                   </div>
-                  <div className="col-span-2">
-                    <span className="text-muted-foreground">Status</span>
-                    <div className="mt-1">
-                      {user.is_active ? (
-                        <Badge variant="outline" className="gap-1 border-success/30 bg-success/10 text-success">
-                          <UserCheck className="h-3 w-3" /> Active
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="gap-1 border-destructive/30 bg-destructive/10 text-destructive">
-                          <UserX className="h-3 w-3" /> Inactive
-                        </Badge>
-                      )}
+                  <div className="col-span-2 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="text-muted-foreground">Status</span>
+                      <div className="mt-1">
+                        {user.is_active ? (
+                          <Badge variant="outline" className="gap-1 border-success/30 bg-success/10 text-success">
+                            <UserCheck className="h-3 w-3" /> Active
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="gap-1 border-destructive/30 bg-destructive/10 text-destructive">
+                            <UserX className="h-3 w-3" /> Inactive
+                          </Badge>
+                        )}
+                      </div>
                     </div>
+                    {canCrud && user.user_type !== 'superadmin' && user.id !== currentUser?.id && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        aria-label={`Hapus ${user.username}`}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setDeleteTarget(user)
+                        }}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
                   </div>
                 </div>
               </Card>

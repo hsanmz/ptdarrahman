@@ -206,7 +206,7 @@ export default function VerifikasiDokumenDetailPage() {
       })
     }
     setDocReviews(initial)
-  }, [applicant?.status, applicant?.rejection_reason, uploadedDocs])
+  }, [applicant, uploadedDocs])
 
   // Calculate review progress and statuses
 

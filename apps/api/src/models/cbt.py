@@ -4,11 +4,16 @@ Handles Bank Soal (Akademik & Psikologi), Questions, Options, Exam Schedules,
 Applicant Attempts, and Answers.
 """
 
-from datetime import date, datetime
+from datetime import UTC, date, datetime
+
 from sqlalchemy import Boolean, Date, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.core.database import Base
+
+
+def _utcnow_naive() -> datetime:
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 class ExamBank(Base):
@@ -30,9 +35,9 @@ class ExamBank(Base):
     total_points: Mapped[float] = mapped_column(Float, default=100.0, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow_naive, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+        DateTime, default=_utcnow_naive, onupdate=_utcnow_naive, nullable=False
     )
 
     questions = relationship(
@@ -57,7 +62,7 @@ class ExamQuestion(Base):
     question_number: Mapped[int] = mapped_column(Integer, nullable=False)
     question_text: Mapped[str] = mapped_column(Text, nullable=False)
     points: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow_naive, nullable=False)
 
     bank = relationship("ExamBank", back_populates="questions")
     options = relationship(
@@ -118,9 +123,9 @@ class ExamSchedule(Base):
     status: Mapped[str] = mapped_column(
         String(20), default="scheduled", nullable=False
     )  # "scheduled" | "ongoing" | "completed" | "cancelled"
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow_naive, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+        DateTime, default=_utcnow_naive, onupdate=_utcnow_naive, nullable=False
     )
 
     bank = relationship("ExamBank")
@@ -153,9 +158,9 @@ class ExamAttempt(Base):
     answers_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     ip_address: Mapped[str | None] = mapped_column(String(50), nullable=True)
     user_agent: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow_naive, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+        DateTime, default=_utcnow_naive, onupdate=_utcnow_naive, nullable=False
     )
 
     schedule = relationship("ExamSchedule", back_populates="attempts")
@@ -182,6 +187,6 @@ class ExamAnswer(Base):
     option_key: Mapped[str | None] = mapped_column(String(5), nullable=True)  # "A", "B", "C", "D", "E"
     is_correct: Mapped[bool | None] = mapped_column(Boolean, default=False, nullable=True)
     score_awarded: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    answered_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    answered_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow_naive, nullable=False)
 
     attempt = relationship("ExamAttempt", back_populates="answers")

@@ -105,8 +105,20 @@ async def _proxy_json(
     params: dict[str, Any] | None = None,
     timeout: float = 8.0,
 ) -> httpx.Response:
-    """Forward request ke microservice; raise HTTPException bila service mati."""
-    _check_service_config()
+    """Forward request ke microservice."""
+    import json
+    if not _wa_configured():
+        return httpx.Response(
+            status_code=400,
+            content=json.dumps({
+                "success": False,
+                "error": (
+                    "WA_SERVICE_URL / WA_SERVICE_API_KEY belum dikonfigurasi di apps/api/.env. "
+                    "Tambahkan keduanya (nilai sama dengan API_KEY di apps/whatsapp/.env)."
+                ),
+            }).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+        )
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             return await client.request(
@@ -119,13 +131,17 @@ async def _proxy_json(
     except httpx.HTTPError as exc:
         target = f"{_wa_base()}{path}"
         logger.warning("WhatsApp microservice unreachable at %s: %s", target, exc)
-        raise HTTPException(
+        return httpx.Response(
             status_code=503,
-            detail=(
-                "WhatsApp microservice tidak dapat dihubungi. "
-                "Pastikan sudah dijalankan (cd apps/whatsapp && npm run dev)."
-            ),
-        ) from exc
+            content=json.dumps({
+                "success": False,
+                "error": (
+                    "WhatsApp microservice tidak dapat dihubungi. "
+                    "Pastikan service sudah dijalankan di background (port 3100)."
+                ),
+            }).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+        )
 
 
 def _json_response(resp: httpx.Response) -> JSONResponse:
@@ -262,7 +278,18 @@ async def whatsapp_qr_sse(
     user: dict[str, Any] = Depends(require_superadmin),
 ) -> StreamingResponse:
     """Proxy SSE live QR dari microservice (frontend tidak sentuh :3100)."""
-    _check_service_config()
+    if not _wa_configured():
+        async def _unconf_stream():
+            yield b'event: error\ndata: {"error":"WhatsApp belum dikonfigurasi"}\n\n'
+        return StreamingResponse(
+            _unconf_stream(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
 
     async def _stream():
         try:
@@ -435,7 +462,8 @@ async def whatsapp_queue(
     if _wa_configured():
         try:
             resp = await _proxy_json("GET", "/api/messages/queue", timeout=3.0)
-            return _json_response(resp)
+            if resp.status_code == 200:
+                return _json_response(resp)
         except Exception:
             pass
     return JSONResponse(

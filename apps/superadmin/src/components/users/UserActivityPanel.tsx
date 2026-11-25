@@ -124,7 +124,7 @@ export default function UserActivityPanel({ userId, username, isEdit }: Props) {
   }, [isEdit, userId, page, search, actionFilter])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     fetchActivities()
   }, [fetchActivities])
 

@@ -33,6 +33,7 @@ from src.core.database import (  # noqa: E402
     get_by_column,
     update_record,
 )
+from src.core.notification_templates import NOTIF_TEMPLATES  # noqa: E402, F401
 from src.core.security import hash_password  # noqa: E402
 
 MODULES = {
@@ -119,15 +120,7 @@ DEFAULT_USERS = [
     {
         "username": "superadmin",
         "full_name": "Superadmin",
-        "email": "",
-        "password": "SuperAdmin123!.",
-        "role_name": "Superadmin",
-        "user_type": "superadmin",
-    },
-    {
-        "username": "Superadmin",
-        "full_name": "Superadmin",
-        "email": "",
+        "email": "superadmin@ptdarrahman.com",
         "password": "SuperAdmin123!.",
         "role_name": "Superadmin",
         "user_type": "superadmin",
@@ -135,7 +128,7 @@ DEFAULT_USERS = [
     {
         "username": "adminppdb",
         "full_name": "Admin PPDB",
-        "email": "",
+        "email": "adminppdb@ptdarrahman.com",
         "password": "adminppdb123!.",
         "role_name": "Admin PPDB",
         "user_type": "admin",
@@ -143,7 +136,7 @@ DEFAULT_USERS = [
     {
         "username": "admincp",
         "full_name": "Admin Company Profile",
-        "email": "",
+        "email": "admincp@ptdarrahman.com",
         "password": "admincp123!.",
         "role_name": "AdminCP",
         "user_type": "admin",
@@ -171,77 +164,6 @@ SITE_SETTINGS = [
     ("whatsapp_message_id", ""),
     ("whatsapp_message_en", ""),
     ("to_email", ""),
-]
-
-NOTIF_TEMPLATES: list[dict[str, str | None]] = [
-    {
-        "event_key": "account_updated",
-        "label": "Data Akun Diperbarui",
-        "channel": "both",
-        "email_subject": "Data Akun Anda Telah Diperbarui",
-        "body": (
-            "Halo {nama_peserta},\n\n"
-            "Data kontak akun Anda telah diperbarui oleh admin:\n"
-            "  Username: {username}\n"
-            "  Email: {email}\n"
-            "  No. WhatsApp: {phone}\n\n"
-            "Bila Anda tidak merasa melakukan perubahan ini, segera hubungi admin.\n\n"
-            "Terima kasih,\nAdmin PTDARRAHMAN"
-        ),
-    },
-    {
-        "event_key": "password_reset",
-        "label": "Password Direset (Kredensial Baru)",
-        "channel": "both",
-        "email_subject": "Password Akun Anda Telah Direset",
-        "body": (
-            "Halo {nama_peserta},\n\n"
-            "Password akun Anda telah direset oleh admin. Berikut kredensial "
-            "login terbaru:\n"
-            "  Username: {username}\n"
-            "  Password: {password}\n"
-            "  Link Login: {link_login}\n\n"
-            "Segera login dan ganti password Anda jika diperlukan.\n\n"
-            "Terima kasih,\nAdmin PTDARRAHMAN"
-        ),
-    },
-    {
-        "event_key": "payment_expired",
-        "label": "Pembayaran Formulir Kedaluwarsa",
-        "channel": "both",
-        "email_subject": "Pembayaran Formulir Kedaluwarsa",
-        "body": (
-            "Halo {nama_peserta},\n\n"
-            "Tagihan pembayaran formulir Anda telah kedaluwarsa dan dibatalkan. "
-            "Tagihan ini tidak dapat dibayar lagi. Silakan mendaftar kembali "
-            "jika gelombang berikutnya tersedia.\n\n"
-            "Terima kasih,\nPanitia PPDB Pesantren Tahfidz Qur'an dan Digital Ar-Rahman"
-        ),
-    },
-    {
-        "event_key": "selection_session_broadcast",
-        "label": "Informasi Tambahan Sesi Seleksi",
-        "channel": "whatsapp",
-        "email_subject": None,
-        "body": (
-            "Halo {nama_peserta},\n\n"
-            "Informasi untuk sesi {session_name}:\n{custom_message}\n\n"
-            "Terima kasih,\nPanitia PPDB PTDARRAHMAN"
-        ),
-    },
-    {
-        "event_key": "document_approved",
-        "label": "Dokumen Disetujui",
-        "channel": "both",
-        "email_subject": "Dokumen PPDB Anda Disetujui",
-        "body": (
-            "Halo {nama_peserta},\n\n"
-            "Selamat! Dokumen persyaratan Anda telah disetujui. Kami akan "
-            "menginformasikan jadwal "
-            "seleksi melalui email dan WhatsApp.\n\n"
-            "Terima kasih,\nPanitia PPDB Pesantren Tahfidz Qur'an dan Digital Ar-Rahman"
-        ),
-    },
 ]
 
 
@@ -361,29 +283,9 @@ def ensure_site_settings() -> None:
 
 
 def ensure_notification_templates() -> None:
-    now = _now()
-    for tpl in NOTIF_TEMPLATES:
-        existing = get_by_column(
-            "notification_templates", "event_key", tpl["event_key"]
-        )
-        if existing:
-            print(f"  template exists:  {tpl['event_key']}")
-            continue
-        create_record(
-            "notification_templates",
-            {
-                "id": str(uuid4()),
-                "event_key": tpl["event_key"],
-                "label": tpl["label"],
-                "channel": tpl["channel"],
-                "email_subject": tpl["email_subject"],
-                "body": tpl["body"],
-                "is_active": 1,
-                "created_at": now,
-                "updated_at": now,
-            },
-        )
-        print(f"  template created: {tpl['event_key']}")
+    from scripts.seed_notifications import seed_notification_templates
+
+    seed_notification_templates()
 
 
 def ensure_default_users() -> None:

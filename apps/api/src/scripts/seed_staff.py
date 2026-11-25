@@ -15,24 +15,21 @@ duplicate rows.  ``level`` is stored in the JSON ``content`` field as
 """
 
 import json
-import uuid
 import sys
+import uuid
+from datetime import UTC, datetime
 from pathlib import Path
-from datetime import datetime
 
-from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 # Adjust the import path if you run the script from another location
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from src.models.content import Staff  # noqa: E402
-from src.models.base import Base  # noqa: E402
-
 # ---------------------------------------------------------------------------
 # Configuration – read DB connection from the .env file used by the API.
 # ---------------------------------------------------------------------------
 from src.core.database import get_engine  # noqa: E402
+from src.models.content import Staff  # noqa: E402
 
 engine = get_engine()
 
@@ -63,7 +60,7 @@ def upsert_staff(session: Session, record: dict) -> None:
             existing.content = json.dumps(content)
             session.add(existing)
     else:
-        now = datetime.utcnow()
+        now = datetime.now(UTC).replace(tzinfo=None)
         staff = Staff(
             id=str(uuid.uuid4()),
             role=record["role"],

@@ -96,11 +96,6 @@ export default function JadwalWawancaraPage() {
     queryKey: ['selection-sessions', 'interview'],
     queryFn: () => api.apiFetch<{ data: any[] }>('/selection/sessions?type=interview'),
   })
-  const schedules: any[] = Array.isArray(sessionsRes?.data)
-    ? sessionsRes.data
-    : Array.isArray(sessionsRes)
-      ? sessionsRes
-      : []
 
   // Form State
   const [form, setForm] = useState({
@@ -119,6 +114,11 @@ export default function JadwalWawancaraPage() {
 
   // Filtered schedules
   const filteredSchedules = useMemo(() => {
+    const schedules: any[] = Array.isArray(sessionsRes?.data)
+      ? sessionsRes.data
+      : Array.isArray(sessionsRes)
+        ? sessionsRes
+        : []
     return schedules.filter((s) => {
       if (selectedWaveId && s.wave_id !== selectedWaveId) return false
       if (searchQuery.trim()) {
@@ -131,7 +131,7 @@ export default function JadwalWawancaraPage() {
       }
       return true
     })
-  }, [schedules, selectedWaveId, searchQuery])
+  }, [sessionsRes, selectedWaveId, searchQuery])
 
   // Save Mutation
   const saveMutation = useMutation({

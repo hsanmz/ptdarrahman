@@ -2,9 +2,23 @@ import type { AuthUser, LoginResponse, User, Role, Module, UserPagePermissions, 
 
 export const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
 
+const REQUEST_TIMEOUT_MS = 25_000
+
 async function fetchWithFallback(url: string, opts?: RequestInit): Promise<Response> {
-  const options = { ...opts, credentials: 'include' as RequestCredentials }
-  return fetch(url, options)
+  if (opts?.signal) {
+    return fetch(url, { ...opts, credentials: 'include' as RequestCredentials })
+  }
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+  try {
+    return await fetch(url, {
+      ...opts,
+      credentials: 'include' as RequestCredentials,
+      signal: controller.signal,
+    })
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 /**
@@ -50,9 +64,13 @@ export function isApiError(err: unknown): err is ApiError {
 const NETWORK_ERROR_MESSAGE =
   'Tidak dapat terhubung ke server. Periksa koneksi internet Anda lalu coba lagi.'
 
+const TIMEOUT_ERROR_MESSAGE =
+  'Permintaan ke server melebihi batas waktu (timeout). Silakan coba lagi.'
+
 /**
  * Normalisasi pesan error menjadi teks yang aman ditampilkan ke user:
  * - `ApiError` → pesan dari backend (sudah berbahasa Indonesia / dari FastAPI)
+ * - `AbortError` (timeout) → pesan batas waktu yang jelas
  * - `TypeError` (fetch gagal: DNS, offline, CORS) → pesan jaringan yang manusiawi,
  *   bukan `Failed to fetch`
  * - Error lain → pesan aslinya, atau fallback jika kosong
@@ -62,6 +80,8 @@ export function getErrorMessage(
   fallback = 'Terjadi kesalahan. Silakan coba lagi.'
 ): string {
   if (isApiError(err)) return err.message
+  if (err instanceof DOMException && err.name === 'AbortError') return TIMEOUT_ERROR_MESSAGE
+  if (err instanceof Error && err.name === 'AbortError') return TIMEOUT_ERROR_MESSAGE
   if (err instanceof TypeError) return NETWORK_ERROR_MESSAGE
   if (err instanceof Error && err.message.trim() !== '') return err.message
   return fallback
@@ -528,6 +548,22 @@ export async function sendCustomNotification(body: {
 export async function getNotificationLogs(params?: any): Promise<any> {
   const query = params ? '?' + new URLSearchParams(params) : ''
   return await apiFetch(`/notifications/logs${query}`)
+}
+
+export interface NotificationRecipient {
+  user_id: string
+  name: string
+  username: string
+  email: string
+  phone: string
+  type: 'Admin' | 'Pendaftar'
+}
+
+export async function getNotificationRecipients(search?: string): Promise<{
+  data: NotificationRecipient[]
+}> {
+  const q = search ? `?search=${encodeURIComponent(search)}` : ''
+  return await apiFetch(`/notifications/recipients${q}`)
 }
 
 // ── Helpers ───────────────────────────────────────────────

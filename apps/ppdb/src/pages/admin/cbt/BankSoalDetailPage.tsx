@@ -124,7 +124,7 @@ export default function BankSoalDetailPage() {
         duration_minutes: bank.duration_minutes,
       })
     }
-  }, [bank?.id, bank?.title, bank?.description, bank?.duration_minutes])
+  }, [bank])
 
   const metaOriginal = bank
     ? {

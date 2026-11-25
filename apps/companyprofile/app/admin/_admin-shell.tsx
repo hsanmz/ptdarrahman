@@ -95,6 +95,7 @@ export function useAdminFavicon(): string {
   const [faviconUrl, setFaviconUrl] = useState('')
   useEffect(() => {
     const loadFavicon = () => {
+      const base = (api.getApiBase?.() ?? api.API_BASE).replace(/\/+$/, '')
       api.getSettings()
         .then((settings) => {
           const favicon = settings.find((s) => s.key === 'favicon')?.value
@@ -104,7 +105,7 @@ export function useAdminFavicon(): string {
           } else if (logo) {
             setFaviconUrl(logo)
           } else {
-            fetch(`${api.API_BASE}/companyprofile/settings/favicon`)
+            fetch(`${base}/companyprofile/settings/favicon`)
               .then((res) => (res.ok ? res.json() : null))
               .then((data) => {
                 if (data?.value) setFaviconUrl(String(data.value))
@@ -113,7 +114,7 @@ export function useAdminFavicon(): string {
           }
         })
         .catch(() => {
-          fetch(`${api.API_BASE}/companyprofile/settings/favicon`)
+          fetch(`${base}/companyprofile/settings/favicon`)
             .then((res) => (res.ok ? res.json() : null))
             .then((data) => {
               if (data?.value) setFaviconUrl(String(data.value))

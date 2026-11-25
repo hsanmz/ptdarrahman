@@ -77,12 +77,10 @@ export default function TahfidzSessionDetailPage() {
     refetchInterval: 5000,
   })
 
-  const schedulesList = Array.isArray(sessionsRes?.data) ? sessionsRes.data : []
+  const allSchedules = useMemo(() => (Array.isArray(sessionsRes?.data) ? sessionsRes.data : []), [sessionsRes])
   const session = useMemo(() => {
-    return schedulesList.find((s) => s.id === sessionId)
-  }, [schedulesList, sessionId])
-
-  const allSchedules = schedulesList
+    return allSchedules.find((s) => s.id === sessionId)
+  }, [allSchedules, sessionId])
 
   // 2. Fetch Categories & Criteria for Tahfidz Rubric
   const { data: categories = [] } = useQuery({
@@ -103,7 +101,7 @@ export default function TahfidzSessionDetailPage() {
   const [bulkData, setBulkData] = useState<Record<string, { scores: Record<string, number>; notes: string }>>({})
 
   // Initialize bulk data when session applicants load
-  const sessionParticipants: any[] = Array.isArray(session?.participants) ? session.participants : []
+  const sessionParticipants: any[] = useMemo(() => (Array.isArray(session?.participants) ? session.participants : []), [session])
 
   // Filtered applicants
   const filteredApplicants = useMemo(() => {

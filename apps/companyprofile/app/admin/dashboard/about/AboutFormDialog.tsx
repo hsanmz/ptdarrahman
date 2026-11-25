@@ -31,7 +31,7 @@ const FIELD_CLASS = 'h-11 rounded-xl border-[var(--border)] bg-white/95 text-sm 
 const TEXTAREA_CLASS = 'min-h-[7rem] resize-y rounded-xl border-[var(--border)] bg-white/95 leading-relaxed focus-visible:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]/20 focus-visible:ring-offset-0'
 
 const SECTION_LABELS: Record<string, string> = {
-  'home-preview': 'Preview Beranda — Siapa Kami', hero: 'Hero halaman', 'story-heading': 'Pembuka perjalanan', story: 'Cerita perjalanan', vision: 'Visi', mission: 'Misi', 'values-heading': 'Pembuka nilai inti', value: 'Nilai inti', 'student-profile': 'Profil santri', 'leadership-heading': 'Pembuka struktur organisasi', cta: 'CTA pendaftaran',
+  'home-preview': 'Preview Beranda — Siapa Kami', hero: 'Hero halaman', 'story-heading': 'Pembuka perjalanan', story: 'Cerita perjalanan', vision: 'Visi', mission: 'Misi', goals: 'Tujuan Pendidikan', 'values-heading': 'Pembuka nilai inti', value: 'Nilai inti', 'student-profile': 'Profil santri', 'leadership-heading': 'Pembuka struktur organisasi', cta: 'CTA pendaftaran',
 }
 
 function sectionText(section: string): string {
@@ -139,7 +139,7 @@ export function AboutFormDialog({ mode, editingItem, formData, setFormData, onCl
 
   function renderContentField(field: { name: string; label: string; type: string }) {
     const id = `about-${field.name}`
-    if (field.name === 'image' || field.name.startsWith('image_')) {
+    if (/^image(_\d+)?$/.test(field.name)) {
       return <div className="space-y-2"><Label htmlFor={id}>{field.label}</Label><FacilityImageField id={id} value={fieldValue(field.name)} onChange={(value) => setField(field.name, value)} onUploadingChange={setUploading} error={fieldErrors[field.name]} /></div>
     }
     if (field.type === 'list' || field.type === 'textarea') {

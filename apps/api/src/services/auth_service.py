@@ -4,13 +4,14 @@ import logging
 import secrets
 import uuid
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import Any, cast
 from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 
 from src.core.cache import invalidate_user_cache
+from src.core.config import settings
 from src.core.security import (
     create_access_token,
     generate_refresh_token,
@@ -87,7 +88,7 @@ class AuthService:
         if redis is None:
             raise HTTPException(503, "Layanan pemulihan sementara tidak tersedia")
         try:
-            saved = redis.get(key)
+            saved = cast(Any, redis.get(key))
             if not saved:
                 raise ValueError("expired")
             user_id, code_hash = saved.split(":", 1)
@@ -715,7 +716,7 @@ class AuthService:
         if self.repository.get_user_by_username_or_email(data["username"]):
             raise HTTPException(400, "Username already exists")
 
-        email = data.get("email") or ""
+        email = (data.get("email") or "").strip() or None
         if email and self.repository.get_user_by_username_or_email(email):
             raise HTTPException(400, "Email already exists")
 
@@ -724,7 +725,7 @@ class AuthService:
             username=data["username"],
             email=email,
             password_hash=hash_password(data["password"]),
-            role_id=data.get("role_id"),
+            role_id=(data.get("role_id") or "").strip() or None,
             user_type=data.get("user_type", "admin"),
             is_active=True,
             created_at=datetime.now(WIB),

@@ -136,7 +136,6 @@ def deactivate_period(
     return result
 
 
-@router.delete("/periods/{id}")
 # ---------------------------------------------------------------------------
 # Period Fee Items (Master Komponen Biaya per Periode)
 # ---------------------------------------------------------------------------
@@ -204,6 +203,7 @@ def delete_period_fee_item(
     return result
 
 
+@router.delete("/periods/{id}")
 def delete_period_endpoint(
     id: str,
     user: dict = Depends(require_ppdb_admin),
@@ -363,8 +363,8 @@ def register_applicant(
 # ---------------------------------------------------------------------------
 @router.get("/applicants")
 def get_applicants(
-    page: int = Query(1),
-    perPage: int = Query(20),
+    page: int = Query(1, ge=1),
+    perPage: int = Query(20, ge=1, le=500),
     search: str = Query(""),
     wave_id: str | None = Query(None),
     status: str | None = Query(None),

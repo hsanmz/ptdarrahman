@@ -1126,7 +1126,7 @@ class SelectionService:
             interview_parent_session = wave_parent_interview[0]
 
         # Ambil Jadwal CBT (Akademik & Psikologi) untuk gelombang ini
-        cbt_schedules = []
+        cbt_schedules: list[dict[str, Any]] = []
         try:
             from src.models.cbt import ExamSchedule
 
@@ -1147,22 +1147,22 @@ class SelectionService:
 
         # Gabungkan semua jadwal dan urutkan secara kronologis
         all_schedules = []
-        for cs in cbt_schedules:
+        for sched in cbt_schedules:
             all_schedules.append(
                 {
-                    "id": cs["id"],
-                    "name": cs["name"],
-                    "category": cs.get("category", "akademik"),
+                    "id": sched["id"],
+                    "name": sched["name"],
+                    "category": sched.get("category", "akademik"),
                     "type": "cbt",
-                    "session_date": str(cs["session_date"])
-                    if cs.get("session_date")
+                    "session_date": str(sched["session_date"])
+                    if sched.get("session_date")
                     else None,
-                    "start_time": cs.get("start_time"),
-                    "end_time": cs.get("end_time"),
-                    "mode": cs.get("mode", "offline"),
-                    "location": cs.get("location"),
-                    "meeting_url": cs.get("meeting_url"),
-                    "officer_name": cs.get("officer_name"),
+                    "start_time": sched.get("start_time"),
+                    "end_time": sched.get("end_time"),
+                    "mode": sched.get("mode", "offline"),
+                    "location": sched.get("location"),
+                    "meeting_url": sched.get("meeting_url"),
+                    "officer_name": sched.get("officer_name"),
                 }
             )
         if tahfidz_session:

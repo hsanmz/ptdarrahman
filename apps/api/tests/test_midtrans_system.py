@@ -10,7 +10,6 @@ Coverage is grouped:
 """
 
 import hashlib
-from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
 from zoneinfo import ZoneInfo
 
@@ -19,22 +18,22 @@ from fastapi import HTTPException
 
 from src.core.config import settings
 from src.core.midtrans import (
-    MidtransClient,
-    MidtransError,
-    MidtransUncertainError,
     STATUS_CANCELED,
     STATUS_COMPLETED,
     STATUS_PENDING,
+    MidtransClient,
+    MidtransError,
+    MidtransUncertainError,
     canonical_status,
     normalize_cancel_response,
     normalize_create_response,
     normalize_status_response,
+    reset_midtrans_client,
 )
 from src.models.ppdb import (
     PPDBApplicant,
     PPDBPaymentTransaction,
     PPDBPeriod,
-    PPDBWave,
 )
 from src.services.payment_service import (
     PaymentService,
@@ -210,7 +209,7 @@ def test_midtrans_signature_verification():
     gross_amount = "250000.00"
 
     expected_sig = hashlib.sha512(
-        f"{order_id}{status_code}{gross_amount}{server_key}".encode("utf-8")
+        f"{order_id}{status_code}{gross_amount}{server_key}".encode()
     ).hexdigest()
 
     assert client.verify_webhook_signature(
@@ -267,6 +266,7 @@ def test_webhook_with_valid_signature_settles_payment():
     mock_repo.get_transaction_by_order_id.return_value = tx
     mock_repo.get_applicant_by_id.return_value = applicant
     mock_repo.get_wave_by_id.return_value = MagicMock(id="wave-1", early_discount_quota=5)
+    mock_repo.count_paid_form_payments_in_wave.return_value = 0
 
     svc = PaymentService(mock_repo)
     svc.check_wave_quota_and_close_if_full = MagicMock(return_value=False)
@@ -400,14 +400,23 @@ def test_create_qris_transaction_success():
     period = PPDBPeriod(id="per-1", form_fee=250000, minimum_dp=5000000)
     mock_repo.get_applicant_by_user_id.return_value = applicant
     mock_repo.get_active_period.return_value = period
+    mock_repo.get_period_by_id.return_value = period
     mock_repo.get_active_transaction.return_value = None
+    mock_repo.get_wave_by_id.return_value = MagicMock(
+        id="wave-1", period_id="per-1", quota=50, early_discount_quota=5
+    )
+    mock_repo.count_paid_form_payments_in_wave.return_value = 0
 
     svc = PaymentService(mock_repo)
 
     with patch.object(settings, "midtrans_server_key", ""):
-        tx_data = svc.create_qris_transaction("user-123", payment_type="form")
-        assert tx_data["amount"] == 250000
-        assert tx_data["status"] == "pending"
-        assert tx_data["order_id"].startswith("PPDB-FORM-")
-        assert tx_data["qr_string"] is not None
-        assert "ID.CO.MIDTRANS" in tx_data["qr_string"]
+        reset_midtrans_client()
+        try:
+            tx_data = svc.create_qris_transaction("user-123", payment_type="form")
+            assert tx_data["amount"] == 250000
+            assert tx_data["status"] == "pending"
+            assert tx_data["order_id"].startswith("PPDB-FORM-")
+            assert tx_data["qr_string"] is not None
+            assert "ID.CO.MIDTRANS" in tx_data["qr_string"]
+        finally:
+            reset_midtrans_client()

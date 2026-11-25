@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { X, Upload, Link2, AlertTriangle } from 'lucide-react'
-import { getMe, updateProfile, uploadImage } from '@/app/lib/api'
+import { X, Upload, Link2, AlertTriangle, AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react'
+import { API_BASE, getApiBase, getMe, updateProfile, uploadImage } from '@/app/lib/api'
 import { isFormDirty, UNSAVED_CHANGES_CONFIRM } from '@/app/lib/form-dirty'
+import { IMAGE_ACCEPT, resolveImageSrc, validateImageFile } from '@/app/lib/image-file'
 import { toast } from './ui/AdminToast'
 import { confirm } from './ui/AdminConfirm'
 
@@ -16,9 +17,21 @@ const ALLOWED_AVATAR_DOMAINS = [
 ]
 
 function isValidAvatarUrl(url: string): boolean {
-  if (!url) return true
+  const trimmed = (url || '').trim()
+  if (!trimmed) return true
+  if (trimmed.startsWith('/uploads/')) return true
   try {
-    const parsed = new URL(url)
+    const parsed = new URL(trimmed)
+    if (parsed.pathname.startsWith('/uploads/')) {
+      const apiHost = new URL((getApiBase?.() ?? API_BASE)).hostname
+      if (
+        parsed.hostname === apiHost ||
+        parsed.hostname === 'localhost' ||
+        parsed.hostname === '127.0.0.1'
+      ) {
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+      }
+    }
     if (parsed.protocol !== 'https:') return false
     return ALLOWED_AVATAR_DOMAINS.some(d => parsed.hostname === d || parsed.hostname.endsWith('.' + d))
   } catch {
@@ -48,6 +61,7 @@ export default function ProfileModal({ open, onClose }: Props) {
   const [uploading, setUploading] = useState(false)
   const [isSuper, setIsSuper] = useState(false)
   const [imageMode, setImageMode] = useState<'upload' | 'url'>('upload')
+  const [isReplacing, setIsReplacing] = useState(false)
   const [form, setForm] = useState({ username: '', email: '', full_name: '', avatar_url: '', old_password: '', new_password: '', confirm_password: '' })
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
@@ -100,11 +114,18 @@ export default function ProfileModal({ open, onClose }: Props) {
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+    const validation = validateImageFile(file)
+    if (validation) {
+      toast('error', validation)
+      return
+    }
     setUploading(true)
     try {
       const url = await uploadImage(file)
       setForm(p => ({ ...p, avatar_url: url }))
+      setIsReplacing(false)
       // Avatar baru tersimpan ke server saat tombol Simpan ditekan.
       toast('success', 'Avatar diunggah — tekan Simpan untuk menyimpan')
     } catch (e) {
@@ -177,63 +198,102 @@ export default function ProfileModal({ open, onClose }: Props) {
             <p className="text-sm text-muted-foreground">Memuat...</p>
           ) : (
             <>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold">Foto Profil / Avatar</span>
+                {form.avatar_url ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                    Sudah Terisi
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500 border border-zinc-200">
+                    <AlertCircle className="h-3 w-3 text-zinc-400" />
+                    Belum Ada Avatar
+                  </span>
+                )}
+              </div>
+
               <div className="flex justify-center">
                 <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center overflow-hidden ring-2 ring-primary/20">
                   {form.avatar_url && isValidAvatarUrl(form.avatar_url) ? (
-                    <Image src={form.avatar_url} alt="" width={80} height={80} className="w-full h-full object-cover" />
+                    <Image src={resolveImageSrc(form.avatar_url, getApiBase?.() ?? API_BASE)} alt="" width={80} height={80} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-2xl font-bold text-primary-foreground">{form.full_name?.charAt(0).toUpperCase() || form.email?.charAt(0).toUpperCase() || '?'}</span>
                   )}
                 </div>
               </div>
 
-              <div className="flex gap-2">
-                <Button type="button" variant={imageMode === 'upload' ? 'default' : 'outline'} size="sm" onClick={() => setImageMode('upload')}>
-                  <Upload className="w-3.5 h-3.5 mr-1.5" /> Upload
-                </Button>
-                <Button type="button" variant={imageMode === 'url' ? 'default' : 'outline'} size="sm" onClick={() => setImageMode('url')}>
-                  <Link2 className="w-3.5 h-3.5 mr-1.5" /> URL
-                </Button>
-              </div>
-
-              {imageMode === 'upload' ? (
-                <div className="flex items-center gap-3">
-                  <Label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:bg-accent transition-all">
-                    {uploading ? (
-                      <><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Mengunggah...</>
-                    ) : (
-                      <><Upload className="w-4 h-4" /> Pilih File</>
-                    )}
-                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
-                  </Label>
+              {form.avatar_url && !isReplacing ? (
+                <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-border bg-accent/30">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">Avatar Aktif</p>
+                    <p className="text-xs text-muted-foreground font-mono truncate">{form.avatar_url}</p>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setIsReplacing(true)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-white px-2 py-1 text-xs font-semibold text-foreground hover:bg-accent transition-colors"
+                    >
+                      <RefreshCw className="h-3 w-3" />
+                      Ganti
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setForm(p => ({ ...p, avatar_url: '' }))
+                        setIsReplacing(false)
+                      }}
+                      className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 transition-colors"
+                      aria-label="Hapus URL avatar"
+                    >
+                      <X className="h-3 w-3" />
+                      Hapus
+                    </button>
+                  </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
-                  <Link2 className="w-4 h-4 text-muted-foreground shrink-0" />
-                  <Input type="url" maxLength={2048} value={form.avatar_url} onChange={e => setForm(p => ({ ...p, avatar_url: e.target.value }))}
-                    placeholder="https://example.com/avatar.jpg" />
-                </div>
-              )}
+                <>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex gap-2">
+                      <Button type="button" variant={imageMode === 'upload' ? 'default' : 'outline'} size="sm" onClick={() => setImageMode('upload')}>
+                        <Upload className="w-3.5 h-3.5 mr-1.5" /> Upload
+                      </Button>
+                      <Button type="button" variant={imageMode === 'url' ? 'default' : 'outline'} size="sm" onClick={() => setImageMode('url')}>
+                        <Link2 className="w-3.5 h-3.5 mr-1.5" /> URL
+                      </Button>
+                    </div>
+                    {isReplacing && (
+                      <button
+                        type="button"
+                        onClick={() => setIsReplacing(false)}
+                        className="text-xs font-medium text-muted-foreground hover:text-foreground"
+                      >
+                        Batal Ganti
+                      </button>
+                    )}
+                  </div>
 
-              {form.avatar_url && (
-                <div className="flex items-start gap-4 p-3 rounded-xl border border-border bg-accent/30">
-                  {isValidAvatarUrl(form.avatar_url) ? (
-                    <Image src={form.avatar_url} alt="preview" width={80} height={56} className="w-20 h-14 object-cover rounded-lg border border-border shrink-0"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                  {imageMode === 'upload' ? (
+                    <div className="flex items-center gap-3">
+                      <Label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:bg-accent transition-all">
+                        {uploading ? (
+                          <><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Mengompresi ke WebP & Mengunggah...</>
+                        ) : (
+                          <><Upload className="w-4 h-4" /> Pilih File Avatar</>
+                        )}
+                        <input type="file" accept={IMAGE_ACCEPT} onChange={handleImageUpload} className="hidden" disabled={uploading} />
+                      </Label>
+                      <span className="text-[11px] text-muted-foreground">Otomatis dioptimasi ke WebP</span>
+                    </div>
                   ) : (
-                    <div className="w-20 h-14 rounded-lg border border-red-200 bg-red-50 flex items-center justify-center shrink-0">
-                      <span className="text-[10px] text-red-500 font-medium">Invalid</span>
+                    <div className="flex items-center gap-2">
+                      <Link2 className="w-4 h-4 text-muted-foreground shrink-0" />
+                      <Input type="url" maxLength={2048} value={form.avatar_url} onChange={e => setForm(p => ({ ...p, avatar_url: e.target.value }))}
+                        placeholder="https://example.com/avatar.jpg" />
                     </div>
                   )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">URL Avatar</p>
-                    <p className="text-xs text-muted-foreground break-all">{form.avatar_url}</p>
-                  </div>
-                  <button type="button" onClick={() => setForm(p => ({ ...p, avatar_url: '' }))}
-                    className="p-1 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-all shrink-0" aria-label="Hapus URL avatar">
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+                </>
               )}
 
               <hr className="border-border" />

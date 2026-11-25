@@ -161,12 +161,15 @@ export function SettingsEditor({ settings, canCrud }: Props) {
     const value = values[key] ?? ''
 
     if (key === 'logo' || key === 'favicon') {
-      if (value && value.startsWith(api.API_BASE)) {
-        toast('error', `URL ${key === 'favicon' ? 'favicon' : 'logo'} tidak valid — gunakan URL gambar langsung.`)
+      const trimmed = value.trim()
+      const apiBase = (api.getApiBase?.() ?? api.API_BASE).replace(/\/+$/, '')
+      const isUploadPath = trimmed.startsWith('/uploads/')
+      if (trimmed && !isUploadPath && !/^https?:\/\//i.test(trimmed)) {
+        toast('error', `URL ${key === 'favicon' ? 'favicon' : 'logo'} harus URL absolut (http/https) atau path /uploads/...`)
         return
       }
-      if (value && !/^https?:\/\//i.test(value)) {
-        toast('error', `URL ${key === 'favicon' ? 'favicon' : 'logo'} harus URL absolut (http/https)`)
+      if (trimmed && trimmed.startsWith(apiBase) && !trimmed.includes('/uploads/')) {
+        toast('error', `URL ${key === 'favicon' ? 'favicon' : 'logo'} tidak valid — gunakan URL gambar langsung.`)
         return
       }
     }

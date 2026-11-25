@@ -25,15 +25,17 @@ ALLOWED_IMAGE_TYPES = {
     "image/gif",
     "application/pdf",
 }
+ALLOWED_COMPANYPROFILE_TYPES = ALLOWED_IMAGE_TYPES | {"image/x-icon"}
 MAX_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 
 # Magic bytes per allowed MIME type. Content-type header from the client is
-# never trusted: the actual bytes are sniffed and must match the declared type.
+# never trusted: the actual bytes are sniffed and validated against accepted types.
 _MAGIC: dict[str, bytes] = {
     "image/jpeg": b"\xff\xd8\xff",
     "image/png": b"\x89PNG\r\n\x1a\n",
     "image/webp": b"RIFF",
     "image/gif": b"GIF8",
+    "image/x-icon": b"\x00\x00\x01\x00",
     "application/pdf": b"%PDF-",
 }
 
@@ -44,7 +46,32 @@ _TYPE_EXT: dict[str, str] = {
     "image/png": ".png",
     "image/webp": ".webp",
     "image/gif": ".gif",
+    "image/x-icon": ".ico",
     "application/pdf": ".pdf",
+}
+
+# Common MIME aliases sent by browsers/OS file pickers or third-party downloaders.
+_MIME_ALIASES: dict[str, str] = {
+    "image/jpg": "image/jpeg",
+    "image/pjpeg": "image/jpeg",
+    "image/x-png": "image/png",
+    "image/x-webp": "image/webp",
+    "image/vnd.microsoft.icon": "image/x-icon",
+    "image/ico": "image/x-icon",
+    "application/ico": "image/x-icon",
+}
+_GENERIC_MIMES = {"", "application/octet-stream", "binary/octet-stream"}
+_IMAGE_MIMES = {"image/jpeg", "image/png", "image/webp", "image/gif", "image/x-icon"}
+_SAFE_EXTENSIONS: set[str] = {
+    ".jpg",
+    ".jpeg",
+    ".jfif",
+    ".jpe",
+    ".png",
+    ".webp",
+    ".gif",
+    ".ico",
+    ".pdf",
 }
 
 PUBLIC_ID_PREFIX = "uploads"
@@ -64,9 +91,35 @@ def _is_webp(content: bytes) -> bool:
     return len(content) >= 12 and content[:4] == b"RIFF" and content[8:12] == b"WEBP"
 
 
+def _is_ico(content: bytes) -> bool:
+    return (
+        len(content) >= 6
+        and content[:4] in (b"\x00\x00\x01\x00", b"\x00\x00\x02\x00")
+        and content[4:6] != b"\x00\x00"
+    )
+
+
+def _normalize_mime(content_type: str | None) -> str:
+    raw = (content_type or "").split(";", 1)[0].strip().lower()
+    return _MIME_ALIASES.get(raw, raw)
+
+
+def _safe_original_name(filename: str | None) -> str:
+    raw = Path((filename or "file").strip()).name or "file"
+    if len(raw) <= 255:
+        return raw
+    ext = Path(raw).suffix[:20]
+    stem = raw[: len(raw) - len(ext)] if ext else raw
+    return f"{stem[: 255 - len(ext)]}{ext}"
+
+
 def _sniff_type(content: bytes) -> str | None:
     """Return the MIME type matching the file's magic bytes, or None."""
     for mime, magic in _MAGIC.items():
+        if mime == "image/x-icon":
+            if _is_ico(content):
+                return mime
+            continue
         if content.startswith(magic):
             if mime == "image/webp" and not _is_webp(content):
                 continue
@@ -80,37 +133,51 @@ def _validate(
     content_type: str | None,
     allowed_types: set[str] | None = None,
 ) -> tuple[str, str]:
-    """Validate declared type + magic bytes + extension.
+    """Validate sniffed magic bytes + safe extension + declared MIME compatibility.
 
     Returns ``(detected_mime, safe_extension)``.
     """
     if not content:
         raise HTTPException(status_code=400, detail="File kosong atau tidak valid")
-    declared = (content_type or "").lower()
-    if not filename:
+    if not filename or not filename.strip():
         raise HTTPException(status_code=400, detail="No file uploaded")
+
     accepted_types = allowed_types or ALLOWED_IMAGE_TYPES
-    if declared not in accepted_types:
+    ext = Path(filename.strip()).suffix.lower()
+    if ext and ext not in _SAFE_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Ekstensi file tidak diizinkan. "
+                "Accepted: .jpg, .jpeg, .png, .webp, .gif, .ico, .pdf"
+            ),
+        )
+
+    detected = _sniff_type(content)
+    if detected is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Format atau isi file tidak didukung. Gunakan file gambar/PDF yang valid.",
+        )
+    if detected not in accepted_types:
         raise HTTPException(
             status_code=400,
             detail="File type not allowed. Accepted: "
             + ", ".join(sorted(accepted_types)),
         )
-    detected = _sniff_type(content)
-    if detected is None or detected != declared:
-        raise HTTPException(
-            status_code=400,
-            detail="Isi file tidak sesuai dengan tipe yang dinyatakan",
-        )
-    ext = Path(filename).suffix.lower()
-    if not ext or ext not in set(_TYPE_EXT.values()):
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                "Ekstensi file tidak diizinkan. "
-                "Accepted: .jpg, .png, .webp, .gif, .pdf"
-            ),
-        )
+
+    declared = _normalize_mime(content_type)
+    if declared not in _GENERIC_MIMES and declared != detected:
+        # Browsers derive file.type from the filename extension, so a genuine
+        # JPEG saved as `.png` sends declared=image/png while sniffing image/jpeg.
+        # Allow interchangeable image formats when both are valid images, but
+        # still reject document/active MIME mismatches.
+        if not (declared in _IMAGE_MIMES and detected in _IMAGE_MIMES):
+            raise HTTPException(
+                status_code=400,
+                detail="Isi file tidak sesuai dengan tipe yang dinyatakan",
+            )
+
     return detected, _TYPE_EXT[detected]
 
 
@@ -144,18 +211,33 @@ def _upload_cloudinary(
         else PUBLIC_ID_PREFIX
     )
     public_id = f"{folder}/{uuid.uuid4().hex}"
-    result = cloudinary.uploader.upload(
-        content,
-        public_id=public_id,
-        folder=None,  # public_id already contains the folder path
-        resource_type="auto",
-        use_filename=False,
-        overwrite=False,
-    )
+    try:
+        result = cloudinary.uploader.upload(
+            content,
+            public_id=public_id,
+            folder=None,  # public_id already contains the folder path
+            resource_type="auto",
+            use_filename=False,
+            overwrite=False,
+        )
+    except Exception as exc:
+        logger.exception("Cloudinary upload failed for %s", original_name)
+        raise HTTPException(
+            status_code=502,
+            detail="Upload ke layanan penyimpanan gagal. Silakan coba lagi.",
+        ) from exc
+
+    public_url = (result or {}).get("secure_url") or (result or {}).get("url")
+    storage_path = (result or {}).get("public_id") or public_id
+    if not public_url:
+        raise HTTPException(
+            status_code=502,
+            detail="Layanan penyimpanan tidak mengembalikan URL berkas.",
+        )
 
     return UploadResult(
-        public_url=result.get("secure_url") or result.get("url"),
-        storage_path=result.get("public_id"),
+        public_url=str(public_url),
+        storage_path=str(storage_path),
         original_name=original_name,
         mime_type=content_type,
         size_bytes=len(content),
@@ -199,7 +281,7 @@ async def upload_file(
     allowed_types: set[str] | None = None,
 ) -> UploadResult:
     content = await _read_with_limit(file, max_size_bytes)
-    original_name = file.filename or "file"
+    original_name = _safe_original_name(file.filename)
     detected_type, safe_ext = _validate(content, file.filename, file.content_type, allowed_types)
 
     provider = settings.upload_provider

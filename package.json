@@ -8,7 +8,8 @@
     "test": "turbo run test",
     "seed": "cd apps/api && python3 -m scripts.seed",
     "seed:cp": "cd apps/api && python3 -m scripts.seed_companyprofile",
-    "seed:hero": "cd apps/api && python3 -m scripts.seed_hero"
+    "seed:hero": "cd apps/api && python3 -m scripts.seed_hero",
+    "seed:notif": "cd apps/api && python3 -m scripts.seed_notifications"
   },
   "devDependencies": {
     "turbo": "^2.1.2",

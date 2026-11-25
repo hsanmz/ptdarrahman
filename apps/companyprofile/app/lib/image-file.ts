@@ -33,12 +33,31 @@ export const PROGRAM_FALLBACK_IMAGES: Record<string, string> = {
   'dirasah-islamiyah': 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop',
 }
 
+const MIME_ALIASES: Record<string, string> = {
+  'image/jpg': 'image/jpeg',
+  'image/pjpeg': 'image/jpeg',
+  'image/x-png': 'image/png',
+  'image/x-webp': 'image/webp',
+}
+
+function inferImageMimeFromName(name: string): string {
+  const lower = name.trim().toLowerCase()
+  if (lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.jfif')) return 'image/jpeg'
+  if (lower.endsWith('.png')) return 'image/png'
+  if (lower.endsWith('.webp')) return 'image/webp'
+  if (lower.endsWith('.gif')) return 'image/gif'
+  return ''
+}
+
 /** Validasi file sebelum dikirim ke `/companyprofile/upload`. */
 export function validateImageFile(file: File): string | null {
   if (!file) return 'Pilih file gambar terlebih dahulu.'
   if (!file.size) return 'File gambar kosong atau tidak valid.'
 
-  if (!IMAGE_TYPES.includes(file.type as (typeof IMAGE_TYPES)[number])) {
+  const rawType = (file.type || '').split(';')[0].trim().toLowerCase()
+  const normalizedType = MIME_ALIASES[rawType] || rawType || inferImageMimeFromName(file.name || '')
+
+  if (!IMAGE_TYPES.includes(normalizedType as (typeof IMAGE_TYPES)[number])) {
     return 'Format gambar tidak didukung. Gunakan JPG, PNG, WEBP, atau GIF.'
   }
   if (file.size > IMAGE_MAX_BYTES) {
@@ -54,6 +73,82 @@ export function formatFileSize(bytes: number): string {
     return `${mb.toFixed(mb >= 10 ? 0 : 1)} MB`
   }
   return `${Math.max(1, Math.round(bytes / 1024))} KB`
+}
+
+/**
+ * Kompresi dan konversi file gambar ke format `.webp` secara client-side.
+ * Otomatis mempertahankan format file asli jika:
+ * - Sudah berekstensi/tipe .webp
+ * - Icon/Favicon (.ico)
+ * - GIF animasi (.gif)
+ * - Bukan di browser environment atau canvas tidak tersedia
+ */
+export async function convertToWebP(file: File, quality = 0.85): Promise<File> {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return file
+  if (!file || !file.size) return file
+
+  const type = (file.type || '').split(';')[0].trim().toLowerCase()
+  const name = (file.name || '').trim().toLowerCase()
+
+  // Lewati file yang sudah WebP, ICO/Favicon, atau GIF
+  if (type === 'image/webp' || name.endsWith('.webp')) return file
+  if (type.includes('icon') || name.endsWith('.ico')) return file
+  if (type === 'image/gif' || name.endsWith('.gif')) return file
+
+  try {
+    const objectUrl = URL.createObjectURL(file)
+    const img = new Image()
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve()
+      img.onerror = () => reject(new Error('Gagal memuat gambar untuk konversi WebP'))
+      img.src = objectUrl
+    })
+
+    // Batasi dimensi maksimum jika foto sangat besar (misal kamera HP 4K/8K)
+    let width = img.naturalWidth || img.width
+    let height = img.naturalHeight || img.height
+    const maxDimension = 2048
+    if (width > maxDimension || height > maxDimension) {
+      if (width > height) {
+        height = Math.round((height * maxDimension) / width)
+        width = maxDimension
+      } else {
+        width = Math.round((width * maxDimension) / height)
+        height = maxDimension
+      }
+    }
+
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.max(1, width)
+    canvas.height = Math.max(1, height)
+    const ctx = canvas.getContext('2d')
+
+    if (!ctx) {
+      URL.revokeObjectURL(objectUrl)
+      return file
+    }
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    URL.revokeObjectURL(objectUrl)
+
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob((b) => resolve(b), 'image/webp', quality)
+    })
+
+    if (!blob) return file
+
+    const baseName = file.name.replace(/\.[^/.]+$/, '')
+    const newFileName = `${baseName || 'image'}.webp`
+
+    return new File([blob], newFileName, {
+      type: 'image/webp',
+      lastModified: Date.now(),
+    })
+  } catch {
+    // Jika canvas atau kompresi gagal di environment tertentu (misal JSDOM test), fallback aman ke file asli
+    return file
+  }
 }
 
 /**
@@ -130,8 +225,9 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
   }
   const uploadsIdx = normalized.indexOf('/uploads/')
   if (uploadsIdx !== -1) {
-    // Kembalikan path relatif /uploads/... agar di-proxy secara transparan oleh Next.js rewrites
-    return normalized.slice(uploadsIdx)
+    const uploadPath = normalized.slice(uploadsIdx)
+    const cleanBase = apiBase.trim().replace(/\/+$/, '')
+    return cleanBase ? `${cleanBase}${uploadPath}` : uploadPath
   }
 
   return src

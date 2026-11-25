@@ -214,8 +214,15 @@ export default function ApplicantForm({
     e.preventDefault()
     if (!validate()) return
     // Kirim kuesioner kesehatan sebagai `disease_history` (JSON) agar tidak
-    // menimpa struktur data yang sudah ada.
-    const payload: Record<string, string> = { ...form }
+    // menimpa struktur data yang sudah ada, dan kosongkan field opsional jadi null/skip.
+    const payload: Record<string, string> = {}
+    for (const [k, v] of Object.entries(form)) {
+      const trimmed = typeof v === 'string' ? v.trim() : v
+      const hadInitial = k !== 'wave_id' && initial?.[k] != null && initial[k] !== ''
+      if (trimmed !== '' || hadInitial) {
+        payload[k] = trimmed
+      }
+    }
     if (legacyHealth) {
       payload.disease_history = legacyHealth
     } else if (!isHealthEmpty(health)) {

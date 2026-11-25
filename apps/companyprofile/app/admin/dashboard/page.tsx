@@ -324,7 +324,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     const userId = adminUser?.id
     if (!userId) return
-    const url = `${api.API_BASE.replace(/\/$/, '')}/users/${userId}/events`
+    const apiBase = (api.getApiBase?.() ?? api.API_BASE).replace(/\/$/, '')
+    const url = `${apiBase}/users/${userId}/events`
     const es = new EventSource(url, { withCredentials: true })
     es.addEventListener('page_permissions_changed', (e) => {
       try {
@@ -706,7 +707,7 @@ export default function AdminDashboard() {
             }
           }
         }}
-        apiBase={api.API_BASE}
+        apiBase={api.getApiBase?.() ?? api.API_BASE}
         contentClassName="animate-fade-in"
         storageKey="cp_collapsed"
         roleLabel={adminUser?.role_name || adminUser?.user_type}
@@ -1117,7 +1118,7 @@ export default function AdminDashboard() {
                               <RowThumb
                                 url={
                                   typeof item.image === 'string' && item.image
-                                    ? resolveImageSrc(item.image, api.API_BASE)
+                                    ? resolveImageSrc(item.image, api.getApiBase?.() ?? api.API_BASE)
                                     : undefined
                                 }
                                 label={titleValue}

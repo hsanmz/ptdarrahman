@@ -37,7 +37,7 @@ export function GalleryAlbumImagesField({ images, onChange, onUploadingChange }:
   const [errorMsg, setErrorMsg] = useState('')
 
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  const apiBase = api.getApiBase?.() ?? api.API_BASE
 
   function setUploadState(val: boolean) {
     setUploading(val)
@@ -53,18 +53,21 @@ export function GalleryAlbumImagesField({ images, onChange, onUploadingChange }:
 
     const newUploadedUrls: string[] = []
     let failedCount = 0
+    let lastError = ''
 
     for (const file of files) {
       const err = validateGalleryImageFile(file)
       if (err) {
         failedCount++
+        lastError = err
         continue
       }
       try {
         const url = await api.uploadImage(file, 'gallery')
         if (url) newUploadedUrls.push(url)
-      } catch {
+      } catch (e) {
         failedCount++
+        lastError = errorMessage(e, '')
       }
     }
 
@@ -75,7 +78,11 @@ export function GalleryAlbumImagesField({ images, onChange, onUploadingChange }:
     }
 
     if (failedCount > 0) {
-      setErrorMsg(`${failedCount} berkas gagal diunggah atau melebihi batas ${formatFileSize(GALLERY_IMAGE_MAX_BYTES)}.`)
+      setErrorMsg(
+        lastError
+          ? `${failedCount} berkas gagal diunggah: ${lastError}`
+          : `${failedCount} berkas gagal diunggah atau melebihi batas ${formatFileSize(GALLERY_IMAGE_MAX_BYTES)}.`,
+      )
     }
   }
 

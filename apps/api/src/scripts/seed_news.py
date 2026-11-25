@@ -16,7 +16,7 @@ import json
 import re
 import sys
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 from sqlalchemy.orm import Session
@@ -139,7 +139,7 @@ def upsert_news(session: Session, item: dict) -> None:
         existing.content = json.dumps(merged_content, ensure_ascii=False)
         session.add(existing)
     else:
-        now = datetime.utcnow()
+        now = datetime.now(UTC).replace(tzinfo=None)
         news = NewsArticle(
             id=str(uuid.uuid4()),
             slug=slug,

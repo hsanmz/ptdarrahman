@@ -102,7 +102,7 @@ export default function WhatsAppPage() {
   // ── Initial load + polling 8 detik ─────────────────────────────────────
 
   useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
+     
     // Load status & antrean saat mount; logs di-load oleh effect [logsPage, logsStatus].
     fetchSession()
     fetchQueueStats()
@@ -111,7 +111,7 @@ export default function WhatsAppPage() {
       if (pollRef.current) clearInterval(pollRef.current)
       initPollRef.current.forEach(clearTimeout)
     }
-    /* eslint-enable react-hooks/set-state-in-effect */
+     
   }, [fetchSession, fetchQueueStats])
 
   useEffect(() => {
@@ -145,7 +145,7 @@ export default function WhatsAppPage() {
   }, [])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     fetchLogs(logsPage, logsStatus)
   }, [logsPage, logsStatus, fetchLogs])
 
@@ -154,7 +154,7 @@ export default function WhatsAppPage() {
   // Kembali ke mode 'phone' jika masih ada pairing code aktif dari sesi lalu
   useEffect(() => {
     if (session?.status === 'qr' && session?.pairingCode && loginMethod === 'qr') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setLoginMethod('phone')
     }
   }, [session?.status, session?.pairingCode, loginMethod])

@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 import logging
 import time
-from typing import Any
+from typing import Any, cast
 
 from redis import Redis  # type: ignore[import-untyped]
 
@@ -90,7 +90,7 @@ def get_cached_user(user_id: str) -> dict[str, Any] | None:
     if r is None:
         return None
     try:
-        raw = r.get(f"{_SESSION_PREFIX}{user_id}")
+        raw = cast(Any, r.get(f"{_SESSION_PREFIX}{user_id}"))
         if raw:
             data = json.loads(raw)
             if isinstance(data, dict):
@@ -147,7 +147,7 @@ def redis_rate_limit(key: str, limit: int, window_seconds: int) -> tuple[bool, i
         count_before_add = int(results[1])
         if count_before_add >= limit:
             # Ambil timestamp entry tertua untuk hitung retry-after
-            oldest_entries = r.zrange(rkey, 0, 0, withscores=True)
+            oldest_entries = cast(Any, r.zrange(rkey, 0, 0, withscores=True))
             if oldest_entries:
                 oldest_ts = float(oldest_entries[0][1])
                 retry_after = max(1, int(window_seconds - (now - oldest_ts)))

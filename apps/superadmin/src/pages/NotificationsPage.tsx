@@ -184,25 +184,23 @@ function SendTab({ templates }: { templates: Template[] }) {
     function loadRecipients() {
       setRecLoading(true)
       setRecError(null)
-      Promise.all([
-        api.getUsers({ per_page: 500 }),
-        api.getApplicants({ perPage: 500 }),
-      ]).then(([usersRes, applicantsRes]) => {
-        if (!active) return
-        const ul = Array.isArray(usersRes) ? usersRes : (usersRes as any).data ?? []
-        const al = (applicantsRes as any).data ?? []
-        const list: Recipient[] = [
-          ...ul.filter((u: any) => u.user_type !== 'superadmin').map((u: any) => ({
-            user_id: u.id, name: u.full_name || u.username, username: u.username,
-            email: u.email || '', phone: u.phone || '', type: 'Admin' as const,
-          })),
-          ...al.filter((a: any) => a.user_id).map((a: any) => ({
-            user_id: a.user_id, name: a.full_name, username: a.username || '',
-            email: a.email || '', phone: a.phone || '', type: 'Pendaftar' as const,
-          })),
-        ]
-        setRecipients(list)
-      }).catch((e) => {
+      api.getNotificationRecipients()
+        .then((res) => {
+          if (!active) return
+          const rows = Array.isArray(res?.data) ? res.data : []
+          setRecipients(
+            rows
+              .filter((r) => Boolean(r.user_id))
+              .map((r) => ({
+                user_id: r.user_id,
+                name: r.name || r.username,
+                username: r.username || '',
+                email: r.email || '',
+                phone: r.phone || '',
+                type: r.type === 'Admin' ? 'Admin' : 'Pendaftar',
+              }))
+          )
+        }).catch((e) => {
         if (!active) return
         // Tandai error — jangan tampil sebagai "Tidak Ada Penerima".
         setRecipients([])

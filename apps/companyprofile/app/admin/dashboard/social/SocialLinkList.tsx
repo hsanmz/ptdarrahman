@@ -47,7 +47,6 @@ async function copyText(text: string): Promise<boolean> {
     } catch {
       return false
     }
-  }
 }
 
 /**

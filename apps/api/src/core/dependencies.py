@@ -59,9 +59,18 @@ def _parse_permissions(raw: Any) -> dict[str, Any]:
     return raw if isinstance(raw, dict) else {}
 
 
+_LEGACY_LEVEL_ALIASES: dict[str, str] = {
+    "access": AccessLevel.CRUD,
+    "full": AccessLevel.CRUD,
+    "view": AccessLevel.READ,
+}
+
+
 def _has_level(actual: str, required: str) -> bool:
+    normalized = str(actual or AccessLevel.NONE).strip().lower()
+    normalized = _LEGACY_LEVEL_ALIASES.get(normalized, normalized)
     try:
-        return LEVEL_ORDER.index(actual) >= LEVEL_ORDER.index(required)
+        return LEVEL_ORDER.index(normalized) >= LEVEL_ORDER.index(required)
     except ValueError:
         return False
 

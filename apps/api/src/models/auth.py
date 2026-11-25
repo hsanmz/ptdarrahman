@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column
@@ -12,8 +13,8 @@ class User(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     username: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
-    email: Mapped[str] = mapped_column(
-        String(255), unique=True, nullable=False, default=""
+    email: Mapped[str | None] = mapped_column(
+        String(255), unique=True, nullable=True, default=None
     )
     phone: Mapped[str | None] = mapped_column(String(32), nullable=True, default=None)
     role_id: Mapped[str | None] = mapped_column(
@@ -38,7 +39,7 @@ class Role(Base):
     description: Mapped[str | None] = mapped_column(Text)
     is_superadmin: Mapped[bool] = mapped_column(Boolean, default=False)
     is_system: Mapped[bool] = mapped_column(Boolean, default=False)
-    permissions: Mapped[dict | None] = mapped_column(Text)
+    permissions: Mapped[Any] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 

@@ -75,8 +75,8 @@ log_info "Mode aktif terdeteksi: ${COMPOSE_MODE}"
 log_info "3/5. Memeriksa & menjalankan migrasi database..."
 API_CONTAINER=$(docker ps -q -f "name=api" | head -n 1)
 if [ -n "$API_CONTAINER" ]; then
-  log_info "Menjalankan 'alembic upgrade head' di container (${API_CONTAINER})..."
-  docker exec "$API_CONTAINER" alembic upgrade head || {
+  log_info "Menjalankan 'alembic upgrade heads' di container (${API_CONTAINER})..."
+  docker exec "$API_CONTAINER" alembic upgrade heads || {
     log_warn "Migrasi via container lama gagal, akan dijalankan ulang setelah restart container."
   }
   log_ok "Migrasi database selesai."
@@ -105,8 +105,9 @@ log_ok "Container berhasil di-rebuild dan dijalankan."
 # Jalankan migrasi ulang jika tadi API belum menyala
 API_CONTAINER_NEW=$(docker ps -q -f "name=api" | head -n 1)
 if [ -n "$API_CONTAINER_NEW" ]; then
-  log_info "Memastikan migrasi alembic pada container baru..."
-  docker exec "$API_CONTAINER_NEW" alembic upgrade head || true
+  log_info "Memastikan migrasi alembic & seeder pada container baru..."
+  docker exec "$API_CONTAINER_NEW" alembic upgrade heads || true
+  docker exec -w /app "$API_CONTAINER_NEW" python -m scripts.seed || true
 fi
 
 # 5. Bersihkan image docker bekas (dangling) agar harddisk server tidak penuh

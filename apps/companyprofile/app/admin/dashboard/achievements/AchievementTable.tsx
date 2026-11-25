@@ -20,8 +20,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/app/components/ui/Table'
+import * as api from '@/app/lib/api'
 import type { RowRecord } from '../_types'
-import { getScopeBadgeStyle } from './achievement-form'
+import { getScopeBadgeStyle, resolveAchievementImageSrc } from './achievement-form'
 import { AchievementCertificateModal } from './AchievementCertificateModal'
 
 interface Props {
@@ -89,7 +90,8 @@ export function AchievementTable({
                 const desc = String(content.desc || item.desc || '').trim()
                 const scope = String(content.scope || item.scope || '').trim()
                 const year = item.year != null ? String(item.year) : '—'
-                const imageUrl = typeof item.image === 'string' ? item.image.trim() : ''
+                const rawImage = typeof item.image === 'string' ? item.image.trim() : ''
+                const imageUrl = rawImage ? resolveAchievementImageSrc(rawImage, api.getApiBase?.() ?? api.API_BASE) : ''
                 const badgeStyle = scope ? getScopeBadgeStyle(scope) : null
 
                 return (

@@ -37,7 +37,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
-ignore = []
+ignore = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -48,3 +48,8 @@ exclude = "versions"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [
+    "ignore:.*Using.*httpx.*with.*starlette.*:UserWarning",
+    "ignore:.*timeout.*argument with the TestClient.*:UserWarning",
+    "ignore:.*default datetime adapter is deprecated.*:DeprecationWarning",
+]

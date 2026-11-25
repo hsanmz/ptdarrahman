@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, DragEvent } from 'react'
-import { AlertCircle, Image as ImageIcon, Link2, Loader2, RefreshCw, Trash2, Upload } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Image as ImageIcon, Link2, Loader2, RefreshCw, Trash2, Upload } from 'lucide-react'
 import { cn } from '@/app/lib/utils'
 import * as api from '@/app/lib/api'
 import { errorMessage } from '../_types'
@@ -40,6 +40,7 @@ const MAX_SIZE_LABEL = formatFileSize(FACILITY_IMAGE_MAX_BYTES)
  */
 export function FacilityImageField({ id, value, onChange, onUploadingChange, error, previewSize = 'default' }: Props) {
   const [mode, setMode] = useState<'upload' | 'url'>('upload')
+  const [isReplacing, setIsReplacing] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [dragging, setDragging] = useState(false)
   const [fileError, setFileError] = useState('')
@@ -78,6 +79,7 @@ export function FacilityImageField({ id, value, onChange, onUploadingChange, err
     try {
       const url = await api.uploadImage(file)
       onChange(url)
+      setIsReplacing(false)
     } catch (e) {
       setBlobUrl('')
       const message = errorMessage(e, '')
@@ -120,6 +122,7 @@ export function FacilityImageField({ id, value, onChange, onUploadingChange, err
   function removeImage() {
     setBlobUrl('')
     setFileError('')
+    setIsReplacing(false)
     onChange('')
     inputRef.current?.focus()
   }
@@ -138,36 +141,109 @@ export function FacilityImageField({ id, value, onChange, onUploadingChange, err
       : '')
   const describedBy = [shownError ? errorId : null, helpId].filter(Boolean).join(' ')
 
+  const hasImage = Boolean(previewSrc)
+  const isFilledView = hasImage && !isReplacing
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-2">
-        <div className="inline-flex items-center gap-0.5 rounded-lg bg-[var(--bg-secondary)] p-0.5">
-          {(['upload', 'url'] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => switchMode(m)}
-              aria-pressed={mode === m}
-              className={cn(
-                'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all',
-                mode === m
-                  ? 'bg-white text-[var(--text)] shadow-sm'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
-              )}
-            >
-              {m === 'upload' ? <Upload className="h-3 w-3" /> : <Link2 className="h-3 w-3" />}
-              {m === 'upload' ? 'Unggah' : 'URL'}
-            </button>
-          ))}
-        </div>
-        {mode === 'url' && (
-          <span className="shrink-0 text-[10px] tabular-nums text-[var(--text-muted)]">
-            {value.trim().length}/{FACILITY_IMAGE_URL_MAX_LENGTH}
-          </span>
+        {isFilledView ? (
+          <span className="text-xs font-semibold text-[var(--text-secondary)]">Gambar Fasilitas</span>
+        ) : (
+          <div className="inline-flex items-center gap-0.5 rounded-lg bg-[var(--bg-secondary)] p-0.5">
+            {(['upload', 'url'] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => switchMode(m)}
+                aria-pressed={mode === m}
+                className={cn(
+                  'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all',
+                  mode === m
+                    ? 'bg-white text-[var(--text)] shadow-sm'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
+                )}
+              >
+                {m === 'upload' ? <Upload className="h-3 w-3" /> : <Link2 className="h-3 w-3" />}
+                {m === 'upload' ? 'Unggah' : 'URL'}
+              </button>
+            ))}
+          </div>
         )}
+
+        <div className="flex items-center gap-2">
+          {hasImage ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
+              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+              Sudah Terisi
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500 border border-zinc-200">
+              <AlertCircle className="h-3 w-3 text-zinc-400" />
+              Belum Ada Gambar
+            </span>
+          )}
+
+          {isReplacing && (
+            <button
+              type="button"
+              onClick={() => setIsReplacing(false)}
+              className="text-[11px] font-medium text-[var(--text-muted)] hover:text-[var(--text)]"
+            >
+              Batal Ganti
+            </button>
+          )}
+
+          {!isFilledView && mode === 'url' && (
+            <span className="shrink-0 text-[10px] tabular-nums text-[var(--text-muted)]">
+              {value.trim().length}/{FACILITY_IMAGE_URL_MAX_LENGTH}
+            </span>
+          )}
+        </div>
       </div>
 
-      {mode === 'upload' ? (
+      {isFilledView ? (
+        <div
+          className={cn(
+            'relative overflow-hidden rounded-xl border border-[var(--border)] bg-white/70 shadow-xs',
+            previewSize === 'large' ? 'h-64 sm:h-72' : 'h-48',
+          )}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element -- URL gambar bebas dari admin; lihat komentar komponen. */}
+          <img
+            src={previewSrc}
+            alt="Pratinjau gambar fasilitas"
+            className="h-full w-full object-cover"
+            onError={(event) => {
+              event.currentTarget.style.display = 'none'
+            }}
+          />
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 via-black/50 to-transparent px-3 pt-6 pb-2">
+            <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-white/90" title={value || undefined}>
+              {value || 'Pratinjau berkas lokal'}
+            </span>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <button
+                id={id}
+                type="button"
+                onClick={() => setIsReplacing(true)}
+                className="inline-flex items-center gap-1 rounded-md bg-white/20 px-2 py-1 text-[11px] font-semibold text-white backdrop-blur-xs transition-colors hover:bg-white/30"
+              >
+                <RefreshCw className="h-3 w-3" />
+                Ganti Gambar
+              </button>
+              <button
+                type="button"
+                onClick={removeImage}
+                className="inline-flex items-center gap-1 rounded-md bg-red-500/20 px-2 py-1 text-[11px] font-semibold text-red-200 backdrop-blur-xs transition-colors hover:bg-red-500/30 hover:text-red-100"
+              >
+                <Trash2 className="h-3 w-3" />
+                Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : mode === 'upload' ? (
         <div
           className={cn(
             'relative overflow-hidden rounded-xl border border-dashed transition-colors',
@@ -178,76 +254,33 @@ export function FacilityImageField({ id, value, onChange, onUploadingChange, err
             shownError && 'border-destructive/60',
           )}
         >
-          {previewSrc ? (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element -- URL gambar bebas dari admin; lihat komentar komponen. */}
-              <img
-                src={previewSrc}
-                alt="Pratinjau gambar fasilitas"
-                className="h-full w-full object-cover"
-                onError={(event) => {
-                  event.currentTarget.style.display = 'none'
-                }}
-              />
-              {!uploading && (
-                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/75 via-black/45 to-transparent px-2.5 pt-6 pb-1.5">
-                  <span className="min-w-0 flex-1 truncate text-[10px] text-white/85" title={value || undefined}>
-                    {value || 'Pratinjau file lokal'}
-                  </span>
-                  <div className="flex shrink-0 items-center gap-0.5">
-                    <button
-                      id={id}
-                      type="button"
-                      onClick={() => inputRef.current?.click()}
-                      className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold text-white/90 transition-colors hover:bg-white/15 hover:text-white"
-                    >
-                      <RefreshCw className="h-3 w-3" />
-                      Ganti
-                    </button>
-                    <button
-                      type="button"
-                      onClick={removeImage}
-                      className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold text-red-200 transition-colors hover:bg-red-500/20 hover:text-red-100"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                      Hapus
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <button
-              id={id}
-              type="button"
-              onClick={() => inputRef.current?.click()}
-              onDragEnter={handleDragEnter}
-              onDragOver={(event) => event.preventDefault()}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              aria-describedby={describedBy}
-              className="flex h-full w-full flex-col items-center justify-center gap-1.5 px-4 text-center focus-visible:ring-2 focus-visible:ring-[var(--accent)]/25 focus-visible:outline-none"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--accent-subtle)] text-[var(--accent)]" aria-hidden="true">
-                <Upload className="h-4 w-4" />
-              </span>
-              <span className="text-xs font-semibold text-[var(--text)]">
-                {dragging ? 'Lepas gambar di sini' : 'Tarik gambar atau klik untuk memilih'}
-              </span>
-            </button>
-          )}
+          <button
+            id={id}
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            onDragEnter={handleDragEnter}
+            onDragOver={(event) => event.preventDefault()}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            aria-describedby={describedBy}
+            className="flex h-full w-full flex-col items-center justify-center gap-1.5 px-4 text-center focus-visible:ring-2 focus-visible:ring-[var(--accent)]/25 focus-visible:outline-none"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--accent-subtle)] text-[var(--accent)]" aria-hidden="true">
+              <Upload className="h-4 w-4" />
+            </span>
+            <span className="text-xs font-semibold text-[var(--text)]">
+              {dragging ? 'Lepas gambar di sini' : 'Tarik gambar atau klik untuk memilih'}
+            </span>
+            <span className="text-[11px] text-[var(--text-muted)]">
+              Otomatis dikonversi ke WebP agar ringan
+            </span>
+          </button>
 
           {uploading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/45 text-white backdrop-blur-[1px]">
               <Loader2 className="h-5 w-5 animate-spin" />
-              <span className="text-[11px] font-semibold">Mengunggah…</span>
+              <span className="text-[11px] font-semibold">Mengompresi ke WebP & Mengunggah…</span>
             </div>
-          )}
-
-          {!previewSrc && !uploading && (
-            <p className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[10px] text-[var(--text-muted)]">
-              Belum ada gambar
-            </p>
           )}
         </div>
       ) : (

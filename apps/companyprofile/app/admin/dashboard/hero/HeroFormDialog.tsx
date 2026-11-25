@@ -4,17 +4,21 @@
 
 import { useState } from 'react'
 import {
+  AlertCircle,
   AlertTriangle,
   ArrowRight,
   Check,
+  CheckCircle2,
   ChevronDown,
   Eye,
   FileText,
   Image as ImageIcon,
   Link2,
+  RefreshCw,
   Save,
   ShieldCheck,
   Sparkles,
+  Trash2,
   Type,
   Upload,
   X,
@@ -43,7 +47,16 @@ interface Props {
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
-const ACCEPTED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
+const ACCEPTED_TYPES = new Set([
+  'image/jpeg',
+  'image/jpg',
+  'image/pjpeg',
+  'image/png',
+  'image/x-png',
+  'image/webp',
+  'image/x-webp',
+])
+const ACCEPTED_EXTS = ['.jpg', '.jpeg', '.jfif', '.jpe', '.png', '.webp']
 const FIELD_CLASS =
   'h-11 rounded-xl border-[var(--border)] bg-white/95 text-sm focus-visible:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]/20 focus-visible:ring-offset-0'
 
@@ -55,6 +68,7 @@ export function HeroFormDialog({ mode, editingItem, formData, setFormData, onClo
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [imageMode, setImageMode] = useState<'upload' | 'url'>('upload')
+  const [isReplacingImage, setIsReplacingImage] = useState(false)
   const [serverError, setServerError] = useState('')
   const [initialFormData] = useState<FormState>(formData)
   const isDirty = isFormDirty(formData, initialFormData)
@@ -77,7 +91,10 @@ export function HeroFormDialog({ mode, editingItem, formData, setFormData, onClo
     const file = event.target.files?.[0]
     event.target.value = ''
     if (!file) return
-    if (!ACCEPTED_TYPES.has(file.type)) {
+    const rawType = (file.type || '').split(';')[0].trim().toLowerCase()
+    const lowerName = (file.name || '').trim().toLowerCase()
+    const isAllowed = ACCEPTED_TYPES.has(rawType) || (!rawType && ACCEPTED_EXTS.some((ext) => lowerName.endsWith(ext)))
+    if (!isAllowed) {
       toast('error', 'Format gambar harus JPG, PNG, atau WebP.')
       return
     }
@@ -182,83 +199,132 @@ export function HeroFormDialog({ mode, editingItem, formData, setFormData, onClo
                     <ImageIcon className="h-4 w-4 text-[var(--accent)]" />
                     Gambar Banner Utama
                   </div>
-                  <span className="text-[11px] font-semibold text-rose-500">* Wajib</span>
+                  <div className="flex items-center gap-2">
+                    {image ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 border border-emerald-200">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                        Sudah Terisi
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 border border-amber-200">
+                        <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
+                        Belum Ada Gambar
+                      </span>
+                    )}
+                    <span className="text-[11px] font-semibold text-rose-500">* Wajib</span>
+                  </div>
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
                   Gunakan gambar horizontal resolusi tinggi (1920×1080 px, rasio 16:9). Gambar otomatis diberi overlay sinematik.
                 </p>
 
-                <div className="mt-4 inline-flex items-center gap-1 rounded-xl bg-[var(--bg-secondary)] p-1">
-                  {(['upload', 'url'] as const).map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => setImageMode(item)}
-                      className={cn(
-                        'flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all',
-                        imageMode === item
-                          ? 'bg-white text-[var(--text)] shadow-xs'
-                          : 'text-[var(--text-secondary)] hover:text-[var(--text)]'
-                      )}
-                    >
-                      {item === 'upload' ? <Upload className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5" />}
-                      {item === 'upload' ? 'Upload File' : 'URL Gambar'}
-                    </button>
-                  ))}
-                </div>
-
-                {imageMode === 'upload' ? (
-                  <label className="group mt-4 flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-[var(--border)] bg-white/60 px-4 py-7 text-center transition-colors hover:border-[var(--accent)]/50 hover:bg-[var(--accent-subtle)]/60">
-                    <span className="mb-1 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--accent-subtle)] text-[var(--accent)]">
-                      <Upload className={cn('h-5 w-5', uploading && 'animate-pulse')} />
-                    </span>
-                    <span className="text-sm font-semibold text-[var(--text)]">
-                      {uploading ? 'Mengunggah gambar...' : 'Pilih file banner'}
-                    </span>
-                    <span className="text-xs text-[var(--text-muted)]">JPG, PNG, atau WebP · maksimal 5 MB</span>
-                    <input
-                      type="file"
-                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                      onChange={handleUpload}
-                      className="hidden"
-                      disabled={uploading}
-                    />
-                  </label>
-                ) : (
-                  <div className="relative mt-4">
-                    <Link2 className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" />
-                    <Input
-                      className={cn(FIELD_CLASS, 'pl-9')}
-                      type="url"
-                      value={image}
-                      onChange={(event) => update({ image: event.target.value })}
-                      placeholder="https://images.unsplash.com/... atau URL gambar langsung"
-                    />
-                  </div>
-                )}
-
-                {image ? (
-                  <div className="mt-4 flex items-start gap-3 rounded-xl border border-[var(--border)]/70 bg-white/70 p-3">
-                    <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)]">
+                {/* Ketika gambar sudah terisi, ganti inputan dengan kartu preview terpadu & aksi ganti/hapus */}
+                {image && !isReplacingImage ? (
+                  <div className="mt-4 space-y-3">
+                    <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-[var(--border)] bg-black/5 shadow-xs">
                       <img
-                        src={resolveImageSrc(image, api.API_BASE)}
+                        src={resolveImageSrc(image, api.getApiBase?.() ?? api.API_BASE)}
                         alt="Pratinjau banner"
                         className="h-full w-full object-cover object-center"
                       />
+                      <div className="absolute top-2 left-2 rounded-md bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-xs">
+                        Gambar Banner Aktif
+                      </div>
                     </div>
-                    <p className="min-w-0 flex-1 break-all text-xs leading-relaxed text-[var(--text-secondary)]">
-                      {image}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => update({ image: '' })}
-                      className="rounded-lg p-1.5 text-[var(--text-muted)] hover:bg-red-50 hover:text-red-500"
-                      aria-label="Hapus gambar banner"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
+                    <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)]/70 bg-white/70 p-3">
+                      <p className="min-w-0 flex-1 truncate font-mono text-xs text-[var(--text-secondary)]" title={image}>
+                        {image}
+                      </p>
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setIsReplacingImage(true)}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-white px-2.5 py-1.5 text-xs font-semibold text-[var(--text)] transition-colors hover:bg-[var(--accent-subtle)] hover:text-[var(--accent)] hover:border-[var(--accent)]/50"
+                        >
+                          <RefreshCw className="h-3.5 w-3.5" />
+                          Ganti Gambar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            update({ image: '' })
+                            setIsReplacingImage(false)
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-100 hover:text-red-700"
+                          aria-label="Hapus gambar banner"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          Hapus
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                ) : null}
+                ) : (
+                  <>
+                    <div className="mt-4 flex items-center justify-between gap-2">
+                      <div className="inline-flex items-center gap-1 rounded-xl bg-[var(--bg-secondary)] p-1">
+                        {(['upload', 'url'] as const).map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            onClick={() => setImageMode(item)}
+                            className={cn(
+                              'flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all',
+                              imageMode === item
+                                ? 'bg-white text-[var(--text)] shadow-xs'
+                                : 'text-[var(--text-secondary)] hover:text-[var(--text)]'
+                            )}
+                          >
+                            {item === 'upload' ? <Upload className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5" />}
+                            {item === 'upload' ? 'Upload File' : 'URL Gambar'}
+                          </button>
+                        ))}
+                      </div>
+                      {isReplacingImage ? (
+                        <button
+                          type="button"
+                          onClick={() => setIsReplacingImage(false)}
+                          className="text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text)]"
+                        >
+                          Batal Ganti
+                        </button>
+                      ) : null}
+                    </div>
+
+                    {imageMode === 'upload' ? (
+                      <label className="group mt-3 flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-[var(--border)] bg-white/60 px-4 py-7 text-center transition-colors hover:border-[var(--accent)]/50 hover:bg-[var(--accent-subtle)]/60">
+                        <span className="mb-1 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--accent-subtle)] text-[var(--accent)]">
+                          <Upload className={cn('h-5 w-5', uploading && 'animate-pulse')} />
+                        </span>
+                        <span className="text-sm font-semibold text-[var(--text)]">
+                          {uploading ? 'Mengompresi ke WebP & Mengunggah...' : 'Pilih file banner'}
+                        </span>
+                        <span className="text-xs text-[var(--text-muted)]">Otomatis dioptimasi ke WebP · JPG, PNG, atau WebP maks 5 MB</span>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                          onChange={(e) => {
+                            void handleUpload(e)
+                            setIsReplacingImage(false)
+                          }}
+                          className="hidden"
+                          disabled={uploading}
+                        />
+                      </label>
+                    ) : (
+                      <div className="relative mt-3">
+                        <Link2 className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" />
+                        <Input
+                          className={cn(FIELD_CLASS, 'pl-9')}
+                          type="url"
+                          value={image}
+                          onChange={(event) => update({ image: event.target.value })}
+                          placeholder="https://images.unsplash.com/... atau URL gambar langsung"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
               </section>
 
               {/* Ukuran Tampilan (2 Ukuran) */}

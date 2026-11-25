@@ -8,7 +8,8 @@ from src.core.dependencies import get_current_user
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("")
+@router.get("/", include_in_schema=False)
 def list_modules(user: dict[str, Any] = Depends(get_current_user)):
     mod_rows = execute_raw("SELECT id, `key`, name FROM modules ORDER BY name")
     page_rows = execute_raw(

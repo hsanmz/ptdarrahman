@@ -475,7 +475,7 @@ class TestWebhookIdempotencyAndReplayProtection:
                     "gross_amount": "250000.00",
                 }
             )
-                assert result_b["status"] == "already_paid"
+            assert result_b["status"] == "already_paid"
 
     @pytest.mark.asyncio
     async def test_wa_webhook_updates_correct_log_by_job_id_when_multiple_queued(self):

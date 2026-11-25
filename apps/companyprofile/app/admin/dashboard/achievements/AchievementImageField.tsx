@@ -5,6 +5,7 @@ import type { ChangeEvent, DragEvent } from 'react'
 import {
   AlertCircle,
   Award,
+  CheckCircle2,
   FileCheck,
   Link2,
   Loader2,
@@ -54,6 +55,7 @@ export function AchievementImageField({
   error,
 }: Props) {
   const [mode, setMode] = useState<'upload' | 'url'>('upload')
+  const [isReplacing, setIsReplacing] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [dragging, setDragging] = useState(false)
   const [fileError, setFileError] = useState('')
@@ -92,6 +94,7 @@ export function AchievementImageField({
     try {
       const uploadedUrl = await api.uploadImage(file)
       onChange(uploadedUrl)
+      setIsReplacing(false)
     } catch (e) {
       setBlobUrl('')
       const message = errorMessage(e, '')
@@ -133,6 +136,7 @@ export function AchievementImageField({
   function removeImage() {
     setBlobUrl('')
     setFileError('')
+    setIsReplacing(false)
     onChange('')
     inputRef.current?.focus()
   }
@@ -149,6 +153,9 @@ export function AchievementImageField({
       ? resolveAchievementImageSrc(value, api.API_BASE)
       : '')
 
+  const hasImage = Boolean(previewSrc)
+  const isFilledView = hasImage && !isReplacing
+
   return (
     <div className="flex h-full flex-col space-y-3">
       {/* Header Baris Kontrol */}
@@ -161,34 +168,59 @@ export function AchievementImageField({
           <span className="text-[11px] text-[var(--text-muted)]">(opsional)</span>
         </div>
 
-        {/* Tab switcher: Upload vs URL */}
-        <div className="inline-flex items-center rounded-lg bg-black/5 p-0.5">
-          <button
-            type="button"
-            onClick={() => switchMode('upload')}
-            className={cn(
-              'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all',
-              mode === 'upload'
-                ? 'bg-white text-[var(--text)] shadow-sm'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
-            )}
-          >
-            <Upload className="h-3 w-3" />
-            Unggah Berkas
-          </button>
-          <button
-            type="button"
-            onClick={() => switchMode('url')}
-            className={cn(
-              'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all',
-              mode === 'url'
-                ? 'bg-white text-[var(--text)] shadow-sm'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
-            )}
-          >
-            <Link2 className="h-3 w-3" />
-            Tautan URL
-          </button>
+        <div className="flex items-center gap-2">
+          {hasImage ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
+              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+              Sudah Terisi
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500 border border-zinc-200">
+              <AlertCircle className="h-3 w-3 text-zinc-400" />
+              Belum Ada Gambar
+            </span>
+          )}
+
+          {isReplacing && (
+            <button
+              type="button"
+              onClick={() => setIsReplacing(false)}
+              className="text-[11px] font-medium text-[var(--text-muted)] hover:text-[var(--text)]"
+            >
+              Batal Ganti
+            </button>
+          )}
+
+          {!isFilledView && (
+            <div className="inline-flex items-center rounded-lg bg-black/5 p-0.5">
+              <button
+                type="button"
+                onClick={() => switchMode('upload')}
+                className={cn(
+                  'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all',
+                  mode === 'upload'
+                    ? 'bg-white text-[var(--text)] shadow-sm'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
+                )}
+              >
+                <Upload className="h-3 w-3" />
+                Unggah Berkas
+              </button>
+              <button
+                type="button"
+                onClick={() => switchMode('url')}
+                className={cn(
+                  'flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all',
+                  mode === 'url'
+                    ? 'bg-white text-[var(--text)] shadow-sm'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text)]',
+                )}
+              >
+                <Link2 className="h-3 w-3" />
+                Tautan URL
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -203,8 +235,8 @@ export function AchievementImageField({
         tabIndex={-1}
       />
 
-      {/* Area Mode URL */}
-      {mode === 'url' ? (
+      {/* Area Mode URL ketika belum terisi atau sedang mengganti */}
+      {!isFilledView && mode === 'url' ? (
         <div className="space-y-2">
           <div className="relative">
             <Link2 className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" />
@@ -294,10 +326,10 @@ export function AchievementImageField({
 
                 <button
                   type="button"
-                  onClick={() => inputRef.current?.click()}
+                  onClick={() => setIsReplacing(true)}
                   disabled={uploading}
                   className="inline-flex items-center gap-1 rounded-lg bg-slate-800 px-2 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-700 hover:text-white transition-colors disabled:opacity-50"
-                  title="Ganti dengan berkas lain"
+                  title="Ganti dengan berkas atau URL lain"
                 >
                   <RefreshCw className={cn('h-3 w-3', uploading && 'animate-spin')} />
                   <span>Ganti</span>

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import * as api from '../api/client'
 import type { ApplicantPeriod, ApplicantWave } from '../api/client'
 import { useToast } from '../components/Toast'
+import { copyToClipboard } from '../lib/utils'
 import {
   Badge,
   Button,
@@ -90,10 +92,12 @@ function HeaderStat({
 
 export default function ApplicantsPage() {
   const { toast } = useToast()
+  const [searchParams] = useSearchParams()
+  const initialQuery = searchParams.get('q') || ''
 
   const [applicants, setApplicants] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(initialQuery)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
@@ -172,10 +176,14 @@ export default function ApplicantsPage() {
   }, [])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearch((prev) => (prev === initialQuery ? prev : initialQuery))
+  }, [initialQuery])
+
+  useEffect(() => {
+     
     fetchApplicants(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [periodFilter, waveFilter, statusFilter, paymentFilter])
+  }, [periodFilter, waveFilter, statusFilter, paymentFilter, initialQuery])
 
   const totalPages = Math.max(1, Math.ceil(total / perPage))
   const hasFilter =
@@ -669,9 +677,9 @@ export default function ApplicantsPage() {
                     variant="outline"
                     size="sm"
                     className="mt-3 w-full"
-                    onClick={() => {
-                      navigator.clipboard?.writeText(resetResult.password)
-                      toast('success', 'Password disalin')
+                    onClick={async () => {
+                      const ok = await copyToClipboard(resetResult.password)
+                      toast(ok ? 'success' : 'error', ok ? 'Password disalin' : 'Gagal menyalin password')
                     }}
                   >
                     Salin Password
