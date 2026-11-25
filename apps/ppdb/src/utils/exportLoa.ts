@@ -3,6 +3,7 @@ import {
   exportCanvasesToPdf,
   downloadCanvasAsPng,
 } from './exportDocUtils'
+import { copyToClipboard } from '../lib/utils'
 
 export interface DownloadLoaOptions {
   containerElement: HTMLElement
@@ -131,10 +132,6 @@ export async function shareLoaDoc({
     }
   }
 
-  if (navigator.clipboard) {
-    await navigator.clipboard.writeText(shareUrl)
-    return { shared: true, method: 'clipboard' }
-  }
-
-  return { shared: false, method: 'clipboard' }
+  const ok = await copyToClipboard(shareUrl)
+  return { shared: ok, method: 'clipboard' }
 }

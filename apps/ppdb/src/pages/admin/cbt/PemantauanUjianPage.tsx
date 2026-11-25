@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { cbtService, type CandidateMonitoring } from '@/services/cbtService'
 import { useToast } from '@/components/Toast'
+import { copyToClipboard } from '@/lib/utils'
 import MoveSessionDialog from '@/components/shared/MoveSessionDialog'
 import { DocTrigger } from '@repo/ui'
 import {
@@ -92,19 +93,27 @@ export default function PemantauanUjianPage() {
 
   const examUrl = `${window.location.origin}/exam/${scheduleId}`
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(examUrl)
-    setCopiedLink(true)
-    toast('success', 'Tautan ujian berhasil disalin!')
-    setTimeout(() => setCopiedLink(false), 2500)
+  const handleCopyLink = async () => {
+    const ok = await copyToClipboard(examUrl)
+    if (ok) {
+      setCopiedLink(true)
+      toast('success', 'Tautan ujian berhasil disalin!')
+      setTimeout(() => setCopiedLink(false), 2500)
+    } else {
+      toast('error', 'Gagal menyalin tautan ujian.')
+    }
   }
 
-  const handleCopyPin = () => {
+  const handleCopyPin = async () => {
     if (!schedule?.access_token) return
-    navigator.clipboard.writeText(schedule.access_token)
-    setCopiedPin(true)
-    toast('success', 'PIN Sesi berhasil disalin!')
-    setTimeout(() => setCopiedPin(false), 2500)
+    const ok = await copyToClipboard(schedule.access_token)
+    if (ok) {
+      setCopiedPin(true)
+      toast('success', 'PIN Sesi berhasil disalin!')
+      setTimeout(() => setCopiedPin(false), 2500)
+    } else {
+      toast('error', 'Gagal menyalin PIN sesi.')
+    }
   }
 
   // Filter candidates

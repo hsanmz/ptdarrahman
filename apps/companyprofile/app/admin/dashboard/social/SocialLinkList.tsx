@@ -26,9 +26,13 @@ interface Props {
  */
 async function copyText(text: string): Promise<boolean> {
   try {
-    await navigator.clipboard.writeText(text)
-    return true
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
   } catch {
+    // Fall through to legacy execCommand copy on restricted contexts
+  }
     try {
       const el = document.createElement('textarea')
       el.value = text

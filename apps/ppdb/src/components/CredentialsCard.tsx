@@ -1,6 +1,7 @@
 import { Copy } from 'lucide-react'
 import { useToast } from '@/components/Toast'
 import { Button } from '@/components/ui'
+import { copyToClipboard } from '@/lib/utils'
 
 interface CredentialsCardProps {
   username: string
@@ -12,27 +13,7 @@ export function CredentialsCard({ username, password, title = 'Akun Anda' }: Cre
   const { toast } = useToast()
 
   const copy = async (text: string, label: string) => {
-    let ok: boolean
-    let ta: HTMLTextAreaElement | null = null
-    try {
-      await navigator.clipboard.writeText(text)
-      ok = true
-    } catch {
-      try {
-        ta = document.createElement('textarea')
-        ta.value = text
-        ta.style.position = 'fixed'
-        ta.style.opacity = '0'
-        document.body.appendChild(ta)
-        ta.focus()
-        ta.select()
-        ok = document.execCommand('copy')
-      } catch {
-        ok = false
-      } finally {
-        if (ta) document.body.removeChild(ta)
-      }
-    }
+    const ok = await copyToClipboard(text)
     toast(ok ? 'success' : 'error', ok ? `${label} disalin ke clipboard` : `Gagal menyalin ${label.toLowerCase()}`)
   }
 

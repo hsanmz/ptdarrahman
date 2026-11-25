@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Copy, Loader2, Smartphone, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui'
+import { copyToClipboard } from '@/lib/utils'
 import { waCancelPairing, waGetQrSseUrl, waRequestPairingCode, getErrorMessage } from '@/api/client'
 
 export default function PhonePanel({
@@ -63,11 +64,12 @@ export default function PhonePanel({
   }
 
   const handleCopy = async () => {
-    try {
-      if (code) await navigator.clipboard.writeText(code)
+    if (!code) return
+    const ok = await copyToClipboard(code)
+    if (ok) {
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
-    } catch { /* ignore */ }
+    }
   }
 
   if (code) {

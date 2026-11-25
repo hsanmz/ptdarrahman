@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/api/client'
 import { useToast } from '@/components/Toast'
+import { copyToClipboard } from '@/lib/utils'
 import ApplicantPageHeader from '@/components/shared/ApplicantPageHeader'
 import OfficialReceiptCard, { type ReceiptData } from '@/components/shared/OfficialReceiptCard'
 import { Button, Skeleton } from '@/components/ui'
@@ -52,12 +53,12 @@ export default function ApplicantReceiptPage() {
       toast('error', 'Kuitansi belum tersedia karena belum ada pembayaran tercatat')
       return
     }
-    try {
-      await navigator.clipboard.writeText(shareUrl)
+    const ok = await copyToClipboard(shareUrl)
+    if (ok) {
       setCopied(true)
       toast('success', 'Link kuitansi berhasil disalin ke clipboard')
       setTimeout(() => setCopied(false), 2000)
-    } catch {
+    } else {
       toast('error', 'Gagal menyalin link kuitansi')
     }
   }

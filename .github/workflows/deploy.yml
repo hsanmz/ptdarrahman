@@ -52,6 +52,13 @@ jobs:
 
             echo "=== [CI/CD] 2. Re-build dan perbarui container yang berubah ==="
             if [ -f .env.ip ]; then
+              if ! grep -q "WA_SERVICE_API_KEY=" .env.ip; then
+                WA_KEY=$(openssl rand -hex 32)
+                WA_SECRET=$(openssl rand -hex 32)
+                echo "WA_SERVICE_API_KEY=${WA_KEY}" >> .env.ip
+                echo "WA_WEBHOOK_SECRET=${WA_SECRET}" >> .env.ip
+              fi
+
               $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
               
               # Tunggu sampai container API berstatus Up

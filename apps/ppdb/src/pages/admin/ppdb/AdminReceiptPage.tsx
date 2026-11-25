@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/api/client'
 import { useToast } from '@/components/Toast'
+import { copyToClipboard } from '@/lib/utils'
 import OfficialReceiptCard, { type ReceiptData } from '@/components/shared/OfficialReceiptCard'
 import {
   Button,
@@ -61,12 +62,12 @@ export default function AdminReceiptPage() {
 
   const handleCopyLink = async () => {
     if (!shareUrl) return
-    try {
-      await navigator.clipboard.writeText(shareUrl)
+    const ok = await copyToClipboard(shareUrl)
+    if (ok) {
       setCopied(true)
       toast('success', 'Link kuitansi berhasil disalin ke clipboard')
       setTimeout(() => setCopied(false), 2000)
-    } catch {
+    } else {
       toast('error', 'Gagal menyalin link kuitansi')
     }
   }

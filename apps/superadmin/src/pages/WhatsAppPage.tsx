@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AlertTriangle, CheckCircle2, XCircle, Radio, Clock, ShieldCheck } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { AlertTriangle, CheckCircle2, XCircle, Radio, Clock, ShieldCheck, Copy, Check } from 'lucide-react'
+import { cn, copyToClipboard } from '@/lib/utils'
 import {
   waGetLogs,
   waGetQueueStats,
@@ -45,6 +45,7 @@ export default function WhatsAppPage() {
 
   // Opsi login: scan QR (default) atau nomor HP + pairing code
   const [loginMethod, setLoginMethod] = useState<LoginMethod>('qr')
+  const [copiedEnv, setCopiedEnv] = useState(false)
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const initPollRef = useRef<number[]>([])
@@ -102,23 +103,37 @@ export default function WhatsAppPage() {
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
-    // Load awal + polling: setState loading di awal fetch adalah pola fetch-on-mount
-    // yang sama dengan QrPanel/ApplicantsPage — tidak bisa didefer tanpa mengubah UX.
+    // Load status & antrean saat mount; logs di-load oleh effect [logsPage, logsStatus].
     fetchSession()
     fetchQueueStats()
-    fetchLogs(1, '')
-
-    pollRef.current = setInterval(() => {
-      fetchSession(true)
-      fetchQueueStats()
-    }, 8_000)
 
     return () => {
       if (pollRef.current) clearInterval(pollRef.current)
       initPollRef.current.forEach(clearTimeout)
     }
     /* eslint-enable react-hooks/set-state-in-effect */
-  }, [fetchSession, fetchQueueStats, fetchLogs])
+  }, [fetchSession, fetchQueueStats])
+
+  useEffect(() => {
+    // Jangan polling tiap 8 detik bila WA microservice tidak dikonfigurasi.
+    if (session?.configured === false) {
+      if (pollRef.current) {
+        clearInterval(pollRef.current)
+        pollRef.current = null
+      }
+      return
+    }
+    pollRef.current = setInterval(() => {
+      fetchSession(true)
+      fetchQueueStats()
+    }, 8_000)
+    return () => {
+      if (pollRef.current) {
+        clearInterval(pollRef.current)
+        pollRef.current = null
+      }
+    }
+  }, [session?.configured, fetchSession, fetchQueueStats])
 
   useEffect(() => {
     document.documentElement.classList.add('no-scrollbar')
@@ -145,6 +160,13 @@ export default function WhatsAppPage() {
   }, [session?.status, session?.pairingCode, loginMethod])
 
   async function handleInit() {
+    if (session?.configured === false) {
+      setActionMsg({
+        type: 'error',
+        text: 'WhatsApp microservice belum dikonfigurasi di environment backend.',
+      })
+      return
+    }
     initPollRef.current.forEach(clearTimeout)
     initPollRef.current = []
     setActionLoading(true)
@@ -268,15 +290,38 @@ export default function WhatsAppPage() {
       {notConfigured && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 flex gap-4">
           <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="font-semibold text-amber-800">Konfigurasi Backend Belum Lengkap</p>
-            <p className="text-xs text-amber-700">
-              Tambahkan variabel berikut ke <code className="bg-amber-100 px-1 rounded">apps/api/.env</code>:
+          <div className="space-y-2 flex-1">
+            <p className="font-semibold text-amber-800">Konfigurasi Gateway WhatsApp Belum Lengkap</p>
+            <p className="text-xs text-amber-700 leading-relaxed">
+              Gateway WhatsApp belum dikonfigurasi di backend. Pastikan variabel lingkungan berikut telah disetel:
             </p>
-            <pre className="mt-2 rounded-lg bg-amber-100 p-2.5 text-xs font-mono text-amber-900 whitespace-pre-wrap">
-{`WA_SERVICE_URL=http://localhost:3100
+            <div className="relative mt-2">
+              <pre className="rounded-lg bg-amber-100 p-3 text-xs font-mono text-amber-900 whitespace-pre-wrap">
+{`# Produksi VPS (Docker IP / Nginx Mode):
+WA_SERVICE_URL=http://whatsapp:3100
+WA_SERVICE_API_KEY=<api-key-yang-sama-dengan-apps/whatsapp/.env>
+
+# Pengembangan Lokal (Non-Docker):
+WA_SERVICE_URL=http://localhost:3100
 WA_SERVICE_API_KEY=<api-key-yang-sama-dengan-apps/whatsapp/.env>`}
-            </pre>
+              </pre>
+              <button
+                type="button"
+                onClick={async () => {
+                  const snippet = 'WA_SERVICE_URL=http://whatsapp:3100\nWA_SERVICE_API_KEY='
+                  const ok = await copyToClipboard(snippet)
+                  if (ok) {
+                    setCopiedEnv(true)
+                    setTimeout(() => setCopiedEnv(false), 2000)
+                  }
+                }}
+                className="absolute top-2 right-2 inline-flex items-center gap-1 rounded bg-amber-200/80 px-2 py-1 text-[11px] font-medium text-amber-800 hover:bg-amber-300 transition-colors"
+                title="Salin template konfigurasi"
+              >
+                {copiedEnv ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+                {copiedEnv ? 'Disalin' : 'Salin'}
+              </button>
+            </div>
           </div>
         </div>
       )}

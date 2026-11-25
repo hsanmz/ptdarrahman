@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { DocTrigger } from '@repo/ui'
+import { copyToClipboard } from '@/lib/utils'
 import {
   cbtService,
   type BankScheduleShare,
@@ -302,19 +303,19 @@ export default function BankSoalDetailPage() {
       .join('\n')
 
   const copyShareLink = async (s: BankScheduleShare) => {
-    try {
-      await navigator.clipboard.writeText(examLinkOf(s))
+    const ok = await copyToClipboard(examLinkOf(s))
+    if (ok) {
       toast('success', 'Link akses ujian disalin. Bagikan ke peserta.')
-    } catch {
+    } else {
       toast('error', 'Gagal menyalin link akses ujian.')
     }
   }
 
   const copyShareText = async (s: BankScheduleShare) => {
-    try {
-      await navigator.clipboard.writeText(shareTextOf(s))
+    const ok = await copyToClipboard(shareTextOf(s))
+    if (ok) {
       toast('success', 'Teks akses ujian disalin, siap ditempel ke peserta.')
-    } catch {
+    } else {
       toast('error', 'Gagal menyalin teks akses ujian.')
     }
   }
@@ -333,8 +334,10 @@ export default function BankSoalDetailPage() {
           url: examLinkOf(s),
         })
       } else {
-        await navigator.clipboard.writeText(text)
-        toast('success', 'Teks akses ujian disalin, siap ditempel ke peserta.')
+        const ok = await copyToClipboard(text)
+        if (ok) {
+          toast('success', 'Teks akses ujian disalin, siap ditempel ke peserta.')
+        }
       }
     } catch {
       // Dibatalkan pengguna

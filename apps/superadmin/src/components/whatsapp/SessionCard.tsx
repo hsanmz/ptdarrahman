@@ -23,6 +23,7 @@ import {
   Check,
 } from 'lucide-react'
 import { waGetQrRaw, waGetQrSseUrl, waRequestPairingCode, type WAProxyStatus } from '../../api/client'
+import { copyToClipboard } from '../../lib/utils'
 import type { LoginMethod } from './constants'
 
 interface Props {
@@ -101,12 +102,14 @@ export default function SessionCard(props: Props) {
   const [pairingError, setPairingError] = useState('')
   const [copiedCode, setCopiedCode] = useState(false)
 
+  const isConfigured = props.session?.configured !== false
+
   useEffect(() => {
     let alive = true
     const currentStatus = props.session?.status || ''
     const isTransitional = ['initializing', 'authenticated', 'qr'].includes(currentStatus)
 
-    if (props.isReady || !isTransitional) {
+    if (!isConfigured || props.isReady || !isTransitional) {
       if (!isTransitional) setQr('')
       return
     }
@@ -183,9 +186,13 @@ export default function SessionCard(props: Props) {
         es = null
       }
     }
-  }, [props.session?.status, props.loginMethod, props.isReady, props.onRefreshStatus])
+  }, [isConfigured, props.session?.status, props.loginMethod, props.isReady, props.onRefreshStatus])
 
   async function requestCode() {
+    if (!isConfigured) {
+      setPairingError('Layanan WhatsApp belum dikonfigurasi di backend.')
+      return
+    }
     if (!phone.trim()) {
       setPairingError('Masukkan nomor WhatsApp terlebih dahulu.')
       return
@@ -202,10 +209,11 @@ export default function SessionCard(props: Props) {
     }
   }
 
-  function copyCode(code: string) {
-    navigator.clipboard.writeText(code)
-    setCopiedCode(true)
-    setTimeout(() => setCopiedCode(false), 2000)
+  async function copyCode(code: string) {
+    if (await copyToClipboard(code)) {
+      setCopiedCode(true)
+      setTimeout(() => setCopiedCode(false), 2000)
+    }
   }
 
   const { badge } = getStatusIndicator(props.statusLabel, props.isReady)
@@ -300,11 +308,13 @@ export default function SessionCard(props: Props) {
                 ) : (
                   <div className="py-4 space-y-3">
                     <p className="text-xs text-slate-500">
-                      Sesi belum aktif. Klik tombol di bawah untuk memulai sesi WhatsApp.
+                      {isConfigured
+                        ? 'Sesi belum aktif. Klik tombol di bawah untuk memulai sesi WhatsApp.'
+                        : 'Gateway WhatsApp belum dikonfigurasi pada backend server.'}
                     </p>
                     <Button
                       onClick={props.onInit}
-                      disabled={props.actionLoading}
+                      disabled={props.actionLoading || !isConfigured}
                       className="gap-2 h-9 text-xs"
                     >
                       <RefreshCw className={`h-3.5 w-3.5 ${props.actionLoading ? 'animate-spin' : ''}`} />
@@ -334,12 +344,12 @@ export default function SessionCard(props: Props) {
                       onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
                       placeholder="6281234567890"
                       className="h-8.5 text-xs font-mono bg-white"
-                      disabled={pairingLoading}
+                      disabled={pairingLoading || !isConfigured}
                     />
                     <Button
                       size="sm"
                       onClick={() => void requestCode()}
-                      disabled={pairingLoading || !phone.trim() || props.isReady}
+                      disabled={pairingLoading || !phone.trim() || props.isReady || !isConfigured}
                       className="h-8.5 px-3 text-xs shrink-0 gap-1.5"
                     >
                       <KeyRound className={`h-3.5 w-3.5 ${pairingLoading ? 'animate-spin' : ''}`} />

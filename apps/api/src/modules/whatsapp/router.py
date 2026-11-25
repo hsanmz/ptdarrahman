@@ -19,6 +19,7 @@ POST /whatsapp/disconnect    — logout & reset sesi
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import math
 from typing import Any
@@ -186,24 +187,28 @@ async def whatsapp_status(
     health: dict[str, Any] | None = None
     status_error: str | None = None
 
-    async with httpx.AsyncClient(timeout=6.0) as client:
-        try:
-            r = await client.get(f"{_wa_base()}/api/session", headers=_wa_headers())
-            if r.status_code == 200:
-                payload = r.json()
-                session = payload.get("data") if isinstance(payload, dict) else None
-            else:
-                status_error = f"WA microservice menjawab {r.status_code}"
-        except httpx.HTTPError as exc:
-            logger.warning("WA session fetch failed: %s", exc)
-            status_error = None
+    async with httpx.AsyncClient(timeout=3.0) as client:
+        sess_res, health_res = await asyncio.gather(
+            client.get(f"{_wa_base()}/api/session", headers=_wa_headers()),
+            client.get(f"{_wa_base()}/health/detailed", headers=_wa_headers()),
+            return_exceptions=True,
+        )
 
+    if isinstance(sess_res, BaseException):
+        logger.warning("WA session fetch failed: %s", sess_res)
+        status_error = None
+    elif getattr(sess_res, "status_code", None) == 200:
+        payload = sess_res.json()
+        session = payload.get("data") if isinstance(payload, dict) else None
+    else:
+        sc = getattr(sess_res, "status_code", "error")
+        status_error = f"WA microservice menjawab {sc}"
+
+    if not isinstance(health_res, BaseException) and getattr(health_res, "status_code", None) in (200, 503):
         try:
-            h = await client.get(f"{_wa_base()}/health/detailed", headers=_wa_headers())
-            if h.status_code in (200, 503):
-                health = h.json()
-        except httpx.HTTPError:
-            pass
+            health = health_res.json()
+        except Exception:
+            health = None
 
     webhook_url: str | None = None
     if health and isinstance(health.get("webhookUrl"), str):
@@ -427,23 +432,41 @@ async def whatsapp_queue(
     user: dict[str, Any] = Depends(require_superadmin),
 ) -> JSONResponse:
     """Statistik antrean pesan dari BullMQ (graceful fallback saat offline)."""
-    try:
-        resp = await _proxy_json("GET", "/api/messages/queue", timeout=4.0)
-        return _json_response(resp)
-    except Exception:
-        return JSONResponse(
-            status_code=200,
-            content={
-                "success": True,
-                "data": {
-                    "waiting": 0,
-                    "active": 0,
-                    "completed": 0,
-                    "failed": 0,
-                    "delayed": 0,
-                },
+    if _wa_configured():
+        try:
+            resp = await _proxy_json("GET", "/api/messages/queue", timeout=3.0)
+            return _json_response(resp)
+        except Exception:
+            pass
+    return JSONResponse(
+        status_code=200,
+        content={
+            "success": True,
+            "data": {
+                "waiting": 0,
+                "active": 0,
+                "completed": 0,
+                "failed": 0,
+                "delayed": 0,
             },
-        )
+        },
+    )
+
+
+def _query_wa_logs_from_db(
+    where_sql: str, params_dict: dict[str, Any], per_page: int, offset: int
+) -> tuple[int, list[dict[str, Any]]]:
+    count_rows = execute_raw(
+        f"SELECT COUNT(id) AS total FROM notification_logs {where_sql}", params_dict
+    )
+    total = int(count_rows[0]["total"]) if count_rows else 0
+    query_params = {**params_dict, "limit": per_page, "offset": offset}
+    data_sql = (
+        f"SELECT * FROM notification_logs {where_sql} "
+        "ORDER BY created_at DESC LIMIT :limit OFFSET :offset"
+    )
+    rows = execute_raw(data_sql, query_params) or []
+    return total, rows
 
 
 @router.get("/logs")
@@ -458,19 +481,20 @@ async def whatsapp_logs(
 
     Coba microservice dahulu, fallback ke MySQL.
     """
-    try:
-        params: dict[str, Any] = {"page": page, "perPage": perPage}
-        if status:
-            params["status"] = status
-        if eventKey:
-            params["eventKey"] = eventKey
-        resp = await _proxy_json(
-            "GET", "/api/messages/logs", params=params, timeout=4.0
-        )
-        if resp.status_code == 200:
-            return _json_response(resp)
-    except Exception:
-        pass
+    if _wa_configured():
+        try:
+            params: dict[str, Any] = {"page": page, "perPage": perPage}
+            if status:
+                params["status"] = status
+            if eventKey:
+                params["eventKey"] = eventKey
+            resp = await _proxy_json(
+                "GET", "/api/messages/logs", params=params, timeout=3.0
+            )
+            if resp.status_code == 200:
+                return _json_response(resp)
+        except Exception:
+            pass
 
     # Fallback ke tabel MySQL notification_logs
     where_clauses = [
@@ -485,17 +509,10 @@ async def whatsapp_logs(
         params_dict["eventKey"] = eventKey
     where_sql = f"WHERE {' AND '.join(where_clauses)}"
 
-    count_rows = execute_raw(
-        f"SELECT COUNT(id) AS total FROM notification_logs {where_sql}", params_dict
-    )
-    total = int(count_rows[0]["total"]) if count_rows else 0
-
     offset = (page - 1) * perPage
-    data_sql = (
-        f"SELECT * FROM notification_logs {where_sql} "
-        f"ORDER BY created_at DESC LIMIT {perPage} OFFSET {offset}"
+    total, rows = await asyncio.to_thread(
+        _query_wa_logs_from_db, where_sql, params_dict, perPage, offset
     )
-    rows = execute_raw(data_sql, params_dict) or []
 
     data = [
         {
@@ -509,12 +526,12 @@ async def whatsapp_logs(
             "retry_count": r.get("retry_count") or 0,
             "error_message": r.get("error_message"),
             "wa_message_id": r.get("wa_message_id"),
-            "created_at": r.get("created_at").isoformat()
-            if hasattr(r.get("created_at"), "isoformat")
-            else str(r.get("created_at")),
-            "sent_at": r.get("sent_at").isoformat()
-            if hasattr(r.get("sent_at"), "isoformat")
-            else (str(r.get("sent_at")) if r.get("sent_at") else None),
+            "created_at": r["created_at"].isoformat()
+            if r.get("created_at") and hasattr(r["created_at"], "isoformat")
+            else (str(r["created_at"]) if r.get("created_at") else None),
+            "sent_at": r["sent_at"].isoformat()
+            if r.get("sent_at") and hasattr(r["sent_at"], "isoformat")
+            else (str(r["sent_at"]) if r.get("sent_at") else None),
         }
         for r in rows
     ]

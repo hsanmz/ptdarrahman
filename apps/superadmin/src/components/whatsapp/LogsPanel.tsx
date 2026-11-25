@@ -24,6 +24,7 @@ import {
   Check,
 } from 'lucide-react'
 import type { WALogEntry } from '../../api/client'
+import { copyToClipboard } from '../../lib/utils'
 import { LOG_STATUSES, formatWhatsAppStatus } from './constants'
 
 interface Props {
@@ -114,10 +115,11 @@ export default function LogsPanel({
     )
   })
 
-  function copyText(text: string) {
-    navigator.clipboard.writeText(text)
-    setCopiedId(true)
-    setTimeout(() => setCopiedId(false), 2000)
+  async function copyText(text: string) {
+    if (await copyToClipboard(text)) {
+      setCopiedId(true)
+      setTimeout(() => setCopiedId(false), 2000)
+    }
   }
 
   return (

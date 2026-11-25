@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, Button, Badge } from "@/components/ui"
 import ReceiptQrCode from '@/components/shared/ReceiptQrCode'
-import { cn } from '@/lib/utils'
+import { cn, copyToClipboard } from '@/lib/utils'
 import { useToast } from '@/components/Toast'
 
 const formatRp = (n: number) => 'Rp ' + (n || 0).toLocaleString('id-ID')
@@ -63,12 +63,12 @@ export default function PaymentStep({ transaction, applicant }: PaymentStepProps
       toast('error', 'Kuitansi belum tersedia karena belum ada pembayaran tercatat')
       return
     }
-    try {
-      await navigator.clipboard.writeText(shareText)
+    const ok = await copyToClipboard(shareText)
+    if (ok) {
       setCopied(true)
       toast('success', 'Kuitansi disalin ke clipboard')
       setTimeout(() => setCopied(false), 2000)
-    } catch {
+    } else {
       toast('error', 'Gagal menyalin kuitansi')
     }
   }

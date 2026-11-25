@@ -115,6 +115,13 @@ if [ -f .env.ip ]; then
   if ! grep -q 'MIDTRANS_SERVER_KEY=..*' .env.ip; then
     sed -i 's/APP_ENV=production/APP_ENV=development/' .env.ip
   fi
+  if ! grep -q 'WA_SERVICE_API_KEY=' .env.ip; then
+    WA_KEY=$(openssl rand -hex 32)
+    WA_SECRET=$(openssl rand -hex 32)
+    echo "WA_SERVICE_API_KEY=${WA_KEY}" >> .env.ip
+    echo "WA_WEBHOOK_SECRET=${WA_SECRET}" >> .env.ip
+    log_ok "Variabel WhatsApp (WA_SERVICE_API_KEY & WA_WEBHOOK_SECRET) ditambahkan ke .env.ip"
+  fi
   set -a
   # shellcheck disable=SC1091
   source .env.ip
@@ -127,6 +134,8 @@ else
   MYSQL_USER_PASS="${MYSQL_PASSWORD:-ptdarrahman_pass_$(openssl rand -hex 4)}"
   JWT_SECRET_KEY=$(openssl rand -hex 32)
   CRON_SECRET_KEY=$(openssl rand -hex 16)
+  WA_KEY=$(openssl rand -hex 32)
+  WA_SECRET=$(openssl rand -hex 32)
 
   cat > .env.ip <<EOF
 PUBLIC_IP=${PUBLIC_IP}
@@ -141,6 +150,8 @@ APP_ENV=development
 MIDTRANS_SERVER_KEY=
 MIDTRANS_CLIENT_KEY=
 MIDTRANS_IS_PRODUCTION=false
+WA_SERVICE_API_KEY=${WA_KEY}
+WA_WEBHOOK_SECRET=${WA_SECRET}
 EOF
   log_ok "File .env.ip berhasil dibuat."
 fi
@@ -186,6 +197,7 @@ echo -e "  👥 2. Portal PPDB     : ${COLOR_CYAN}http://${PUBLIC_IP}:5174${COLO
 echo -e "  🛡️ 3. Superadmin Panel : ${COLOR_CYAN}http://${PUBLIC_IP}:5173${COLOR_RESET}"
 echo -e "  ⚡ 4. Backend API Docs : ${COLOR_CYAN}http://${PUBLIC_IP}:8000/docs${COLOR_RESET}"
 echo -e "  🗄️ 5. Database UI (PMA): ${COLOR_CYAN}http://${PUBLIC_IP}:8085${COLOR_RESET}"
+echo -e "  💬 6. WhatsApp Gateway : ${COLOR_CYAN}Internal :3100 (Kelola via Superadmin :5173/whatsapp)${COLOR_RESET}"
 echo
 echo -e "Kredensial Login phpMyAdmin (Port 8085):"
 echo -e "  - Server   : mysql"
