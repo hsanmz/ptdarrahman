@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_SSH_PORT || 22 }}
           timeout: 60s
-          command_timeout: 30m
+          command_timeout: 60m
           script_stop: true
           script: |
             echo "=== [CI/CD] 1. Mengambil pembaruan kode terbaru dari Git ==="
@@ -47,8 +47,7 @@ jobs:
               fi
             fi
 
-            echo "=== [CI/CD] 0. Membersihkan disk & cache Docker sebelum build ==="
-            $DOCKER_CMD builder prune -af >/dev/null 2>&1 || true
+            echo "=== [CI/CD] 0. Membersihkan container mati, image usang, dan log sistem ==="
             $DOCKER_CMD image prune -f >/dev/null 2>&1 || true
             $DOCKER_CMD container prune -f >/dev/null 2>&1 || true
             sudo -n journalctl --vacuum-size=20M >/dev/null 2>&1 || true
@@ -82,10 +81,6 @@ jobs:
                 } || true
               fi
 
-              # Build frontend secara terpisah lalu rapikan cache agar puncak disk minimal
-              $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml build frontend
-              $DOCKER_CMD builder prune -f >/dev/null 2>&1 || true
-
               $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
               
               # Tunggu sampai container API berstatus Up
@@ -115,9 +110,6 @@ jobs:
                   echo "WA_WEBHOOK_SECRET=${WA_SECRET}" | sudo -n tee -a .env.prod >/dev/null 2>&1 || true
                 } || true
               fi
-
-              $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml build frontend
-              $DOCKER_CMD builder prune -f >/dev/null 2>&1 || true
 
               $DOCKER_CMD compose --env-file .env.prod -f docker-compose.prod.yml up -d --build --force-recreate
               
