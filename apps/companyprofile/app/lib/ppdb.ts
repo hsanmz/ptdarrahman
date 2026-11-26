@@ -37,9 +37,9 @@ export interface ActivePpdbWave {
 /** Gelombang aktif, atau `null` bila belum ada / API tidak terjangkau. */
 export async function fetchActivePpdbWave(): Promise<ActivePpdbWave | null> {
   try {
-    // `next` diabaikan browser, dipakai Next.js untuk cache server-side.
+    // Server-side fetch wave aktif PPDB selalu up-to-date (no-store).
     const res = await fetch(`${PPDB_API_BASE}/ppdb/waves/active-public`, {
-      next: { revalidate: 60 },
+      cache: 'no-store',
     })
     if (!res.ok) return null
     const data = (await res.json()) as ActivePpdbWave

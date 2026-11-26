@@ -175,8 +175,8 @@ async function tryRefresh(): Promise<string | null> {
 }
 
 async function fetchApi<T>(endpoint: string, opts?: RequestInit): Promise<T> {
-  const finalOpts: RequestInit = { next: { revalidate: 60 }, ...opts }
-  if (opts?.cache) delete finalOpts.next
+  const finalOpts: RequestInit = { cache: 'no-store', ...opts }
+  if (opts?.next) delete finalOpts.cache
 
   const res = await fetchWithFallback(`${getApiBase()}/companyprofile${endpoint}`, finalOpts)
   if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)

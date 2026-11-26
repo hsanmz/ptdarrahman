@@ -8,6 +8,9 @@ import ScrollProgress from "@/app/components/ui/ScrollProgress"
 import ScrollToTop from "@/app/components/ui/ScrollToTop"
 import { getProgramsCached, getSettings } from "@/app/lib/api"
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function MainLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

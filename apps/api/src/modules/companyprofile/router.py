@@ -62,6 +62,7 @@ TABLES = {
     "about": "about_content",
     "faq": "faq_items",
     "ppdb": "ppdb_content",
+    "ppdb-content": "ppdb_content",
 }
 
 PUBLIC_SETTINGS_KEYS = {
