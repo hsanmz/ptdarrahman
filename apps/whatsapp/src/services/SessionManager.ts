@@ -64,16 +64,31 @@ export class SessionManager extends EventEmitter {
   /**
    * Initialize WhatsApp client.
    * Safe to call multiple times — idempotent.
+   * @param force Paksa destroy sesi lama & bersihkan lock bila sebelumnya gagal/stuck.
    */
-  async initialize(): Promise<void> {
-    if (this.client && this.sessionInfo.status !== "destroyed") {
+  async initialize(force = false): Promise<void> {
+    if (!force && this.client && this.sessionInfo.status !== "destroyed") {
       logger.info("[Session] Already initialized, skipping");
       return;
     }
 
-    if (this.initializePromise) {
+    if (!force && this.initializePromise) {
       logger.info("[Session] Initialization already in progress, awaiting...");
       return this.initializePromise;
+    }
+
+    this.clearReconnectTimer();
+
+    if (this.client) {
+      logger.info("[Session] Membersihkan client sebelumnya sebelum inisialisasi ulang...");
+      try {
+        await this.client.destroy();
+      } catch (err) {
+        logger.debug("[Session] Error destroying previous client during re-init", {
+          error: (err as Error).message,
+        });
+      }
+      this.client = null;
     }
 
     logger.info("[Session] Initializing WhatsApp client...");
@@ -135,10 +150,22 @@ export class SessionManager extends EventEmitter {
         const msg = (err as Error).message;
         logger.error("[Session] Failed to initialize client", { error: msg });
         this.updateStatus("disconnected", { lastError: msg });
-        // Lepas client yang gagal: kalau tidak, initialize() berikutnya
-        // short-circuit ("Already initialized") dan sesi tidak bisa dipulihkan
-        // tanpa restart container.
-        this.client = null;
+
+        // Lepas client yang gagal & pastikan browser instance di-destroy agar tidak jadi zombie
+        if (this.client) {
+          try {
+            await this.client.destroy();
+          } catch (destroyErr) {
+            logger.debug("[Session] Error destroying failed client", {
+              error: (destroyErr as Error).message,
+            });
+          }
+          this.client = null;
+        }
+
+        // Bersihkan lock Chromium yang mungkin dibuat sebelum crash
+        this.clearStaleChromiumProfileLock();
+
         if (!this.isShuttingDown) {
           this.scheduleReconnect();
         }
@@ -380,12 +407,13 @@ export class SessionManager extends EventEmitter {
   }
 
   /**
-   * Chromium menolak start dengan `Code: 21` kalau `SingletonLock` di profile
-   * menunjuk ke host lain. Di Docker, `wa_session` persisten memakai volume:
-   * begitu container di-recreate, hostname berubah tetapi lock lama tetap ada →
-   * sesi WA tidak bisa start selamanya ("The profile appears to be in use by
-   * another Chromium process on another computer"). Hapus lock yang sudah stale
-   * (hostname beda / pid mati) sebelum launch.
+   * Chromium menolak start dengan `Code: 21` atau error:
+   * "The browser is already running for <userDataDir>..."
+   * kalau `SingletonLock` / `SingletonSocket` / `DevToolsActivePort` di profile masih ada.
+   *
+   * Di Docker volume, file ini sering tertinggal saat crash/restart mendadak,
+   * atau jika ada proses Chromium zombie yang menggantung.
+   * Fungsi ini mematikan proses zombie tersebut dan menghapus semua file lock sebelum launch.
    */
   private clearStaleChromiumProfileLock(): void {
     const dataPath = path.resolve(env.WA_SESSION_PATH);
@@ -395,10 +423,12 @@ export class SessionManager extends EventEmitter {
     if (fs.existsSync(preferred)) profileDirs.push(preferred);
 
     try {
-      for (const entry of fs.readdirSync(dataPath, { withFileTypes: true })) {
-        if (!entry.isDirectory()) continue;
-        const dir = path.join(dataPath, entry.name);
-        if (dir !== preferred) profileDirs.push(dir);
+      if (fs.existsSync(dataPath)) {
+        for (const entry of fs.readdirSync(dataPath, { withFileTypes: true })) {
+          if (!entry.isDirectory()) continue;
+          const dir = path.join(dataPath, entry.name);
+          if (dir !== preferred) profileDirs.push(dir);
+        }
       }
     } catch (err) {
       logger.debug("[Session] Tidak bisa scan dataPath WA session", {
@@ -409,45 +439,80 @@ export class SessionManager extends EventEmitter {
     for (const dir of profileDirs) {
       this.removeStaleLockIn(dir);
     }
+
+    // Bersihkan juga socket domain UNIX di /tmp yang ditinggalkan Chromium
+    try {
+      if (fs.existsSync("/tmp")) {
+        const tmpFiles = fs.readdirSync("/tmp");
+        for (const file of tmpFiles) {
+          if (file.startsWith("org.chromium.Chromium.") || file.startsWith(".org.chromium.Chromium.")) {
+            try {
+              fs.rmSync(path.join("/tmp", file), { recursive: true, force: true });
+            } catch {
+              // ignore
+            }
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
   }
 
   private removeStaleLockIn(profileDir: string): void {
     const lockPath = path.join(profileDir, "SingletonLock");
-    let lockTarget: string;
+    let lockTarget = "";
     try {
       lockTarget = fs.readlinkSync(lockPath);
     } catch {
-      // Lock tidak ada (atau bukan symlink) — tidak ada yang perlu dibersihkan.
-      return;
+      // Bukan symlink, atau file tidak ada / error readlink
     }
 
-    const separator = lockTarget.lastIndexOf("-");
-    const host = separator === -1 ? lockTarget : lockTarget.slice(0, separator);
-    const pid = Number(separator === -1 ? "" : lockTarget.slice(separator + 1));
-    const sameHost = host === os.hostname();
-    const alive = sameHost && Number.isInteger(pid) && pid > 0 ? this.isPidAlive(pid) : false;
+    if (lockTarget) {
+      const separator = lockTarget.lastIndexOf("-");
+      const host = separator === -1 ? lockTarget : lockTarget.slice(0, separator);
+      const pid = Number(separator === -1 ? "" : lockTarget.slice(separator + 1));
+      const sameHost = host === os.hostname();
+      const alive = sameHost && Number.isInteger(pid) && pid > 0 ? this.isPidAlive(pid) : false;
 
-    if (sameHost && alive) {
-      logger.warn("[Session] SingletonLock dipakai proses lain — dibiarkan apa adanya", {
-        lock: lockTarget,
-      });
-      return;
-    }
-
-    for (const name of ["SingletonLock", "SingletonSocket", "SingletonCookie"]) {
-      try {
-        fs.rmSync(path.join(profileDir, name), { force: true });
-      } catch (err) {
-        logger.warn("[Session] Gagal hapus stale Chromium lock", {
-          file: name,
-          error: (err as Error).message,
+      // Jika ada proses Chromium lama yang masih hidup di host/container ini,
+      // bunuh proses zombie tersebut karena sesi baru sedang dimulai!
+      if (sameHost && alive && pid !== process.pid) {
+        logger.warn("[Session] Mematikan proses Chromium lama yang menggantung", {
+          pid,
+          lock: lockTarget,
         });
+        try {
+          process.kill(pid, "SIGKILL");
+        } catch {
+          // ignore
+        }
       }
     }
-    logger.warn("[Session] Stale Chromium lock dibersihkan (container/host berubah)", {
-      profile: profileDir,
-      lock: lockTarget,
-    });
+
+    // Hapus SEMUA file lock Chromium tanpa syarat (baik symlink maupun regular file)
+    const lockFiles = [
+      "SingletonLock",
+      "SingletonSocket",
+      "SingletonCookie",
+      "DevToolsActivePort",
+      "lockfile",
+    ];
+
+    for (const name of lockFiles) {
+      const target = path.join(profileDir, name);
+      try {
+        fs.rmSync(target, { force: true, recursive: true });
+      } catch {
+        try {
+          fs.unlinkSync(target);
+        } catch {
+          // ignore
+        }
+      }
+    }
+
+    logger.info("[Session] Chromium profile locks dibersihkan", { profile: profileDir });
   }
 
   private isPidAlive(pid: number): boolean {

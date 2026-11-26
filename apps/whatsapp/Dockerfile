@@ -67,7 +67,7 @@ COPY --from=builder --chown=ppuser:ppuser /app/node_modules ./node_modules
 COPY --chown=ppuser:ppuser package.json ./
 
 # Buat direktori yang dibutuhkan
-RUN mkdir -p /app/wa-session /app/logs && chown -R ppuser:ppuser /app
+RUN mkdir -p /app/wa-session /app/logs && chmod 777 /app/wa-session /app/logs && chown -R ppuser:ppuser /app
 
 USER ppuser
 

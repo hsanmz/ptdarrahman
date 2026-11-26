@@ -53,6 +53,7 @@ jobs:
             sudo -n journalctl --vacuum-size=20M >/dev/null 2>&1 || true
             sudo -n apt-get clean >/dev/null 2>&1 || true
             sudo -n rm -rf /tmp/* /var/tmp/* 2>/dev/null || true
+            sudo -n sh -c 'truncate -s 0 /var/lib/docker/containers/*/*-json.log' >/dev/null 2>&1 || true
 
             echo "Kapasitas disk sebelum pembaruan:"
             df -h /
@@ -61,8 +62,8 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
-            # Bersihkan cache lokal host (turbo, mypy, venv lama, ignored node_modules)
-            rm -rf .turbo .mypy_cache apps/api/.venv* apps/*/node_modules/.ignored bin/dotenvx 2>/dev/null || true
+            # Di host VPS, node_modules dan cache lokal di luar Docker sama sekali tidak dibutuhkan
+            rm -rf node_modules apps/*/node_modules .turbo .mypy_cache apps/api/.venv* bin/dotenvx 2>/dev/null || true
 
             # Pastikan hak akses direktori kerja dimiliki oleh user aktif
             sudo -n chown -R "$USER:$USER" . 2>/dev/null || true
@@ -131,6 +132,7 @@ jobs:
 
             echo "=== [CI/CD] 3. Membersihkan cache Docker agar storage 20GB tetap lega ==="
             $DOCKER_CMD image prune -f >/dev/null 2>&1 || true
+            $DOCKER_CMD builder prune -af --filter type=exec.cachemount >/dev/null 2>&1 || true
             $DOCKER_CMD builder prune -af >/dev/null 2>&1 || true
 
             echo "Kapasitas disk setelah selesai:"

@@ -47,8 +47,8 @@ router.post("/init", async (_req: Request, res: Response) => {
     return;
   }
 
-  // Non-blocking init
-  sessionManager.initialize().catch((err) => {
+  // Non-blocking init dengan force=true (membersihkan proses zombie/lock bila sebelumnya macet)
+  sessionManager.initialize(true).catch((err) => {
     logger.error("[Route] Session init error", { error: (err as Error).message });
   });
 
