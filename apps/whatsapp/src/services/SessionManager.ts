@@ -90,6 +90,9 @@ export class SessionManager extends EventEmitter {
       "--window-size=1280,720",
       "--no-first-run",
       "--disable-crash-reporter",
+      "--disk-cache-size=10485760",
+      "--media-cache-size=10485760",
+      "--aggressive-cache-discard",
     ];
 
     if (process.platform === "linux") {

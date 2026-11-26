@@ -87,6 +87,7 @@ const allowLocalIp = [
 ].includes(apiImageHostname);
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   turbopack: {
     root: path.resolve(__dirname, "../../"),
   },

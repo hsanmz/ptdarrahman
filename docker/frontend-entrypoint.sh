@@ -9,26 +9,23 @@
 set -euo pipefail
 
 echo "──────────────────────────────────────────────"
-echo " PTDARRAHMAN — Frontend container (UI only)"
-echo "   companyprofile : http://0.0.0.0:3000"
-echo "   superadmin     : http://0.0.0.0:5173"
-echo "   ppdb           : http://0.0.0.0:5174"
+echo " PTDARRAHMAN — Frontend container (Optimized Standalone)"
+echo "   companyprofile : http://0.0.0.0:3000 (Next.js Standalone)"
+echo "   superadmin     : http://0.0.0.0:5173 (Static SPA)"
+echo "   ppdb           : http://0.0.0.0:5174 (Static SPA)"
 echo "──────────────────────────────────────────────"
 
-cd /workspace/apps/companyprofile
-node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000 &
+node /workspace/apps/companyprofile/server.js &
 PID_NEXT=$!
-echo "[frontend] companyprofile (Next.js) → :3000 (pid $PID_NEXT)"
+echo "[frontend] companyprofile (Next.js Standalone) → :3000 (pid $PID_NEXT)"
 
-cd /workspace/apps/superadmin
-node node_modules/vite/bin/vite.js preview --host 0.0.0.0 --port 5173 &
+node /usr/local/bin/spa-server.js 5173 /workspace/apps/superadmin/dist &
 PID_SUPER=$!
-echo "[frontend] superadmin → :5173 (pid $PID_SUPER)"
+echo "[frontend] superadmin (Static SPA) → :5173 (pid $PID_SUPER)"
 
-cd /workspace/apps/ppdb
-node node_modules/vite/bin/vite.js preview --host 0.0.0.0 --port 5174 &
+node /usr/local/bin/spa-server.js 5174 /workspace/apps/ppdb/dist &
 PID_PPDB=$!
-echo "[frontend] ppdb → :5174 (pid $PID_PPDB)"
+echo "[frontend] ppdb (Static SPA) → :5174 (pid $PID_PPDB)"
 
 # Tunggu proses pertama yang berhenti. Jika ada yang crash, seluruh container berhenti
 # (sinyal ke orkestrator untuk restart), agar UI tidak tampil separuh-separuh.

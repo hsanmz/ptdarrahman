@@ -61,6 +61,9 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            # Bersihkan cache lokal host (turbo, mypy, venv lama, ignored node_modules)
+            rm -rf .turbo .mypy_cache apps/api/.venv* apps/*/node_modules/.ignored bin/dotenvx 2>/dev/null || true
+
             # Pastikan hak akses direktori kerja dimiliki oleh user aktif
             sudo -n chown -R "$USER:$USER" . 2>/dev/null || true
 

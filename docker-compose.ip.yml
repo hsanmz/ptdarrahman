@@ -15,12 +15,19 @@
 
 name: ptarrahman-ip
 
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   # ── 1. MySQL 8.0 (Database Lokal VPS) ──────────────────────────────────────
   mysql:
     image: mysql:8.0
     container_name: ptd-mysql
     restart: unless-stopped
+    logging: *default-logging
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ptdarrahman_root_pass}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-ptdarrahman}
@@ -59,12 +66,14 @@ services:
       mysql:
         condition: service_healthy
     mem_limit: 128m
+    logging: *default-logging
 
   # ── 3. Redis (Cache & Session Rate Limit) ──────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: ptd-redis
     restart: unless-stopped
+    logging: *default-logging
     command: >
       redis-server
         --appendonly yes
@@ -127,6 +136,7 @@ services:
       timeout: 10s
       retries: 5
       start_period: 40s
+    logging: *default-logging
 
   # ── 5. WhatsApp Microservice (whatsapp-web.js + Chromium) ───────────────────
   whatsapp:
@@ -135,6 +145,7 @@ services:
       dockerfile: Dockerfile
     container_name: ptd-whatsapp
     restart: unless-stopped
+    logging: *default-logging
     ports:
       - "127.0.0.1:3100:3100"
     volumes:
@@ -201,6 +212,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+    logging: *default-logging
 
 volumes:
   mysql_data:

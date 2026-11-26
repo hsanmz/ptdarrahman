@@ -63,17 +63,24 @@ RUN pnpm build && \
     rm -rf apps/companyprofile/.next/cache && \
     rm -rf /root/.local/share/pnpm/store /root/.npm
 
-# ── Stage: runtime — serve UI only ──────────────────────────────────────────
+# ── Stage: runtime — serve UI only (Ultra Lightweight Standalone) ─────────────
 FROM node:${NODE_VERSION}-slim AS runtime
 ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 WORKDIR /workspace
 
-COPY --from=builder /workspace/node_modules ./node_modules
-COPY --from=builder /workspace/pnpm-workspace.yaml /workspace/pnpm-lock.yaml /workspace/package.json /workspace/turbo.json ./
-COPY --from=builder /workspace/packages ./packages
-COPY --from=builder /workspace/apps ./apps
-RUN rm -rf /workspace/apps/companyprofile/.next/cache
+# 1. Company Profile: Next.js standalone (traced dependencies only)
+COPY --from=builder /workspace/apps/companyprofile/.next/standalone ./
+COPY --from=builder /workspace/apps/companyprofile/.next/static ./apps/companyprofile/.next/static
+COPY --from=builder /workspace/apps/companyprofile/public ./apps/companyprofile/public
 
+# 2. PPDB & Superadmin: Compiled static dist bundles (No node_modules needed!)
+COPY --from=builder /workspace/apps/ppdb/dist ./apps/ppdb/dist
+COPY --from=builder /workspace/apps/superadmin/dist ./apps/superadmin/dist
+
+# 3. Native lightweight static SPA server & Entrypoint
+COPY docker/spa-server.js /usr/local/bin/spa-server.js
 COPY docker/frontend-entrypoint.sh /usr/local/bin/frontend-entrypoint.sh
 RUN sed -i 's/\r$//' /usr/local/bin/frontend-entrypoint.sh && chmod +x /usr/local/bin/frontend-entrypoint.sh
 

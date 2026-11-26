@@ -22,11 +22,3 @@ redis>=5.0.0
 # Uploads
 cloudinary==1.45.0
 
-# Testing (optional, dev)
-pytest==8.4.2
-httpx==0.28.1
-
-# Linting & Type Checking
-ruff==0.6.5
-mypy==1.11.2
-pre-commit==3.8.0

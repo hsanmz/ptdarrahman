@@ -4,11 +4,15 @@
 
 # ── Python artifacts ──────────────────────────────────────────────────────────
 .venv
+.venv*
 venv
+venv*
+.uv-cache
 __pycache__
 *.pyc
 *.pyo
 *.pyd
+*.log
 
 # ── Dev databases (never in production image) ─────────────────────────────────
 *.db

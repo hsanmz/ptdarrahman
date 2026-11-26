@@ -2356,10 +2356,7 @@ import { AnimationClip as AnimationClip2, AnimationMixer, Bone as Bone3, LoopRep
 
 
 import { GLTFLoader as GLTFLoader2 } from "three/examples/jsm/loaders/GLTFLoader.js";
-
-
-
-// DRACOLoader2 dihapus dengan alasan yang sama seperti di loader planet.
+import { DRACOLoader as DRACOLoader2 } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 
 
@@ -2630,6 +2627,9 @@ function Courier({ motion, paused, reduced, onReady, shirtColor, pantsColor, sho
 
 
     const loader = new GLTFLoader2();
+    const dracoLoader = new DRACOLoader2();
+    dracoLoader.setDecoderPath('/draco/');
+    loader.setDRACOLoader(dracoLoader);
 
 
 
