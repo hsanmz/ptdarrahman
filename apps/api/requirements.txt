@@ -22,3 +22,6 @@ redis>=5.0.0
 # Uploads
 cloudinary==1.45.0
 
+# HTTP client (Midtrans, WhatsApp service & webhooks)
+httpx==0.28.1
+
