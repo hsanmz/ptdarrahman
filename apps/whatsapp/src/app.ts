@@ -43,7 +43,8 @@ export function createApp(): express.Application {
           : null;
         const allowed =
           /^https?:\/\/(localhost|127\.0\.0\.1|::1)(:\d+)?$/.test(origin) ||
-          /\.ptdarrahman\.sch\.id$/.test(origin) ||
+          /\.ptdarrahman\.sch\.id(:\d+)?$/.test(origin) ||
+          /\.arrahmanic\.org(:\d+)?$/.test(origin) ||
           explicitOrigins.includes(origin) ||
           (extraRegex ? extraRegex.test(origin) : false);
         cb(allowed ? null : new Error("Not allowed by CORS"), allowed);

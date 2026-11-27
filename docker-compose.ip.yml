@@ -116,7 +116,8 @@ services:
       COOKIE_SECURE: "false"
       JWT_SECRET: ${JWT_SECRET:-ptdarrahman_secret_jwt_key_must_be_32_chars_min}
       CRON_SECRET: ${CRON_SECRET:-ptdarrahman_cron_secret_random_16}
-      CORS_ORIGINS: "http://${PUBLIC_IP:-103.55.37.77}:3000,http://${PUBLIC_IP:-103.55.37.77}:5173,http://${PUBLIC_IP:-103.55.37.77}:5174,http://localhost:3000,http://localhost:5173,http://localhost:5174"
+      CORS_ORIGINS: "http://${PUBLIC_IP:-103.55.37.77}:3000,http://${PUBLIC_IP:-103.55.37.77}:5173,http://${PUBLIC_IP:-103.55.37.77}:5174,http://localhost:3000,http://localhost:5173,http://localhost:5174,https://ptd.arrahmanic.org,http://ptd.arrahmanic.org,https://ptd.arrahmanic.org:3000,http://ptd.arrahmanic.org:3000,https://ppdbptd.arrahmanic.org,http://ppdbptd.arrahmanic.org,https://ppdbptd.arrahmanic.org:5174,http://ppdbptd.arrahmanic.org:5174,https://adminppdb.arrahmanic.org,http://adminppdb.arrahmanic.org,https://adminppdb.arrahmanic.org:5173,http://adminppdb.arrahmanic.org:5173"
+      CORS_ORIGIN_REGEX: "^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\]|([a-zA-Z0-9-]+\\.)*arrahmanic\\.org|([a-zA-Z0-9-]+\\.)*ptdarrahman\\.sch\\.id)(:\\d+)?$"
       WA_SERVICE_URL: http://whatsapp:3100
       WA_SERVICE_API_KEY: ${WA_SERVICE_API_KEY:-f7b3a9e2d1c6b8a4f5e7d3c9b1a6e8f2d5c7b9a3e1f4d6c8b2a7e5f9d3c1b6a4}
       WA_WEBHOOK_SECRET: ${WA_WEBHOOK_SECRET:-e8d2c7b1a4f6e9d3c5b8a2f7e1d4c9b6a3f5e8d2c7b1a4f6e9d3c5b8a2f7e1d4}
@@ -124,6 +125,12 @@ services:
       MIDTRANS_SERVER_KEY: ${MIDTRANS_SERVER_KEY:-}
       MIDTRANS_CLIENT_KEY: ${MIDTRANS_CLIENT_KEY:-}
       MIDTRANS_IS_PRODUCTION: "false"
+      UPLOAD_PROVIDER: ${UPLOAD_PROVIDER:-cloudinary}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-dfwutfkbn}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-972511113942619}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-_5nv6X8OEmTNCZsOokP0OXN_qAI}
+      CLOUDINARY_FOLDER: ${CLOUDINARY_FOLDER:-ptdarrahman}
+      CLOUDINARY_SECURE: "true"
     depends_on:
       mysql:
         condition: service_healthy
@@ -166,6 +173,8 @@ services:
       REDIS_PORT: "6379"
       REDIS_PASSWORD: ""
       REDIS_DB: "1"
+      CORS_ORIGINS: "http://${PUBLIC_IP:-103.55.37.77}:3000,http://${PUBLIC_IP:-103.55.37.77}:5173,http://${PUBLIC_IP:-103.55.37.77}:5174,http://localhost:3000,http://localhost:5173,http://localhost:5174,https://ptd.arrahmanic.org,http://ptd.arrahmanic.org,https://ptd.arrahmanic.org:3000,http://ptd.arrahmanic.org:3000,https://ppdbptd.arrahmanic.org,http://ppdbptd.arrahmanic.org,https://ppdbptd.arrahmanic.org:5174,http://ppdbptd.arrahmanic.org:5174,https://adminppdb.arrahmanic.org,http://adminppdb.arrahmanic.org,https://adminppdb.arrahmanic.org:5173,http://adminppdb.arrahmanic.org:5173"
+      CORS_ORIGIN_REGEX: "^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\]|([a-zA-Z0-9-]+\\.)*arrahmanic\\.org|([a-zA-Z0-9-]+\\.)*ptdarrahman\\.sch\\.id)(:\\d+)?$"
       CHROMIUM_EXECUTABLE_PATH: /usr/bin/chromium
       WA_SESSION_PATH: /app/wa-session
       WEBHOOK_URL: http://api:8000/notifications/webhook/whatsapp

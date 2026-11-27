@@ -20,10 +20,25 @@ from fastapi.middleware.cors import CORSMiddleware
 logger = logging.getLogger("ptdarrahman.cors")
 
 # Explicit allowlist used when CORS_ORIGINS is empty/unset.
-DEFAULT_ORIGINS: list[str] = []
+DEFAULT_ORIGINS: list[str] = [
+    "https://ptd.arrahmanic.org",
+    "http://ptd.arrahmanic.org",
+    "https://ptd.arrahmanic.org:3000",
+    "http://ptd.arrahmanic.org:3000",
+    "https://ppdbptd.arrahmanic.org",
+    "http://ppdbptd.arrahmanic.org",
+    "https://ppdbptd.arrahmanic.org:5174",
+    "http://ppdbptd.arrahmanic.org:5174",
+    "https://adminppdb.arrahmanic.org",
+    "http://adminppdb.arrahmanic.org",
+    "https://adminppdb.arrahmanic.org:5173",
+    "http://adminppdb.arrahmanic.org:5173",
+]
 
-# Covers every local dev port
-DEFAULT_ORIGIN_REGEX = re.compile(r"^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$")
+# Covers every local dev port, arrahmanic.org subdomains, and ptdarrahman.sch.id subdomains
+DEFAULT_ORIGIN_REGEX = re.compile(
+    r"^https?://(localhost|127\.0\.0\.1|\[::1\]|([a-zA-Z0-9-]+\.)*arrahmanic\.org|([a-zA-Z0-9-]+\.)*ptdarrahman\.sch\.id)(:\d+)?$"
+)
 
 
 def resolve_cors(settings):
@@ -37,7 +52,10 @@ def resolve_cors(settings):
         credentials = False
     elif raw:
         origins = [o.strip() for o in raw.split(",") if o.strip()]
-        regex = re.compile(extra_regex) if extra_regex else None
+        if extra_regex:
+            regex = re.compile(f"(?:{DEFAULT_ORIGIN_REGEX.pattern})|(?:{extra_regex})")
+        else:
+            regex = DEFAULT_ORIGIN_REGEX
         credentials = True
     else:
         origins = list(DEFAULT_ORIGINS)

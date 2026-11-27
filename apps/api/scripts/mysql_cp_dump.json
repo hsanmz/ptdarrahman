@@ -2,523 +2,523 @@
   "gallery_items": [
     {
       "id": "7f766f2e-e635-4fae-98f1-dc5d1392f18e",
-      "image": "http://localhost:8000/uploads/3340a321-acd9-49fd-a4a6-a4b94908d829",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748279/ptdarrahman/3340a321-acd9-49fd-a4a6-a4b94908d829.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Berenang Bersama Santri\"}"
     },
     {
       "id": "c41eb3a8-6181-4bd4-bea2-820fc1f8aa9e",
-      "image": "http://localhost:8000/uploads/750b3575-4471-49b0-afe5-8196f153132a",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748392/ptdarrahman/750b3575-4471-49b0-afe5-8196f153132a.jpg",
       "category": "Kegiatan Santri",
       "content": "{\"title\": \"Podcast\"}"
     },
     {
       "id": "ef55dde4-f33e-486b-9b6c-66335a04a42f",
-      "image": "http://localhost:8000/uploads/d715d435-2cdf-4865-aaad-25cde6a2631c",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748758/ptdarrahman/d715d435-2cdf-4865-aaad-25cde6a2631c.jpg",
       "category": "Kegiatan Tahfidz & Al-Qur'an",
       "content": "{\"title\": \"Pembacaan Kitab Hadisul Sholihin\"}"
     },
     {
       "id": "8eb3fcef-043b-4947-b2db-ade42ea2bf46",
-      "image": "http://localhost:8000/uploads/63ff389d-7398-4bd6-880d-23a846efeb83",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748337/ptdarrahman/63ff389d-7398-4bd6-880d-23a846efeb83.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Agenda Doa Bersama\"}"
     },
     {
       "id": "b15ac018-d9db-4528-8bfc-4c2d4988ebd6",
-      "image": "http://localhost:8000/uploads/72c2deff-370d-4365-b7ed-84f2685171d7",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748390/ptdarrahman/72c2deff-370d-4365-b7ed-84f2685171d7.jpg",
       "category": "Kegiatan Akademik",
       "content": "{\"title\": \"Belajar Bersama\"}"
     },
     {
       "id": "4db53a69-1b65-4146-aa84-5efbb2803dc1",
-      "image": "http://localhost:8000/uploads/4cd28cb1-abbe-4779-a5b6-f5bc6922a063",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748299/ptdarrahman/4cd28cb1-abbe-4779-a5b6-f5bc6922a063.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Latihan Futsal\",\"desc\":\"Latihan Fustal Bersama Ust.japar\"}"
     },
     {
       "id": "b190ad11-3b5f-4287-b197-e06cc8954be0",
-      "image": "http://localhost:8000/uploads/c5ef76a2-fe4a-494f-8a61-f08e909e6504",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748729/ptdarrahman/c5ef76a2-fe4a-494f-8a61-f08e909e6504.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Futsal\"}"
     },
     {
       "id": "0d76d81d-0a52-4715-b5cc-f3b821b1edff",
-      "image": "http://localhost:8000/uploads/c70459d0-05a8-411c-abf6-7487d3c2df49",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748742/ptdarrahman/c70459d0-05a8-411c-abf6-7487d3c2df49.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\":\"Penghargaan Juara 3 Lomba Nasyid\",\"desc\":\"Merayakan maulid nabi\"}"
     },
     {
       "id": "516e43ad-1ea1-44d0-9a3e-ca8e27ed582e",
-      "image": "http://localhost:8000/uploads/b9ea9049-f8c9-4769-a7ba-a7b2564a40e3",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748495/ptdarrahman/b9ea9049-f8c9-4769-a7ba-a7b2564a40e3.jpg",
       "category": "Kehidupan Asrama",
       "content": "{\"title\": \"Iftar Jama'i Bersama Wali Santri\"}"
     },
     {
       "id": "54429169-1893-4c37-8195-8cbdfd2a4ca9",
-      "image": "http://localhost:8000/uploads/b9febcea-04a6-4138-ab5f-5d260c527242",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748519/ptdarrahman/b9febcea-04a6-4138-ab5f-5d260c527242.jpg",
       "category": "Kegiatan Tahfidz & Al-Qur'an",
       "content": "{\"title\": \"Halaqoh\"}"
     },
     {
       "id": "55cb1cbe-b25f-4a82-ae0c-c246f8ead843",
-      "image": "http://localhost:8000/uploads/e7d0c465-6169-42b7-84d5-e009e9a1853d",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748880/ptdarrahman/e7d0c465-6169-42b7-84d5-e009e9a1853d.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "a8594637-5394-4eb0-b3fd-be606261511d",
-      "image": "http://localhost:8000/uploads/9e88398e-fee1-4bcd-a22f-42d3c83653c6",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748447/ptdarrahman/9e88398e-fee1-4bcd-a22f-42d3c83653c6.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "be98277c-06ec-486e-87d8-1850f11c3417",
-      "image": "http://localhost:8000/uploads/a560ac9f-7214-40ba-be8b-afa23c838be6",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748455/ptdarrahman/a560ac9f-7214-40ba-be8b-afa23c838be6.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Istirahat Selepas Futsal\"}"
     },
     {
       "id": "50569347-26e6-4941-a37a-734bbd2dfe31",
-      "image": "http://localhost:8000/uploads/30e15081-ed6b-443d-bdf4-8f09f95439e5",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748267/ptdarrahman/30e15081-ed6b-443d-bdf4-8f09f95439e5.jpg",
       "category": "Kegiatan Tahfidz & Al-Qur'an",
       "content": "{\"title\": \"Khotmul Quran Keliling\"}"
     },
     {
       "id": "c13b9b80-9db1-4410-b472-728fa53f7c64",
-      "image": "http://localhost:8000/uploads/6d25be78-ee60-47d3-acf2-0c82302a70b1",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748370/ptdarrahman/6d25be78-ee60-47d3-acf2-0c82302a70b1.jpg",
       "category": "Perlombaan & Prestasi",
       "content": "{\"title\": \"Lomba MHQ dan Ceramah\"}"
     },
     {
       "id": "3e2f82ce-7767-412c-904e-dc5aa4fb5ed1",
-      "image": "http://localhost:8000/uploads/fa5f230e-e173-4648-8c2a-6932fc0d6878",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748912/ptdarrahman/fa5f230e-e173-4648-8c2a-6932fc0d6878.jpg",
       "category": "Kegiatan Sekolah",
       "content": "{\"title\": \"Persiapan Agenda Berbagi Ilmu\"}"
     },
     {
       "id": "413ed275-78f8-41e0-8760-34a7b5778fe9",
-      "image": "http://localhost:8000/uploads/8b33c192-699d-4223-a08c-732f829c28ba",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748725/ptdarrahman/8b33c192-699d-4223-a08c-732f829c28ba.jpg",
       "category": "Kegiatan Organisasi",
       "content": "{\"title\":\"Nasihat Dari Ketua Yayasan (Pak Eko)\",\"desc\":\"Ketua Yayasan Arrahman Berbagi Nasihat\"}"
     },
     {
       "id": "55b029e6-5327-4aab-b851-f9e73a18c82b",
-      "image": "http://localhost:8000/uploads/673fe386-e29f-4cf0-8aa6-e737071ea19e",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748352/ptdarrahman/673fe386-e29f-4cf0-8aa6-e737071ea19e.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Muhadhoroh Mingguan\"}"
     },
     {
       "id": "5cc1dfd6-4f53-4a7c-8e7b-07dff5658b05",
-      "image": "http://localhost:8000/uploads/16acfaae-a12d-4cc0-93ef-1f9f1af2e82f",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748196/ptdarrahman/16acfaae-a12d-4cc0-93ef-1f9f1af2e82f.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Muhadhoroh Mingguan\"}"
     },
     {
       "id": "c7d6a198-f994-4a99-a6ac-66d9dba2a678",
-      "image": "http://localhost:8000/uploads/9f3fcc82-6d33-40ab-bbc6-3375fd357467",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748452/ptdarrahman/9f3fcc82-6d33-40ab-bbc6-3375fd357467.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Muhadasah Mingguan\"}"
     },
     {
       "id": "eb4a3350-6ac3-49d9-ad64-82e8866d9c7a",
-      "image": "http://localhost:8000/uploads/97bc7e24-4bc8-4a05-ad2c-e6a98d11b7db",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748866/ptdarrahman/97bc7e24-4bc8-4a05-ad2c-e6a98d11b7db.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Muhadhoroh Mingguan\"}"
     },
     {
       "id": "99856612-05dc-4020-ae7c-0173c7426d86",
-      "image": "http://localhost:8000/uploads/3e73c5ba-5ac7-482f-b942-7efee1668369",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748286/ptdarrahman/3e73c5ba-5ac7-482f-b942-7efee1668369.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Pemanasan Olahraga\"}"
     },
     {
       "id": "77878f7c-50cc-4d95-8205-d91b641a1e54",
-      "image": "http://localhost:8000/uploads/889e2b83-4e6a-4928-a9c7-4f1259b5f7a3",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748414/ptdarrahman/889e2b83-4e6a-4928-a9c7-4f1259b5f7a3.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Pemanasan Olahraga\"}"
     },
     {
       "id": "aed20f7f-13b6-4271-9739-9ee937dc4b83",
-      "image": "http://localhost:8000/uploads/f3b1d54f-b909-40bd-b548-3ab1b960c439",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748892/ptdarrahman/f3b1d54f-b909-40bd-b548-3ab1b960c439.jpg",
       "category": "Kegiatan Tahfidz & Al-Qur'an",
       "content": "{\"title\": \"Pembacaan Kitab Hadist Harian\"}"
     },
     {
       "id": "b23c1868-0055-40b7-8b72-d24e2aa110aa",
-      "image": "http://localhost:8000/uploads/c3f3203b-0a01-4cc1-9551-6bc1a2dd0bab",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795751461/ptdarrahman/c3f3203b-0a01-4cc1-9551-6bc1a2dd0bab.jpg",
       "category": "Kegiatan Tahfidz & Al-Qur'an",
       "content": "{\"title\": \"Pembacaan Kitab Hadist Harian\"}"
     },
     {
       "id": "e17eb185-a6c1-4161-b50f-79ec7e171032",
-      "image": "http://localhost:8000/uploads/dc212d67-9e11-4770-b809-95ac43c7b623",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748768/ptdarrahman/dc212d67-9e11-4770-b809-95ac43c7b623.jpg",
       "category": "Perlombaan & Prestasi",
       "content": "{\"title\": \"Pemberangkatan Menuju Lomba Espeto9\"}"
     },
     {
       "id": "3ccba8c1-54c6-4011-9122-36172546eb90",
-      "image": "http://localhost:8000/uploads/0608b5f7-e13b-4986-a950-2d5d816abddd",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748155/ptdarrahman/0608b5f7-e13b-4986-a950-2d5d816abddd.jpg",
       "category": "Perlombaan & Prestasi",
       "content": "{\"title\":\"Penghargaan Juara 2 Story Telling PTD\",\"desc\":\"Merayakan Hari lahir Baginda Nabi Muhammad SAW\"}"
     },
     {
       "id": "b8c09b83-dd58-41b4-9946-a80e7f56a5e4",
-      "image": "http://localhost:8000/uploads/399466bb-8601-46b9-be37-5c0234e2ccef",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748281/ptdarrahman/399466bb-8601-46b9-be37-5c0234e2ccef.jpg",
       "category": "Acara & Perayaan",
       "content": "{\"title\": \"Penghargaan Lomba 17 Agustus 1945\"}"
     },
     {
       "id": "964d42a4-f6b6-4ae7-be10-b5bcbcf5c0f9",
-      "image": "http://localhost:8000/uploads/1bc25b3e-960e-451c-9294-674b3ea35607",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748206/ptdarrahman/1bc25b3e-960e-451c-9294-674b3ea35607.jpg",
       "category": "Perlombaan & Prestasi",
       "content": "{\"title\": \"Lomba Espeto9 MHQ dan Story Telling\"}"
     },
     {
       "id": "df0fb169-876c-4c66-b1f5-251972e9cdce",
-      "image": "http://localhost:8000/uploads/b8de27f1-fc34-4196-a84e-44b79ae485f4",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748493/ptdarrahman/b8de27f1-fc34-4196-a84e-44b79ae485f4.jpg",
       "category": "Kegiatan Sekolah",
       "content": "{\"title\": \"Persiapan Agenda Berbagi Ilmu\"}"
     },
     {
       "id": "ac448795-b88a-4206-bc77-d1c155a6e936",
-      "image": "http://localhost:8000/uploads/7bdc533f-9a82-4fe7-b3e2-11d876c3a3b4",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748397/ptdarrahman/7bdc533f-9a82-4fe7-b3e2-11d876c3a3b4.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "d8d5f588-4704-4d2b-ad2c-2c4d770f5e94",
-      "image": "http://localhost:8000/uploads/a35ee620-350f-4edc-a1f2-cb86a2c0b485",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748453/ptdarrahman/a35ee620-350f-4edc-a1f2-cb86a2c0b485.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "ebf942cd-dc07-4b0b-8a8c-885e8e973eb3",
-      "image": "http://localhost:8000/uploads/4424cb34-6d51-4a43-9f3a-c70b2df538f4",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748290/ptdarrahman/4424cb34-6d51-4a43-9f3a-c70b2df538f4.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "a3097553-d6fc-4d7e-a411-e25e26b7bd11",
-      "image": "http://localhost:8000/uploads/42db7ca0-d20d-4e0f-8a11-fd1020099e3d",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748287/ptdarrahman/42db7ca0-d20d-4e0f-8a11-fd1020099e3d.jpg",
       "category": "Kunjungan & Studi Banding",
       "content": "{\"title\": \"Photo Bersama di Kota Tua\"}"
     },
     {
       "id": "bf2c51fa-89e9-4b88-bcf0-4f968ec86b5f",
-      "image": "http://localhost:8000/uploads/82dedf94-5b7f-4b6e-a83e-b1bd71963cb0",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748410/ptdarrahman/82dedf94-5b7f-4b6e-a83e-b1bd71963cb0.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "c3e7602c-4abf-46bc-aeca-503c5563bfd2",
-      "image": "http://localhost:8000/uploads/bd98fafd-b56e-4066-9603-3adbc9fe6c4b",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748521/ptdarrahman/bd98fafd-b56e-4066-9603-3adbc9fe6c4b.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "fdf864d7-2048-4bd2-ad5d-43f81e7deba4",
-      "image": "http://localhost:8000/uploads/c763f9df-bc38-46f1-8e6c-ada1c2d73cb4",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748745/ptdarrahman/c763f9df-bc38-46f1-8e6c-ada1c2d73cb4.jpg",
       "category": "Dokumentasi Umum",
       "content": "{\"title\": \"Photo Bersama\"}"
     },
     {
       "id": "7c970b39-0d65-42f2-93db-b48ede36856f",
-      "image": "http://localhost:8000/uploads/64192fdd-7c1c-4d1a-8429-1293c60fd25c",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748338/ptdarrahman/64192fdd-7c1c-4d1a-8429-1293c60fd25c.jpg",
       "category": "Kegiatan Pesantren",
       "content": "{\"title\": \"Photo Bersama Persiapan Ujian Tahfidz\"}"
     },
     {
       "id": "dad20360-4493-44f5-a3c0-073401e96ea0",
-      "image": "http://localhost:8000/uploads/f918a2e8-7a7d-4302-afec-b6d86df83847",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748908/ptdarrahman/f918a2e8-7a7d-4302-afec-b6d86df83847.jpg",
       "category": "Kunjungan & Studi Banding",
       "content": "{\"title\": \"Kunjungi Masjid Istiqlal\"}"
     },
     {
       "id": "e5e4002a-cc2f-418a-8e62-c7e8b56bef8f",
-      "image": "http://localhost:8000/uploads/9d0d1442-de4d-4584-bd97-a668f4b77543",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748446/ptdarrahman/9d0d1442-de4d-4584-bd97-a668f4b77543.jpg",
       "category": "Kunjungan & Studi Banding",
       "content": "{\"title\": \"Photo di Kereta Kunjungan ke Kota Tua\"}"
     },
     {
       "id": "1735f044-16b5-47fd-b88a-14fd1114de89",
-      "image": "http://localhost:8000/uploads/164939a2-8e36-45ad-9b07-77bd2e22fa25",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748189/ptdarrahman/164939a2-8e36-45ad-9b07-77bd2e22fa25.jpg",
       "category": "Kegiatan Akademik",
       "content": "{\"title\": \"Pelaksanaan Ujian UTS\"}"
     },
     {
       "id": "3b684568-e04c-4a78-8584-a3805cec3872",
-      "image": "http://localhost:8000/uploads/1ee73ed9-fdcf-4202-918b-cdc7ef117b89",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748213/ptdarrahman/1ee73ed9-fdcf-4202-918b-cdc7ef117b89.jpg",
       "category": "Kegiatan Akademik",
       "content": "{\"title\":\"Pelaksanaan Ujian UTS\",\"desc\":\"Ujian Tengah Semester Santri PTD\"}"
     },
     {
       "id": "6b704b6c-260c-41cf-b7a4-8b8f3c450630",
-      "image": "http://localhost:8000/uploads/09972c0f-dd90-43ca-b6d0-320559ea6778",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748184/ptdarrahman/09972c0f-dd90-43ca-b6d0-320559ea6778.jpg",
       "category": "Kegiatan Pesantren",
       "content": "{\"title\": \"Upacara Bendera\"}"
     },
     {
       "id": "a5c28454-64a1-443b-b717-147c6cf07e8f",
-      "image": "http://localhost:8000/uploads/4bdb0ec0-11b9-48b0-bf11-e996909bb045",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748295/ptdarrahman/4bdb0ec0-11b9-48b0-bf11-e996909bb045.jpg",
       "category": "Kegiatan Pesantren",
       "content": "{\"title\": \"Upacara Bendera\"}"
     },
     {
       "id": "d4af0ad3-78c7-4d24-b548-ca3d44b79897",
-      "image": "http://localhost:8000/uploads/2baf8be8-3f34-429c-829b-f9100ccc3f5d",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748247/ptdarrahman/2baf8be8-3f34-429c-829b-f9100ccc3f5d.jpg",
       "category": "Kegiatan Akademik",
       "content": "{\"title\": \"Pelaksanaan Ujian UTS\"}"
     },
     {
       "id": "e8bea269-9124-48ae-80fa-55a3f0605284",
-      "image": "http://localhost:8000/uploads/9b1dac79-6453-466c-a7f7-d41f5f839782",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748431/ptdarrahman/9b1dac79-6453-466c-a7f7-d41f5f839782.jpg",
       "category": "Kegiatan Pesantren",
       "content": "{\"title\": \"Upacara Bendera\"}"
     },
     {
       "id": "139bea39-b343-4a8d-899f-d455815ce006",
-      "image": "http://localhost:8000/uploads/1c6265f6-d3e7-4f51-aabe-8f79f9ec2c35",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748207/ptdarrahman/1c6265f6-d3e7-4f51-aabe-8f79f9ec2c35.jpg",
       "category": "Kegiatan Pesantren",
       "content": "{\"title\": \"Upacara Bendera\"}"
     },
     {
       "id": "28b8b72c-910a-4d45-8eac-d7f26a3a70af",
-      "image": "http://localhost:8000/uploads/034a33de-1adc-4860-b262-1dd40561cffc",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795751466/ptdarrahman/034a33de-1adc-4860-b262-1dd40561cffc.jpg",
       "category": "Kegiatan Pesantren",
       "content": "{\"title\": \"Upacara Bendera\"}"
     },
     {
       "id": "a744a27b-ba2e-4a76-be57-d7c18c06911b",
-      "image": "http://localhost:8000/uploads/08ba4071-6e38-4116-9307-5669ea4af7ca",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748179/ptdarrahman/08ba4071-6e38-4116-9307-5669ea4af7ca.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Latihan体能 di Lapangan\"}"
     },
     {
       "id": "8efff451-6468-4214-a6b4-db31c10e4554",
-      "image": "http://localhost:8000/uploads/1c8484a5-88de-4f41-b292-f3bee86b2eb0",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748275/ptdarrahman/1c8484a5-88de-4f41-b292-f3bee86b2eb0.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Senam Pemanasan Bersama\"}"
     },
     {
       "id": "7bf2db17-4398-47bf-a004-cf3d280cde12",
-      "image": "http://localhost:8000/uploads/a6171560-3499-44eb-87d5-8e19cc7e6369",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748467/ptdarrahman/a6171560-3499-44eb-87d5-8e19cc7e6369.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Pemanasan Sebelum olahraga\"}"
     },
     {
       "id": "87b06c18-ad10-4b63-a7c0-3b8175db49a9",
-      "image": "http://localhost:8000/uploads/e5fd6212-019b-46af-9be5-7dd0ebb07600",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748892/ptdarrahman/e5fd6212-019b-46af-9be5-7dd0ebb07600.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Stretching Bersama\"}"
     },
     {
       "id": "4977d5aa-76a3-4fa2-b79d-d0f389c6186e",
-      "image": "http://localhost:8000/uploads/f5bdabe9-17e8-46e7-bcad-cd923bc20996",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748928/ptdarrahman/f5bdabe9-17e8-46e7-bcad-cd923bc20996.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Latihan Agility Train Your Attitude\",\"desc\":\"Makan Ubi Unggu Bersama Santri Train Your Attitude\"}"
     },
     {
       "id": "e2530a3d-841b-4f8f-bbfe-51ec2ebc8ae5",
-      "image": "http://localhost:8000/uploads/fbec6305-cac3-4aef-ac94-08772c7ee0b4",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748922/ptdarrahman/fbec6305-cac3-4aef-ac94-08772c7ee0b4.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Drill Kaki Cepat\"}"
     },
     {
       "id": "c8dccb01-b2dc-491b-a91a-7d85718584eb",
-      "image": "http://localhost:8000/uploads/e16aa369-6fb0-489d-8e2c-93cb155ff290",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748788/ptdarrahman/e16aa369-6fb0-489d-8e2c-93cb155ff290.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Lari Pemanasan круг\"}"
     },
     {
       "id": "d7b2455c-82d7-4c79-ae85-1eb38d4404ca",
-      "image": "http://localhost:8000/uploads/e00bac4a-b99c-42f6-bd68-00a85a495556",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748778/ptdarrahman/e00bac4a-b99c-42f6-bd68-00a85a495556.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Sprint Latihan\"}"
     },
     {
       "id": "6333d6bf-bf73-4988-954c-623494f027cf",
-      "image": "http://localhost:8000/uploads/29e8fbae-93d5-4e69-8ebe-df0be832d8e6",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748246/ptdarrahman/29e8fbae-93d5-4e69-8ebe-df0be832d8e6.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Latihan Power\"}"
     },
     {
       "id": "7888e1d6-718f-4e3b-9f0f-f98105889fa0",
-      "image": "http://localhost:8000/uploads/c4fd1d27-908b-4251-9ac0-936dad08cf17",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795751472/ptdarrahman/c4fd1d27-908b-4251-9ac0-936dad08cf17.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Push-up Bersama\"}"
     },
     {
       "id": "b2ed3ad4-87b9-4ea0-97f6-603f76d96da0",
-      "image": "http://localhost:8000/uploads/073d33b8-7665-4cd6-87ff-04613367f492",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748184/ptdarrahman/073d33b8-7665-4cd6-87ff-04613367f492.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Sit-up Training\"}"
     },
     {
       "id": "aed47206-2f9a-41cb-94a9-c2391a5850c5",
-      "image": "http://localhost:8000/uploads/06e2e58e-dac2-4306-8cdb-23a48281dc8d",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795751473/ptdarrahman/06e2e58e-dac2-4306-8cdb-23a48281dc8d.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Pull-up Exercise\"}"
     },
     {
       "id": "aac5382a-b957-4735-b09d-da3449af1c89",
-      "image": "http://localhost:8000/uploads/51d524c4-bc43-4c5f-a8cc-a9ba0bffabfc",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748310/ptdarrahman/51d524c4-bc43-4c5f-a8cc-a9ba0bffabfc.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Plank Hold\"}"
     },
     {
       "id": "35e85333-1ce2-48f5-948b-a5b4c6a0deb8",
-      "image": "http://localhost:8000/uploads/e634d789-bef9-4c31-a604-5dd53fee4af9",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748879/ptdarrahman/e634d789-bef9-4c31-a604-5dd53fee4af9.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Latihan Back Strength\"}"
     },
     {
       "id": "03778d43-3996-47d6-bf13-78e9a0f0f917",
-      "image": "http://localhost:8000/uploads/8959f567-8bd0-4aed-82b8-c27d41fb2a67",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748428/ptdarrahman/8959f567-8bd0-4aed-82b8-c27d41fb2a67.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Team Building Exercis Train Your Attitude\",\"desc\":\"Pembagian Tugas Setiap masing kelompok \"}"
     },
     {
       "id": "76e4fae5-ad15-4b92-a5da-98c26012185a",
-      "image": "http://localhost:8000/uploads/e3116588-b092-4477-95bb-380cf18a4aeb",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748798/ptdarrahman/e3116588-b092-4477-95bb-380cf18a4aeb.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Fun Game Olahraga\"}"
     },
     {
       "id": "f5de4636-5529-4460-b9dc-67890d80ca1c",
-      "image": "http://localhost:8000/uploads/2c4b99e1-18f2-45b5-a2fe-25333f3453df",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748261/ptdarrahman/2c4b99e1-18f2-45b5-a2fe-25333f3453df.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Relay Race Training\"}"
     },
     {
       "id": "b5c640e9-f33e-43a3-b97e-3be8d4b6cfef",
-      "image": "http://localhost:8000/uploads/62385b2f-ae1d-41fd-a70e-c88a27fec963",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748332/ptdarrahman/62385b2f-ae1d-41fd-a70e-c88a27fec963.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Basket Skill Drill\"}"
     },
     {
       "id": "3a4be213-86bb-4d94-bcfa-f41b783be17e",
-      "image": "http://localhost:8000/uploads/9cab513e-d2ee-49b0-a8aa-1783d1cef150",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748444/ptdarrahman/9cab513e-d2ee-49b0-a8aa-1783d1cef150.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Penampilan Nasyid Train Your Attitude \",\"desc\":\"Penampilan Naysid yang di bawakan oleh para-ustadz\"}"
     },
     {
       "id": "0f8b6e8e-3644-4977-b42d-9b2f88df35e6",
-      "image": "http://localhost:8000/uploads/b812c5cf-ff1e-4dac-a53a-0ccdd2fafc40",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748486/ptdarrahman/b812c5cf-ff1e-4dac-a53a-0ccdd2fafc40.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Train Your Attitude\",\"desc\":\"Pemberian arahan Train Your Attitude\"}"
     },
     {
       "id": "37e16bcc-29a7-4c36-b3b8-59910c41bbfd",
-      "image": "http://localhost:8000/uploads/c6360d42-eb6e-4c74-9e9a-3704c786f64a",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748741/ptdarrahman/c6360d42-eb6e-4c74-9e9a-3704c786f64a.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Practice Train Your Attitude\",\"desc\":\"Menonton pertunjukan Akting Train Your Attitude setiap masing regu\"}"
     },
     {
       "id": "49b91315-8f6f-4988-92c0-2c7258b1b42f",
-      "image": "http://localhost:8000/uploads/bf94f759-4949-475a-b698-16daaeebd432",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748533/ptdarrahman/bf94f759-4949-475a-b698-16daaeebd432.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Perakitan Tenda Train Your Attitude\",\"desc\":\"Merakit Tenda setiap masing regu kelompok Train Your Attitude\"}"
     },
     {
       "id": "5f5f8203-a48d-400f-bb5d-3d0668e8b615",
-      "image": "http://localhost:8000/uploads/f33e1212-57ec-418f-bdf7-86ff94b23ca9",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748889/ptdarrahman/f33e1212-57ec-418f-bdf7-86ff94b23ca9.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Train Your Attitude\",\"desc\":\"Merapihkan Area sekitar Tenda Masing-masing regu\"}"
     },
     {
       "id": "7a6d92f7-4fab-42eb-9a21-317c1ef467f9",
-      "image": "http://localhost:8000/uploads/39cab3fa-cd3d-478e-bcb1-d99f81efc511",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748517/ptdarrahman/39cab3fa-cd3d-478e-bcb1-d99f81efc511.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Swimming Training\"}"
     },
     {
       "id": "0207a3de-bb91-4204-84a6-40a306bffc5b",
-      "image": "http://localhost:8000/uploads/f7d36381-494a-44af-95ae-7836504df421",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748903/ptdarrahman/f7d36381-494a-44af-95ae-7836504df421.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Upacara Train Your Attitude\",\"desc\":\"Pelatihan kemandirian dan survival \"}"
     },
     {
       "id": "f12d2eb4-2387-4fb1-b359-88767b180eaf",
-      "image": "http://localhost:8000/uploads/6ef59116-7f69-47fe-ac95-bda0a3494669",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748385/ptdarrahman/6ef59116-7f69-47fe-ac95-bda0a3494669.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Jogging Sore\"}"
     },
     {
       "id": "d0ed0cb0-6965-46ca-94ad-06afff4fec9b",
-      "image": "http://localhost:8000/uploads/67495631-0aef-4980-b3c1-b51462d2e14e",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748365/ptdarrahman/67495631-0aef-4980-b3c1-b51462d2e14e.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Cycling Exercise\"}"
     },
     {
       "id": "c462fe8e-d989-464f-8300-6696e3e2d836",
-      "image": "http://localhost:8000/uploads/816e4fe4-fddc-427e-8bb1-38e111e6535c",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748408/ptdarrahman/816e4fe4-fddc-427e-8bb1-38e111e6535c.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Yoga untuk Santri\"}"
     },
     {
       "id": "77893033-2a89-4fda-9563-b5c581f667de",
-      "image": "http://localhost:8000/uploads/d9a33e2c-dc26-404d-b64f-514ce593bed3",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748767/ptdarrahman/d9a33e2c-dc26-404d-b64f-514ce593bed3.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Train Your Attitude\",\"desc\":\"Melatih dan Belajar Baris Berbaris\"}"
     },
     {
       "id": "4283c530-3487-46c3-a3ec-2fb3810b616e",
-      "image": "http://localhost:8000/uploads/65389836-333d-4463-b6f6-c791cc53c8f5",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748350/ptdarrahman/65389836-333d-4463-b6f6-c791cc53c8f5.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\":\"Latihan Baris berbaris Train Your Attitude\",\"desc\":\"Bermain Baris Berbaris Santri PTD arrahman\"}"
     },
     {
       "id": "80234726-f56b-47da-8ded-3ff80aabc2ab",
-      "image": "http://localhost:8000/uploads/e44d4d99-de7e-49ab-b5c5-6a5c9687a140",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748831/ptdarrahman/e44d4d99-de7e-49ab-b5c5-6a5c9687a140.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Wushu Practice\"}"
     },
     {
       "id": "865a3401-d115-4ee1-9caf-e6995062465a",
-      "image": "http://localhost:8000/uploads/267400ea-fde9-4c81-a945-49f3c0124aa8",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748231/ptdarrahman/267400ea-fde9-4c81-a945-49f3c0124aa8.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Self Defense Class\"}"
     },
     {
       "id": "b0e5c4a9-8f48-4a7f-8b54-097c022384a3",
-      "image": "http://localhost:8000/uploads/cb4b772d-c058-42c6-9168-e2ffa40e9cc8",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748755/ptdarrahman/cb4b772d-c058-42c6-9168-e2ffa40e9cc8.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Obstacle Course\"}"
     },
     {
       "id": "a1c9fcb5-fb30-41f5-b536-9761c88d96b1",
-      "image": "http://localhost:8000/uploads/0e7fd869-3444-4dff-8379-45fc9c42295f",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748199/ptdarrahman/0e7fd869-3444-4dff-8379-45fc9c42295f.jpg",
       "category": "Olahraga & Kebugaran",
       "content": "{\"title\": \"Tough Mudder TA\"}"
     },
     {
       "id": "3880528e-a24e-467c-9324-c2e44167a4e0",
-      "image": "http://localhost:8000/uploads/1ab2deeb-f563-4a03-ba6a-ae69ecbd099b",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748202/ptdarrahman/1ab2deeb-f563-4a03-ba6a-ae69ecbd099b.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\":\"Motivasi Dari Ust.Farrel Muhammad Rizqi, Lc, S.T.l, M.Ec.\",\"desc\":\"Pembinaan dan Motivasi mengenal Sejarah Islam\"}"
     },
     {
       "id": "d686ccb9-4c60-4450-a604-7b7f0d129389",
-      "image": "http://localhost:8000/uploads/3752da4c-fdc1-4e8d-8626-08da70f1980a",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748281/ptdarrahman/3752da4c-fdc1-4e8d-8626-08da70f1980a.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Pemberian Al-Quran untuk Santri Baru\"}"
     },
     {
       "id": "77452c97-cc73-435f-a0e3-8b2441c3e36e",
-      "image": "http://localhost:8000/uploads/b5b81026-7c84-43a1-805a-53927817e593",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748473/ptdarrahman/b5b81026-7c84-43a1-805a-53927817e593.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\":\"Motivasi Dari Ust.Farrel Muhammad Rizqi, Lc, S.T.l, M.Ec.\",\"desc\":\"Motivasi dan Shearing ilmu\"}"
     },
     {
       "id": "c7d0469a-4642-45d7-9bdb-74c0d6535292",
-      "image": "http://localhost:8000/uploads/5f3df4a5-6a20-4c03-96c8-6bf259faec4a",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748318/ptdarrahman/5f3df4a5-6a20-4c03-96c8-6bf259faec4a.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Doa Bersama Setelah Pemberian\"}"
     },
     {
       "id": "c704153b-25a2-4528-9c70-0db4e35c58e0",
-      "image": "http://localhost:8000/uploads/0014a419-42f5-4387-8c28-1716f5f9b293",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795748159/ptdarrahman/0014a419-42f5-4387-8c28-1716f5f9b293.jpg",
       "category": "Kegiatan Keagamaan",
       "content": "{\"title\": \"Foto Bersama Sesudah Pemberian Al-Quran\"}"
     }

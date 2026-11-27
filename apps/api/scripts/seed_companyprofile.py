@@ -23,6 +23,7 @@ Safe to run repeatedly.
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 from pathlib import Path
 from uuid import uuid4
@@ -1900,8 +1901,37 @@ def seed_company_settings() -> None:
 # ============================================================================
 
 
+def sync_seed_uploads() -> None:
+    """Sinkronisasi file gambar seed ke folder uploads aktif agar dapat diakses via /uploads/."""
+    candidates = [
+        Path(__file__).resolve().parent.parent / "uploads",
+        Path(__file__).resolve().parent.parent.parent / "companyprofile" / "public" / "uploads",
+    ]
+    target_dir = Path("/app/uploads") if Path("/app/uploads").exists() else (Path(__file__).resolve().parent.parent / "uploads")
+    try:
+        target_dir.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
+
+    copied = 0
+    for src_dir in candidates:
+        if src_dir.exists() and src_dir.resolve() != target_dir.resolve():
+            for f in src_dir.iterdir():
+                if f.is_file():
+                    dest = target_dir / f.name
+                    if not dest.exists() or dest.stat().st_size != f.stat().st_size:
+                        try:
+                            shutil.copy2(f, dest)
+                            copied += 1
+                        except Exception:
+                            pass
+    if copied > 0:
+        print(f"  sync uploads: {copied} file gambar berhasil disalin ke {target_dir}")
+
+
 def seed_all_companyprofile() -> None:
     print("\n--- Seeding Company Profile Official Production Content ---")
+    sync_seed_uploads()
     seed_news_articles()
     seed_programs()
     seed_facilities()
