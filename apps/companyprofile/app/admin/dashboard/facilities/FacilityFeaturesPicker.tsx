@@ -87,6 +87,18 @@ export function FacilityFeaturesPicker({ id, value, onChange, category }: Props)
     }
   }
 
+  function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
+    const text = event.clipboardData.getData('text')
+    if (text && (text.includes(',') || text.includes('\n'))) {
+      event.preventDefault()
+      const parts = text.split(/[,\n]+/).map((s) => s.trim()).filter(Boolean)
+      if (parts.length > 0) {
+        commit([...selected, ...parts])
+        setDraft('')
+      }
+    }
+  }
+
   const remainingSuggestions = suggestions.filter((f) => !selectedKeys.has(f.toLowerCase()))
 
   return (
@@ -138,6 +150,10 @@ export function FacilityFeaturesPicker({ id, value, onChange, category }: Props)
             if (duplicateHint) setDuplicateHint('')
           }}
           onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          onBlur={() => {
+            if (draft.trim()) addFeature(draft)
+          }}
           placeholder="Contoh: Proyektor, AC, WiFi…"
           autoComplete="off"
           aria-describedby={duplicateHint ? errorId : helperId}

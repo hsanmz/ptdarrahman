@@ -1,6 +1,24 @@
 import type { AuthUser, LoginResponse, User, Role, Module, UserPagePermissions, PagePermissionItem } from '../types'
 
-export const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
+export function getApiBase(): string {
+  if (typeof window !== 'undefined') {
+    // Jika diakses via HTTPS (domain resmi via Cloudflare/Reverse Proxy), gunakan same-origin relative URL
+    // agar di-proxy mulus oleh spa-server tanpa mixed-content atau CORS error.
+    if (window.location.protocol === 'https:') {
+      return ''
+    }
+    const envApi = import.meta.env.VITE_API_URL
+    if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
+      return envApi.replace(/\/+$/, '')
+    }
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return `${window.location.protocol}//${window.location.hostname}:8000`
+    }
+  }
+  return (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
+}
+
+export const API_BASE = getApiBase()
 
 const REQUEST_TIMEOUT_MS = 25_000
 

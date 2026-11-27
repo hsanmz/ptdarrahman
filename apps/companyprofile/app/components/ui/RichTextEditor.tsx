@@ -197,16 +197,44 @@ export function RichTextEditor({
   }
 
   // Paste dari Word/web: ambil versi HTML lalu bersihkan. Teks polos diubah
-  // menjadi paragraf agar baris baru tidak hilang.
+  // menjadi paragraf agar baris baru tidak hilang. Menggunakan manipulasi DOM Range
+  // modern agar isi langsung masuk ke DOM dan tersimpan tanpa tergantung execCommand lama.
   function handlePaste(event: ClipboardEvent<HTMLDivElement>) {
     if (disabled) return
     const html = event.clipboardData.getData('text/html')
     const text = event.clipboardData.getData('text/plain')
     if (!html && !text) return
     event.preventDefault()
+
     const clean = html ? sanitizeRichHtml(html) : plainTextToHtml(text)
-    document.execCommand('insertHTML', false, clean)
+    const selection = window.getSelection()
+    const el = editorRef.current
+
+    if (selection && selection.rangeCount > 0 && el && el.contains(selection.anchorNode)) {
+      const range = selection.getRangeAt(0)
+      range.deleteContents()
+
+      const template = document.createElement('template')
+      template.innerHTML = clean
+      const frag = template.content
+
+      const lastNode = frag.lastChild
+      range.insertNode(frag)
+
+      if (lastNode) {
+        const newRange = document.createRange()
+        newRange.setStartAfter(lastNode)
+        newRange.collapse(true)
+        selection.removeAllRanges()
+        selection.addRange(newRange)
+        savedRange.current = newRange.cloneRange()
+      }
+    } else if (el) {
+      el.innerHTML = (el.innerHTML || '') + clean
+    }
+
     emit()
+    refreshToolbar()
   }
 
   /**

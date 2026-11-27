@@ -71,6 +71,18 @@ export function StaffExpertisePicker({ id, value, onChange }: Props) {
     }
   }
 
+  function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
+    const text = event.clipboardData.getData('text')
+    if (text && (text.includes(',') || text.includes('\n'))) {
+      event.preventDefault()
+      const parts = text.split(/[,\n]+/).map((s) => s.trim()).filter(Boolean)
+      if (parts.length > 0) {
+        commit([...selected, ...parts])
+        setDraft('')
+      }
+    }
+  }
+
   return (
     <div className="space-y-2">
       <div className="flex items-baseline justify-between gap-2">
@@ -115,6 +127,10 @@ export function StaffExpertisePicker({ id, value, onChange }: Props) {
             if (duplicateHint) setDuplicateHint('')
           }}
           onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          onBlur={() => {
+            if (draft.trim()) addFeature(draft)
+          }}
           placeholder="Contoh: Tahfidz, Bahasa Arab…"
           autoComplete="off"
           aria-describedby={duplicateHint ? errorId : helperId}

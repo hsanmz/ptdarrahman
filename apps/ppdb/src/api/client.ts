@@ -1,6 +1,24 @@
 const USER_KEY = 'ppdb_user'
 
-export const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+export function getApiBase(): string {
+  if (typeof window !== 'undefined') {
+    // Jika diakses via HTTPS (domain resmi via Cloudflare/Reverse Proxy), gunakan same-origin relative URL
+    // agar di-proxy mulus oleh spa-server tanpa mixed-content atau CORS error.
+    if (window.location.protocol === 'https:') {
+      return ''
+    }
+    const envApi = import.meta.env.VITE_API_URL
+    if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
+      return envApi.replace(/\/+$/, '')
+    }
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return `${window.location.protocol}//${window.location.hostname}:8000`
+    }
+  }
+  return (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+}
+
+export const API_BASE = getApiBase()
 
 // ── Dummy auth (dev-only) ────────────────────────────────────
 // Aktifkan lewat VITE_MOCK_AUTH=true di .env lokal saat backend/DB belum bisa

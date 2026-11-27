@@ -20,7 +20,11 @@ import type {
 import { groupLeadership } from '../data/leadership'
 import { convertToWebP } from './image-file'
 
-export const PRIMARY_API = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
+export const PRIMARY_API = (
+  process.env.INTERNAL_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  'http://localhost:8000'
+).replace(/\/+$/, '')
 // Fallback API opsional (mis. darurat ke server kedua). Kosongkan untuk
 // menonaktifkan mekanisme fallback; JANGAN fallback ke localhost di produksi.
 export const FALLBACK_API = (process.env.NEXT_PUBLIC_FALLBACK_API_URL || '').replace(/\/+$/, '')
@@ -28,6 +32,11 @@ export const FALLBACK_API = (process.env.NEXT_PUBLIC_FALLBACK_API_URL || '').rep
 /** Resolusi URL API dinamis: di browser, sesuaikan otomatis ke host pemanggil jika env localhost */
 export function getApiBase(): string {
   if (typeof window !== 'undefined') {
+    // Jika diakses via HTTPS (domain resmi via Cloudflare/Reverse Proxy), gunakan same-origin relative URL
+    // agar di-proxy mulus oleh Next.js rewrites tanpa mixed-content atau CORS error.
+    if (window.location.protocol === 'https:') {
+      return ''
+    }
     const envApi = process.env.NEXT_PUBLIC_API_URL
     if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
       return envApi.replace(/\/+$/, '')
@@ -99,7 +108,7 @@ function isRetryableStatus(status: number): boolean {
 
 async function fetchWithFallback(url: string, opts?: RequestInit): Promise<Response> {
   const currentBase = getApiBase()
-  if (!FALLBACK_API || currentBase === FALLBACK_API) return fetch(url, opts)
+  if (!FALLBACK_API || !currentBase || currentBase === FALLBACK_API) return fetch(url, opts)
 
   const fallbackUrl = url.replace(currentBase, FALLBACK_API)
 

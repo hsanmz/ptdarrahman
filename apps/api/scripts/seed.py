@@ -333,14 +333,6 @@ def main() -> None:
     ensure_site_settings()
     ensure_notification_templates()
     ensure_default_users()
-
-    # Seed Company Profile production content
-    try:
-        from scripts.seed_companyprofile import seed_all_companyprofile
-        seed_all_companyprofile()
-    except Exception as exc:
-        print(f"  [WARN] Company Profile seeder encountered an error: {exc}")
-
     print("Done.")
 
 

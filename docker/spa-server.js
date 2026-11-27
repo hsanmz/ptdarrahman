@@ -12,6 +12,72 @@ const path = require("path");
 const port = parseInt(process.argv[2] || "8080", 10);
 const rootDir = path.resolve(process.argv[3] || ".");
 
+const API_HOST = process.env.INTERNAL_API_HOST || "api";
+const API_PORT = parseInt(process.env.INTERNAL_API_PORT || "8000", 10);
+
+const PROXY_PREFIXES = [
+  "/auth",
+  "/ppdb",
+  "/companyprofile",
+  "/cbt",
+  "/selection",
+  "/roles",
+  "/modules",
+  "/users",
+  "/search",
+  "/payment",
+  "/notifications",
+  "/whatsapp",
+  "/uploads",
+  "/health",
+  "/docs",
+  "/openapi.json",
+  "/v1/models",
+  "/settings",
+];
+
+function isApiRoute(pathname) {
+  return PROXY_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix + "/")
+  );
+}
+
+function proxyRequest(req, res) {
+  const headers = { ...req.headers };
+  const clientIp = req.socket.remoteAddress || "";
+  headers["x-forwarded-for"] = headers["x-forwarded-for"]
+    ? `${headers["x-forwarded-for"]}, ${clientIp}`
+    : clientIp;
+  if (!headers["x-forwarded-proto"]) {
+    headers["x-forwarded-proto"] = req.connection.encrypted ? "https" : "http";
+  }
+  headers["x-forwarded-host"] = req.headers["host"] || "";
+  headers["host"] = `${API_HOST}:${API_PORT}`;
+
+  const options = {
+    hostname: API_HOST,
+    port: API_PORT,
+    path: req.url,
+    method: req.method,
+    headers: headers,
+  };
+
+  const proxyReq = http.request(options, (proxyRes) => {
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+    proxyRes.pipe(res, { end: true });
+  });
+
+  proxyReq.on("error", (err) => {
+    console.error(`[proxy error] ${req.method} ${req.url} -> ${API_HOST}:${API_PORT}:`, err.message);
+    if (!res.headersSent) {
+      res.writeHead(502, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ detail: "Bad Gateway: Backend API service unreachable" }));
+    }
+  });
+
+  req.pipe(proxyReq, { end: true });
+}
+
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
@@ -36,14 +102,19 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
-  // Hanya layani GET dan HEAD
+  // Parse path tanpa query string
+  const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+
+  // Rute API: Proxy langsung ke backend internal (FastAPI)
+  if (isApiRoute(urlPath)) {
+    return proxyRequest(req, res);
+  }
+
+  // Hanya layani GET dan HEAD untuk static assets
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.writeHead(405, { "Content-Type": "text/plain" });
     return res.end("Method Not Allowed");
   }
-
-  // Parse path tanpa query string
-  const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
   let filePath = path.join(rootDir, urlPath);
 
   // Pencegahan Directory Traversal

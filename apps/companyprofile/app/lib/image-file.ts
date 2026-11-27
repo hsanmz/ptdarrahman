@@ -175,49 +175,92 @@ export function validateImageUrl(value: string): string | null {
   }
 }
 
+export const PENGURUS_CDN: Record<string, string> = {
+  'ahmad-mahfud': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763710/ptdarrahman/pengurus_ahmad-mahfud.webp',
+  'chandra-sari': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763711/ptdarrahman/pengurus_chandra-sari.webp',
+  'dahniar': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763712/ptdarrahman/pengurus_dahniar.webp',
+  'dewi-nareswari': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763713/ptdarrahman/pengurus_dewi-nareswari.webp',
+  'eko-santoso': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763715/ptdarrahman/pengurus_eko-santoso.webp',
+  'fathya-irsalina': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763716/ptdarrahman/pengurus_fathya-irsalina.webp',
+  'indra-setiawan': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_indra-setiawan.webp',
+  'leo-latul': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_leo-latul.webp',
+  'mira-susanti': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763718/ptdarrahman/pengurus_mira-susanti.webp',
+  'noor-kartika': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763720/ptdarrahman/pengurus_noor-kartika.webp',
+  'rachmania-kurniawati': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763721/ptdarrahman/pengurus_rachmania-kurniawati.webp',
+  'rini-widiastuti': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763722/ptdarrahman/pengurus_rini-widiastuti.webp',
+  'ruswandri': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763723/ptdarrahman/pengurus_ruswandri.webp',
+  'silvi-laeli': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763724/ptdarrahman/pengurus_silvi-laeli.webp',
+  'susilawati': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763725/ptdarrahman/pengurus_susilawati.webp',
+  'ustd-ahmad': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763726/ptdarrahman/pengurus_ustd-ahmad.webp',
+  'ustd-ziyad': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763727/ptdarrahman/pengurus_ustd-ziyad.webp',
+}
+
+export const NEWS_CDN: Record<string, string> = {
+  'seminar-kristologi': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763735/ptdarrahman/news_seminar-kristologi.jpg',
+  'lomba-hut-ri-80': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763729/ptdarrahman/news_lomba-hut-ri-80.jpg',
+  'upacara-hut-ri-80': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763738/ptdarrahman/news_upacara-hut-ri-80.jpg',
+  'porseni-pontren-2025': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763730/ptdarrahman/news_porseni-pontren-2025.jpg',
+  'sharing-session-gojek': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763736/ptdarrahman/news_sharing-session-gojek.jpg',
+  'ramadhan-gotong-royong': 'https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763733/ptdarrahman/news_ramadhan-gotong-royong.png',
+}
+
 /**
  * Normalisasi dan resolusi URL gambar untuk seluruh aplikasi Company Profile.
- * Menangani path relatif, domain nonaktif (arrahmanic.org), dan localhost mismatch.
+ * Menangani path relatif, domain nonaktif (arrahmanic.org), migrasi Cloudinary CDN, dan localhost mismatch.
  */
 export function resolveImageSrc(value: string | null | undefined, apiBase = ''): string {
   const src = (value ?? '').trim()
   if (!src || src === 'null' || src === 'undefined') return ''
 
-  // Petakan domain lama arrahmanic.org / webbackend.arrahmanic.org ke aset lokal fisik yang tersimpan
+  // Resolusi path lokal /images/pengurus/ ke Cloudinary CDN
+  if (src.includes('/images/pengurus/')) {
+    for (const [key, cdnUrl] of Object.entries(PENGURUS_CDN)) {
+      if (src.includes(key)) return cdnUrl
+    }
+  }
+
+  // Resolusi path lokal /images/news/ ke Cloudinary CDN
+  if (src.includes('/images/news/')) {
+    for (const [key, cdnUrl] of Object.entries(NEWS_CDN)) {
+      if (src.includes(key)) return cdnUrl
+    }
+  }
+
+  // Petakan domain lama arrahmanic.org / webbackend.arrahmanic.org ke Cloudinary CDN
   if (src.includes('arrahmanic.org')) {
     // Berita
-    if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) return '/images/news/seminar-kristologi.jpg'
-    if (src.includes('BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1')) return '/images/news/lomba-hut-ri-80.jpg'
-    if (src.includes('ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ')) return '/images/news/upacara-hut-ri-80.jpg'
-    if (src.includes('wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97')) return '/images/news/porseni-pontren-2025.jpg'
-    if (src.includes('FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8')) return '/images/news/sharing-session-gojek.jpg'
-    if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) return '/images/news/ramadhan-gotong-royong.png'
+    if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) return NEWS_CDN['seminar-kristologi']
+    if (src.includes('BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1')) return NEWS_CDN['lomba-hut-ri-80']
+    if (src.includes('ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ')) return NEWS_CDN['upacara-hut-ri-80']
+    if (src.includes('wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97')) return NEWS_CDN['porseni-pontren-2025']
+    if (src.includes('FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8')) return NEWS_CDN['sharing-session-gojek']
+    if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) return NEWS_CDN['ramadhan-gotong-royong']
 
     // Pengurus Yayasan & Manajemen Lembaga
     const lower = decodeURIComponent(src).toLowerCase()
-    if (lower.includes('indra setiawan')) return '/images/pengurus/indra-setiawan.png'
-    if (lower.includes('rini widiastuti')) return '/images/pengurus/rini-widiastuti.png'
-    if (lower.includes('eko')) return '/images/pengurus/eko-santoso.png'
-    if (lower.includes('chandra')) return '/images/pengurus/chandra-sari.png'
-    if (lower.includes('noor')) return '/images/pengurus/noor-kartika.png'
-    if (lower.includes('rachmania')) return '/images/pengurus/rachmania-kurniawati.png'
-    if (lower.includes('fathya')) return '/images/pengurus/fathya-irsalina.png'
-    if (lower.includes('mira')) return '/images/pengurus/mira-susanti.png'
-    if (lower.includes('leo')) return '/images/pengurus/leo-latul.png'
-    if (lower.includes('mahfud')) return '/images/pengurus/ahmad-mahfud.png'
-    if (lower.includes('dewi')) return '/images/pengurus/dewi-nareswari.png'
-    if (lower.includes('niar') || lower.includes('dahniar')) return '/images/pengurus/dahniar.png'
-    if (lower.includes('ruswandri')) return '/images/pengurus/ruswandri.png'
-    if (lower.includes('silvi')) return '/images/pengurus/silvi-laeli.png'
-    if (lower.includes('ziyad')) return '/images/pengurus/ustd-ziyad.png'
-    if (lower.includes('ahmad')) return '/images/pengurus/ustd-ahmad.png'
-    if (lower.includes('susi') || lower.includes('susilawati')) return '/images/pengurus/susilawati.png'
+    if (lower.includes('indra setiawan')) return PENGURUS_CDN['indra-setiawan']
+    if (lower.includes('rini widiastuti')) return PENGURUS_CDN['rini-widiastuti']
+    if (lower.includes('eko')) return PENGURUS_CDN['eko-santoso']
+    if (lower.includes('chandra')) return PENGURUS_CDN['chandra-sari']
+    if (lower.includes('noor')) return PENGURUS_CDN['noor-kartika']
+    if (lower.includes('rachmania')) return PENGURUS_CDN['rachmania-kurniawati']
+    if (lower.includes('fathya')) return PENGURUS_CDN['fathya-irsalina']
+    if (lower.includes('mira')) return PENGURUS_CDN['mira-susanti']
+    if (lower.includes('leo')) return PENGURUS_CDN['leo-latul']
+    if (lower.includes('mahfud')) return PENGURUS_CDN['ahmad-mahfud']
+    if (lower.includes('dewi')) return PENGURUS_CDN['dewi-nareswari']
+    if (lower.includes('niar') || lower.includes('dahniar')) return PENGURUS_CDN['dahniar']
+    if (lower.includes('ruswandri')) return PENGURUS_CDN['ruswandri']
+    if (lower.includes('silvi')) return PENGURUS_CDN['silvi-laeli']
+    if (lower.includes('ziyad')) return PENGURUS_CDN['ustd-ziyad']
+    if (lower.includes('ahmad')) return PENGURUS_CDN['ustd-ahmad']
+    if (lower.includes('susi') || lower.includes('susilawati')) return PENGURUS_CDN['susilawati']
 
     if (src.includes('news') || src.includes('berita')) {
-      return '/images/news/seminar-kristologi.jpg'
+      return NEWS_CDN['seminar-kristologi']
     }
     if (src.includes('staff') || src.includes('guru') || src.includes('ustadz')) {
-      return '/images/pengurus/ustd-ziyad.png'
+      return PENGURUS_CDN['ustd-ziyad']
     }
     return ''
   }

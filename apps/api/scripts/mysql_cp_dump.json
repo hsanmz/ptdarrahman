@@ -527,7 +527,7 @@
     {
       "id": "news-kit-1",
       "slug": "dua-santri-ptd-ar-rahman-tuntaskan-tasmi-30-juz-bil-ghoib",
-      "image": "/images/news/seminar-kristologi.jpg",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763735/ptdarrahman/news_seminar-kristologi.jpg",
       "category": "Tahfidz & Tasmi'",
       "date": "2024-06-05",
       "gallery": null,
@@ -536,7 +536,7 @@
     {
       "id": "news-kit-5",
       "slug": "evaluasi-kompetensi-digital-ujian-praktik-iot-dan-basis-data",
-      "image": "/images/news/sharing-session-gojek.jpg",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763736/ptdarrahman/news_sharing-session-gojek.jpg",
       "category": "Teknologi Digital",
       "date": "2024-12-10",
       "gallery": null,
@@ -545,7 +545,7 @@
     {
       "id": "31da2d8d-7f6c-4ff9-9f9e-76c3d13dc68d",
       "slug": "seminar-keislaman-ustaz-ahmad-kainama-kupas-kristologi-dan-perbandingan-agama",
-      "image": "/images/news/seminar-kristologi.jpg",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763735/ptdarrahman/news_seminar-kristologi.jpg",
       "category": "news",
       "date": "",
       "gallery": null,
@@ -554,7 +554,7 @@
     {
       "id": "5ca1451e-3a94-4666-899e-d92c8b09520a",
       "slug": "ptd-ar-rahman-gelar-lomba-hut-ri-ke-80",
-      "image": "/images/news/lomba-hut-ri-80.jpg",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763729/ptdarrahman/news_lomba-hut-ri-80.jpg",
       "category": "news",
       "date": "",
       "gallery": null,
@@ -563,7 +563,7 @@
     {
       "id": "70ac27c2-5f9f-4e88-9ef7-8ace36eeceb2",
       "slug": "upacara-hut-kemerdekaan-ke-80-di-ptd-arrahman",
-      "image": "/images/news/upacara-hut-ri-80.jpg",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763738/ptdarrahman/news_upacara-hut-ri-80.jpg",
       "category": "news",
       "date": "",
       "gallery": null,
@@ -572,7 +572,7 @@
     {
       "id": "93ddcaeb-a164-4539-9dfd-331a31750bfe",
       "slug": "santri-ptd-ar-rahman-tunjukkan-semangat-juang-di-porseni-pontren-2025-kabupaten-bekasi",
-      "image": "/images/news/porseni-pontren-2025.jpg",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763730/ptdarrahman/news_porseni-pontren-2025.jpg",
       "category": "Kegiatan & Prestasi",
       "date": "2025-10-19",
       "gallery": "[]",
@@ -581,7 +581,7 @@
     {
       "id": "a2169dee-29f0-4590-b4b8-ff1a6f81763d",
       "slug": "sharing-session-ptd-arrahman-hadirkan-senior-engineer-gojek-kupas-tuntas-next-js",
-      "image": "/images/news/sharing-session-gojek.jpg",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763736/ptdarrahman/news_sharing-session-gojek.jpg",
       "category": "Teknologi Digital",
       "date": "2025-09-19",
       "gallery": null,
@@ -590,7 +590,7 @@
     {
       "id": "d78bd9dd-8f07-4855-90b6-99bc7fd2680f",
       "slug": "menjemput-keberkahan-ramadhan-santri-ptd-ar-rahman-gotong-royong-bersihkan-pesantren",
-      "image": "/images/news/ramadhan-gotong-royong.png",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763733/ptdarrahman/news_ramadhan-gotong-royong.png",
       "category": "Kehidupan Asrama",
       "date": "2025-03-12",
       "gallery": null,
@@ -600,33 +600,33 @@
   "staff": [
     {
       "id": "2ca6c358-4e1f-456c-97d6-6bd7032593a0",
-      "image": "/images/pengurus/ustd-ahmad.png",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763726/ptdarrahman/pengurus_ustd-ahmad.webp",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Murtadho Tumari\", \"level\": 2, \"position\": \"Kepala Pengasuhan\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 3, \"nama\": \"Ustadz Murtadho Tumari\", \"jabatan\": \"Kepala Pengasuhan\", \"image\": \"/images/pengurus/ustd-ahmad.png\"}"
+      "content": "{\"name\": \"Ustadz Murtadho Tumari\", \"level\": 2, \"position\": \"Kepala Pengasuhan\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 3, \"nama\": \"Ustadz Murtadho Tumari\", \"jabatan\": \"Kepala Pengasuhan\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763726/ptdarrahman/pengurus_ustd-ahmad.webp\"}"
     },
     {
       "id": "31aaddf7-3645-41c6-b792-1864f786c32e",
-      "image": "/images/pengurus/ahmad-mahfud.png",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763710/ptdarrahman/pengurus_ahmad-mahfud.webp",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Mahrozal Mizan\", \"level\": 2, \"position\": \"Administator\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 2, \"nama\": \"Ustadz Mahrozal Mizan\", \"jabatan\": \"Administator\", \"image\": \"/images/pengurus/ahmad-mahfud.png\"}"
+      "content": "{\"name\": \"Ustadz Mahrozal Mizan\", \"level\": 2, \"position\": \"Administator\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 2, \"nama\": \"Ustadz Mahrozal Mizan\", \"jabatan\": \"Administator\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763710/ptdarrahman/pengurus_ahmad-mahfud.webp\"}"
     },
     {
       "id": "679c2350-b8b8-4f27-888f-afccd92727a3",
-      "image": "/images/pengurus/leo-latul.png",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_leo-latul.webp",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Ian\", \"level\": 3, \"position\": \"Guru IT\", \"parentId\": \"31aaddf7-3645-41c6-b792-1864f786c32e\", \"order\": 4, \"nama\": \"Ustadz Ian\", \"jabatan\": \"Guru IT\", \"image\": \"/images/pengurus/leo-latul.png\"}"
+      "content": "{\"name\": \"Ustadz Ian\", \"level\": 3, \"position\": \"Guru IT\", \"parentId\": \"31aaddf7-3645-41c6-b792-1864f786c32e\", \"order\": 4, \"nama\": \"Ustadz Ian\", \"jabatan\": \"Guru IT\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_leo-latul.webp\"}"
     },
     {
       "id": "962203c2-8840-475e-b441-13876bbe27d3",
-      "image": "/images/pengurus/ruswandri.png",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763723/ptdarrahman/pengurus_ruswandri.webp",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Nur Fatoni\", \"level\": 3, \"position\": \"Musyrif & Guru B.Arab\", \"parentId\": \"2ca6c358-4e1f-456c-97d6-6bd7032593a0\", \"order\": 5, \"nama\": \"Ustadz Nur Fatoni\", \"jabatan\": \"Musyrif & Guru B.Arab\", \"image\": \"/images/pengurus/ruswandri.png\"}"
+      "content": "{\"name\": \"Ustadz Nur Fatoni\", \"level\": 3, \"position\": \"Musyrif & Guru B.Arab\", \"parentId\": \"2ca6c358-4e1f-456c-97d6-6bd7032593a0\", \"order\": 5, \"nama\": \"Ustadz Nur Fatoni\", \"jabatan\": \"Musyrif & Guru B.Arab\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763723/ptdarrahman/pengurus_ruswandri.webp\"}"
     },
     {
       "id": "d25d0845-2a58-4266-b8fc-d4f740e7c6bd",
-      "image": "/images/pengurus/ustd-ziyad.png",
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763727/ptdarrahman/pengurus_ustd-ziyad.webp",
       "role": "leader",
-      "content": "{\"name\": \"Ustadz Ziyad Khairy\", \"level\": 1, \"position\": \"Mudir PTD Arrahman\", \"order\": 1, \"nama\": \"Ustadz Ziyad Khairy\", \"jabatan\": \"Mudir PTD Arrahman\", \"image\": \"/images/pengurus/ustd-ziyad.png\"}"
+      "content": "{\"name\": \"Ustadz Ziyad Khairy\", \"level\": 1, \"position\": \"Mudir PTD Arrahman\", \"order\": 1, \"nama\": \"Ustadz Ziyad Khairy\", \"jabatan\": \"Mudir PTD Arrahman\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763727/ptdarrahman/pengurus_ustd-ziyad.webp\"}"
     }
   ],
   "leadership_members": [
@@ -634,92 +634,92 @@
       "id": "leadership-08",
       "board": "islamic-center",
       "order": 1,
-      "image": "/images/pengurus/chandra-sari.png",
-      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"President Director\", \"image\": \"/images/pengurus/chandra-sari.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763711/ptdarrahman/pengurus_chandra-sari.webp",
+      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"President Director\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763711/ptdarrahman/pengurus_chandra-sari.webp\"}"
     },
     {
       "id": "leadership-09",
       "board": "islamic-center",
       "order": 2,
-      "image": "/images/pengurus/fathya-irsalina.png",
-      "content": "{\"name\": \"Fathya Irsalina M\", \"position\": \"AVP Performance Management\", \"image\": \"/images/pengurus/fathya-irsalina.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763716/ptdarrahman/pengurus_fathya-irsalina.webp",
+      "content": "{\"name\": \"Fathya Irsalina M\", \"position\": \"AVP Performance Management\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763716/ptdarrahman/pengurus_fathya-irsalina.webp\"}"
     },
     {
       "id": "leadership-10",
       "board": "islamic-center",
       "order": 3,
-      "image": "/images/pengurus/mira-susanti.png",
-      "content": "{\"name\": \"Mira Susanti\", \"position\": \"AVP Internal Auditor\", \"image\": \"/images/pengurus/mira-susanti.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763718/ptdarrahman/pengurus_mira-susanti.webp",
+      "content": "{\"name\": \"Mira Susanti\", \"position\": \"AVP Internal Auditor\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763718/ptdarrahman/pengurus_mira-susanti.webp\"}"
     },
     {
       "id": "leadership-11",
       "board": "islamic-center",
       "order": 4,
-      "image": "/images/pengurus/leo-latul.png",
-      "content": "{\"name\": \"Leo Latul Agusta\", \"position\": \"Director of Education Center\", \"image\": \"/images/pengurus/leo-latul.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_leo-latul.webp",
+      "content": "{\"name\": \"Leo Latul Agusta\", \"position\": \"Director of Education Center\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_leo-latul.webp\"}"
     },
     {
       "id": "leadership-12",
       "board": "islamic-center",
       "order": 5,
-      "image": "/images/pengurus/ahmad-mahfud.png",
-      "content": "{\"name\": \"Ahmad Mahfud\", \"position\": \"Director of Support & Development\", \"image\": \"/images/pengurus/ahmad-mahfud.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763710/ptdarrahman/pengurus_ahmad-mahfud.webp",
+      "content": "{\"name\": \"Ahmad Mahfud\", \"position\": \"Director of Support & Development\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763710/ptdarrahman/pengurus_ahmad-mahfud.webp\"}"
     },
     {
       "id": "leadership-13",
       "board": "islamic-center",
       "order": 6,
-      "image": "/images/pengurus/dewi-nareswari.png",
-      "content": "{\"name\": \"Dewi Nareswari\", \"position\": \"Vice President of Branding & Development\", \"image\": \"/images/pengurus/dewi-nareswari.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763713/ptdarrahman/pengurus_dewi-nareswari.webp",
+      "content": "{\"name\": \"Dewi Nareswari\", \"position\": \"Vice President of Branding & Development\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763713/ptdarrahman/pengurus_dewi-nareswari.webp\"}"
     },
     {
       "id": "leadership-14",
       "board": "islamic-center",
       "order": 7,
-      "image": "/images/pengurus/dahniar.png",
-      "content": "{\"name\": \"Dahniar\", \"position\": \"Vice President of Finance & Support\", \"image\": \"/images/pengurus/dahniar.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763712/ptdarrahman/pengurus_dahniar.webp",
+      "content": "{\"name\": \"Dahniar\", \"position\": \"Vice President of Finance & Support\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763712/ptdarrahman/pengurus_dahniar.webp\"}"
     },
     {
       "id": "leadership-15",
       "board": "islamic-center",
       "order": 8,
-      "image": "/images/pengurus/ruswandri.png",
-      "content": "{\"name\": \"Ruswandri\", \"position\": \"Head of Lembaga Pengelolaan Ziswaf\", \"image\": \"/images/pengurus/ruswandri.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763723/ptdarrahman/pengurus_ruswandri.webp",
+      "content": "{\"name\": \"Ruswandri\", \"position\": \"Head of Lembaga Pengelolaan Ziswaf\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763723/ptdarrahman/pengurus_ruswandri.webp\"}"
     },
     {
       "id": "leadership-16",
       "board": "islamic-center",
       "order": 9,
-      "image": "/images/pengurus/silvi-laeli.png",
-      "content": "{\"name\": \"Silvi Laeli Kodaria\", \"position\": \"Head of Sekolah Alam Qurani Ar Rahman\", \"image\": \"/images/pengurus/silvi-laeli.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763724/ptdarrahman/pengurus_silvi-laeli.webp",
+      "content": "{\"name\": \"Silvi Laeli Kodaria\", \"position\": \"Head of Sekolah Alam Qurani Ar Rahman\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763724/ptdarrahman/pengurus_silvi-laeli.webp\"}"
     },
     {
       "id": "leadership-17",
       "board": "islamic-center",
       "order": 10,
-      "image": "/images/pengurus/ustd-ziyad.png",
-      "content": "{\"name\": \"Ziyad Khairy\", \"position\": \"Head of Pesantren Tahfidz Qur'an dan Digital Ar-Rahman\", \"image\": \"/images/pengurus/ustd-ziyad.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763727/ptdarrahman/pengurus_ustd-ziyad.webp",
+      "content": "{\"name\": \"Ziyad Khairy\", \"position\": \"Head of Pesantren Tahfidz Qur'an dan Digital Ar-Rahman\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763727/ptdarrahman/pengurus_ustd-ziyad.webp\"}"
     },
     {
       "id": "leadership-18",
       "board": "islamic-center",
       "order": 11,
-      "image": "/images/pengurus/ustd-ahmad.png",
-      "content": "{\"name\": \"Ahmad Khaeruddin\", \"position\": \"Head of Lembaga Pendidikan Al Quran\", \"image\": \"/images/pengurus/ustd-ahmad.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763726/ptdarrahman/pengurus_ustd-ahmad.webp",
+      "content": "{\"name\": \"Ahmad Khaeruddin\", \"position\": \"Head of Lembaga Pendidikan Al Quran\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763726/ptdarrahman/pengurus_ustd-ahmad.webp\"}"
     },
     {
       "id": "leadership-19",
       "board": "islamic-center",
       "order": 12,
-      "image": "/images/pengurus/susilawati.png",
-      "content": "{\"name\": \"Susilawati\", \"position\": \"Head of Lembaga Pembinaan Masyarakat\", \"image\": \"/images/pengurus/susilawati.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763725/ptdarrahman/pengurus_susilawati.webp",
+      "content": "{\"name\": \"Susilawati\", \"position\": \"Head of Lembaga Pembinaan Masyarakat\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763725/ptdarrahman/pengurus_susilawati.webp\"}"
     },
     {
       "id": "leadership-01",
       "board": "yayasan",
       "order": 1,
-      "image": "/images/pengurus/indra-setiawan.png",
-      "content": "{\"name\": \"Indra Setiawan\", \"position\": \"Pembina\", \"image\": \"/images/pengurus/indra-setiawan.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_indra-setiawan.webp",
+      "content": "{\"name\": \"Indra Setiawan\", \"position\": \"Pembina\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763717/ptdarrahman/pengurus_indra-setiawan.webp\"}"
     },
     {
       "id": "leadership-02",
@@ -732,36 +732,36 @@
       "id": "leadership-03",
       "board": "yayasan",
       "order": 3,
-      "image": "/images/pengurus/rini-widiastuti.png",
-      "content": "{\"name\": \"Rini Widiastuti Rahayu\", \"position\": \"Pengawas\", \"image\": \"/images/pengurus/rini-widiastuti.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763722/ptdarrahman/pengurus_rini-widiastuti.webp",
+      "content": "{\"name\": \"Rini Widiastuti Rahayu\", \"position\": \"Pengawas\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763722/ptdarrahman/pengurus_rini-widiastuti.webp\"}"
     },
     {
       "id": "leadership-04",
       "board": "yayasan",
       "order": 4,
-      "image": "/images/pengurus/eko-santoso.png",
-      "content": "{\"name\": \"Eko Santoso\", \"position\": \"Ketua\", \"image\": \"/images/pengurus/eko-santoso.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763715/ptdarrahman/pengurus_eko-santoso.webp",
+      "content": "{\"name\": \"Eko Santoso\", \"position\": \"Ketua\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763715/ptdarrahman/pengurus_eko-santoso.webp\"}"
     },
     {
       "id": "leadership-05",
       "board": "yayasan",
       "order": 5,
-      "image": "/images/pengurus/chandra-sari.png",
-      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"Bendahara\", \"image\": \"/images/pengurus/chandra-sari.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763711/ptdarrahman/pengurus_chandra-sari.webp",
+      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"Bendahara\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763711/ptdarrahman/pengurus_chandra-sari.webp\"}"
     },
     {
       "id": "leadership-06",
       "board": "yayasan",
       "order": 6,
-      "image": "/images/pengurus/noor-kartika.png",
-      "content": "{\"name\": \"Noor Kartika Muliawati\", \"position\": \"Sekretaris\", \"image\": \"/images/pengurus/noor-kartika.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763720/ptdarrahman/pengurus_noor-kartika.webp",
+      "content": "{\"name\": \"Noor Kartika Muliawati\", \"position\": \"Sekretaris\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763720/ptdarrahman/pengurus_noor-kartika.webp\"}"
     },
     {
       "id": "leadership-07",
       "board": "yayasan",
       "order": 7,
-      "image": "/images/pengurus/rachmania-kurniawati.png",
-      "content": "{\"name\": \"Rachmania Kurniawati\", \"position\": \"Sekretaris\", \"image\": \"/images/pengurus/rachmania-kurniawati.png\"}"
+      "image": "https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763721/ptdarrahman/pengurus_rachmania-kurniawati.webp",
+      "content": "{\"name\": \"Rachmania Kurniawati\", \"position\": \"Sekretaris\", \"image\": \"https://res.cloudinary.com/dfwutfkbn/image/upload/v1795763721/ptdarrahman/pengurus_rachmania-kurniawati.webp\"}"
     }
   ]
 }

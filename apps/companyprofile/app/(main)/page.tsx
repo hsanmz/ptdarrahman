@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic'
 import HeroSection from '@/app/components/sections/HeroSection'
 import AboutPreview from '@/app/components/sections/AboutPreview'
 import ProgramsPreview from '@/app/components/sections/ProgramsPreview'
-import StatsSection from '@/app/components/sections/StatsSection'
 import CTASection from '@/app/components/sections/CTASection'
 import { getAboutContentRows, getHeroSlides, getTestimonials, getPrograms, getSettings } from '@/app/lib/api'
 import { getTestimonialsDummyFallback } from '@/app/lib/dummyTestimonials'
@@ -71,7 +70,6 @@ export default async function Home() {
 
       <div className="verse-divider" />
       <AboutPreview settings={settingsMap} content={homeAbout} />
-      <StatsSection content={homeAbout} />
       <ProgramsPreview programs={programs ?? []} />
       <TestimonialsCarousel testimonials={testimonials ?? []} />
       {homeCta ? <CTASection content={homeCta} wave={wave} /> : null}

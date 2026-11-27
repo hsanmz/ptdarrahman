@@ -120,6 +120,30 @@ const nextConfig: NextConfig = {
         source: '/uploads/:path*',
         destination: `${targetApi}/uploads/:path*`,
       },
+      {
+        source: '/companyprofile/:path*',
+        destination: `${targetApi}/companyprofile/:path*`,
+      },
+      {
+        source: '/auth/:path*',
+        destination: `${targetApi}/auth/:path*`,
+      },
+      {
+        source: '/notifications/:path*',
+        destination: `${targetApi}/notifications/:path*`,
+      },
+      {
+        source: '/whatsapp/:path*',
+        destination: `${targetApi}/whatsapp/:path*`,
+      },
+      {
+        source: '/search/:path*',
+        destination: `${targetApi}/search/:path*`,
+      },
+      {
+        source: '/ppdb/:path*',
+        destination: `${targetApi}/ppdb/:path*`,
+      },
     ];
   },
   async headers() {

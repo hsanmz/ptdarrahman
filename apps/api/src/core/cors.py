@@ -33,11 +33,16 @@ DEFAULT_ORIGINS: list[str] = [
     "http://adminppdb.arrahmanic.org",
     "https://adminppdb.arrahmanic.org:5173",
     "http://adminppdb.arrahmanic.org:5173",
+    "http://103.55.37.77:3000",
+    "http://103.55.37.77:5173",
+    "http://103.55.37.77:5174",
+    "http://103.55.37.77:8000",
+    "http://103.55.37.77",
 ]
 
-# Covers every local dev port, arrahmanic.org subdomains, and ptdarrahman.sch.id subdomains
+# Covers every local dev port, any IPv4 address, arrahmanic.org subdomains, and ptdarrahman.sch.id subdomains
 DEFAULT_ORIGIN_REGEX = re.compile(
-    r"^https?://(localhost|127\.0\.0\.1|\[::1\]|([a-zA-Z0-9-]+\.)*arrahmanic\.org|([a-zA-Z0-9-]+\.)*ptdarrahman\.sch\.id)(:\d+)?$"
+    r"^https?://(localhost|127\.0\.0\.1|\[::1\]|(\d{1,3}\.){3}\d{1,3}|([a-zA-Z0-9-]+\.)*arrahmanic\.org|([a-zA-Z0-9-]+\.)*ptdarrahman\.sch\.id)(:\d+)?$"
 )
 
 

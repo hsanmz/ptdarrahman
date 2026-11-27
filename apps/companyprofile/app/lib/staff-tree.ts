@@ -5,7 +5,37 @@ export interface StaffTreeNode {
   children: StaffTreeNode[]
 }
 
-export function buildStaffTree(staff: Staff[]): StaffTreeNode[] {
+export function deduplicateStaff(staff: Staff[]): Staff[] {
+  const byName = new Map<string, Staff>()
+  for (const s of staff) {
+    const rawName = (s.content?.name || s.name || '').trim().toLowerCase()
+    if (!rawName) {
+      byName.set(s.id, s)
+      continue
+    }
+    const existing = byName.get(rawName)
+    if (!existing) {
+      byName.set(rawName, s)
+    } else {
+      // Prioritaskan entri yang memiliki gambar, parentId, atau bio terlengkap
+      const existingScore =
+        (existing.image ? 4 : 0) +
+        (existing.content?.parentId ? 2 : 0) +
+        (existing.content?.bio ? 1 : 0)
+      const currentScore =
+        (s.image ? 4 : 0) +
+        (s.content?.parentId ? 2 : 0) +
+        (s.content?.bio ? 1 : 0)
+      if (currentScore > existingScore) {
+        byName.set(rawName, s)
+      }
+    }
+  }
+  return Array.from(byName.values())
+}
+
+export function buildStaffTree(staffList: Staff[]): StaffTreeNode[] {
+  const staff = deduplicateStaff(staffList)
   const byId = new Map(staff.map((s) => [s.id, s]))
   const childrenOf = new Map<string, Staff[]>()
   const roots: Staff[] = []
