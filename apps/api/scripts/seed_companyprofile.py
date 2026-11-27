@@ -48,6 +48,16 @@ def _table_exists(table_name: str) -> bool:
         return False
 
 
+_DUMP_PATH = Path(__file__).resolve().parent / "mysql_cp_dump.json"
+_LOCAL_MYSQL_DUMP: dict = {}
+if _DUMP_PATH.exists():
+    try:
+        with open(_DUMP_PATH, encoding="utf-8") as _df:
+            _LOCAL_MYSQL_DUMP = json.load(_df)
+    except Exception:
+        _LOCAL_MYSQL_DUMP = {}
+
+
 # ============================================================================
 # 1. NEWS ARTICLES (Berita Resmi)
 # ============================================================================
@@ -162,6 +172,37 @@ def seed_news_articles() -> None:
     if not _table_exists("news_articles"):
         return
     now = utcnow()
+    dump_news = _LOCAL_MYSQL_DUMP.get("news_articles")
+    if dump_news:
+        for item in dump_news:
+            existing = get_by_slug("news_articles", item["slug"])
+            c_val = item.get("content")
+            c_json = c_val if isinstance(c_val, str) else json.dumps(c_val or {}, ensure_ascii=False)
+            g_val = item.get("gallery")
+            if isinstance(g_val, str):
+                g_json = g_val
+            elif isinstance(g_val, list):
+                g_json = json.dumps(g_val, ensure_ascii=False)
+            else:
+                g_json = json.dumps([], ensure_ascii=False)
+            payload = {
+                "slug": item["slug"],
+                "category": item.get("category") or "news",
+                "date": item.get("date") or "",
+                "image": item.get("image"),
+                "content": c_json,
+                "gallery": g_json,
+                "updated_at": now,
+            }
+            if existing:
+                update_record("news_articles", existing["id"], payload)
+            else:
+                payload["id"] = item.get("id") or f"news-seed-{uuid4().hex[:12]}"
+                payload["created_at"] = now
+                create_record("news_articles", payload)
+        print(f"  news seeded from local MySQL: {len(dump_news)} items")
+        return
+
     for item in NEWS_ARTICLES:
         existing = get_by_slug("news_articles", item["slug"])
         content_obj = {
@@ -558,6 +599,27 @@ def seed_staff() -> None:
     if not _table_exists("staff"):
         return
     now = utcnow()
+    dump_staff = _LOCAL_MYSQL_DUMP.get("staff")
+    if dump_staff:
+        for s in dump_staff:
+            existing = get_by_id("staff", s["id"])
+            c_val = s.get("content")
+            c_json = c_val if isinstance(c_val, str) else json.dumps(c_val or {}, ensure_ascii=False)
+            payload = {
+                "role": s.get("role") or "teacher",
+                "image": s.get("image") or "",
+                "content": c_json,
+                "updated_at": now,
+            }
+            if existing:
+                update_record("staff", s["id"], payload)
+            else:
+                payload["id"] = s["id"]
+                payload["created_at"] = now
+                create_record("staff", payload)
+        print(f"  staff seeded from local MySQL: {len(dump_staff)} items")
+        return
+
     for s in STAFF_MEMBERS:
         existing = get_by_column("staff", "role", s["role"])
         content_json = json.dumps(
@@ -754,6 +816,27 @@ def seed_leadership_members() -> None:
     if not _table_exists("leadership_members"):
         return
     now = utcnow()
+    dump_lead = _LOCAL_MYSQL_DUMP.get("leadership_members")
+    if dump_lead:
+        for m in dump_lead:
+            existing = get_by_id("leadership_members", m["id"])
+            c_val = m.get("content")
+            c_json = c_val if isinstance(c_val, str) else json.dumps(c_val or {}, ensure_ascii=False)
+            payload = {
+                "board": m.get("board") or "yayasan",
+                "order": int(m.get("order") or 0),
+                "content": c_json,
+                "updated_at": now,
+            }
+            if existing:
+                update_record("leadership_members", m["id"], payload)
+            else:
+                payload["id"] = m["id"]
+                payload["created_at"] = now
+                create_record("leadership_members", payload)
+        print(f"  leadership seeded from local MySQL: {len(dump_lead)} items")
+        return
+
     existing_rows = execute_raw(
         "SELECT id, board, `order`, content FROM leadership_members"
     )
@@ -956,6 +1039,27 @@ def seed_gallery_items() -> None:
     if not _table_exists("gallery_items"):
         return
     now = utcnow()
+    dump_gallery = _LOCAL_MYSQL_DUMP.get("gallery_items")
+    if dump_gallery:
+        for g in dump_gallery:
+            existing = get_by_id("gallery_items", g["id"])
+            c_val = g.get("content")
+            c_json = c_val if isinstance(c_val, str) else json.dumps(c_val or {}, ensure_ascii=False)
+            payload = {
+                "category": g.get("category") or "Kegiatan",
+                "image": g.get("image") or "",
+                "content": c_json,
+                "updated_at": now,
+            }
+            if existing:
+                update_record("gallery_items", g["id"], payload)
+            else:
+                payload["id"] = g["id"]
+                payload["created_at"] = now
+                create_record("gallery_items", payload)
+        print(f"  gallery items seeded from local MySQL: {len(dump_gallery)} items")
+        return
+
     for g in GALLERY_SEEDS:
         existing = get_by_id("gallery_items", g["id"])
         content_json = json.dumps(g["content"], ensure_ascii=False)

@@ -110,10 +110,12 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
 
   // Handle Touch Gesture untuk mobile
   const handleTouchStart = (e: React.TouchEvent) => {
+    setIsHoveredControls(false)
     touchStartX.current = e.touches[0].clientX
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
+    setIsHoveredControls(false)
     if (touchStartX.current === null) return
     const diff = touchStartX.current - e.changedTouches[0].clientX
     if (Math.abs(diff) > 40) {
@@ -181,7 +183,7 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
       </div>
 
       {/* Foreground Content: Typography, Badges, & Action Buttons */}
-      <div className="relative z-20 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
+      <div className="relative z-20 h-full max-w-7xl mx-auto px-4 sm:px-8 md:px-16 lg:px-20 flex flex-col justify-center">
         <AnimatePresence mode="wait">
           {current && (
             <motion.div
@@ -238,18 +240,19 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
         </AnimatePresence>
       </div>
 
-      {/* Floating Carousel Navigation Arrows */}
+      {/* Carousel Navigation Controls */}
       {items.length > 1 ? (
         <>
+          {/* Desktop Floating Arrows */}
           <button
             type="button"
             onClick={goToPrev}
             onMouseEnter={() => setIsHoveredControls(true)}
             onMouseLeave={() => setIsHoveredControls(false)}
             aria-label="Banner sebelumnya"
-            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-slate-900/40 hover:bg-slate-900/80 text-white border border-white/20 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 shadow-xl cursor-pointer"
+            className="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 h-11 w-11 lg:h-12 lg:w-12 items-center justify-center rounded-full bg-slate-900/50 hover:bg-slate-900/85 text-white border border-white/20 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 shadow-xl cursor-pointer"
           >
-            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
+            <ChevronLeft className="h-6 w-6" aria-hidden="true" />
           </button>
 
           <button
@@ -258,45 +261,69 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
             onMouseEnter={() => setIsHoveredControls(true)}
             onMouseLeave={() => setIsHoveredControls(false)}
             aria-label="Banner berikutnya"
-            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-slate-900/40 hover:bg-slate-900/80 text-white border border-white/20 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 shadow-xl cursor-pointer"
+            className="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 h-11 w-11 lg:h-12 lg:w-12 items-center justify-center rounded-full bg-slate-900/50 hover:bg-slate-900/85 text-white border border-white/20 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 shadow-xl cursor-pointer"
           >
-            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
+            <ChevronRight className="h-6 w-6" aria-hidden="true" />
           </button>
 
-          {/* Bottom Pagination & Progress Bars */}
+          {/* Bottom Navigation Bar: Integrated Mobile Arrows + Dots Progress & Counter */}
           <div
             onMouseEnter={() => setIsHoveredControls(true)}
             onMouseLeave={() => setIsHoveredControls(false)}
-            className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-3 bg-slate-950/60 backdrop-blur-md border border-white/15 px-3.5 sm:px-4 py-2 rounded-full shadow-2xl"
+            className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 sm:gap-3 bg-slate-950/70 backdrop-blur-md border border-white/15 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-2xl"
           >
-            {items.map((slide, index) => {
-              const isCurrent = index === active
-              return (
-                <button
-                  key={slide.id || index}
-                  type="button"
-                  onClick={() => setActive(index)}
-                  aria-label={`Tampilkan banner ${index + 1}`}
-                  aria-current={isCurrent}
-                  className={`relative h-2 rounded-full transition-all duration-500 overflow-hidden cursor-pointer ${
-                    isCurrent ? 'w-8 sm:w-10 bg-white/30' : 'w-2 sm:w-2.5 bg-white/40 hover:bg-white/70'
-                  }`}
-                >
-                  {isCurrent && (
-                    <span
-                      key={`progress-${active}`}
-                      className="absolute inset-0 bg-[var(--accent-gold)] rounded-full animate-hero-progress origin-left"
-                      style={{
-                        animationDuration: `${AUTOPLAY_MS}ms`,
-                      }}
-                    />
-                  )}
-                </button>
-              )
-            })}
-            <span className="text-[11px] font-mono font-medium text-white/70 ml-1.5 pl-2 border-l border-white/20">
+            {/* Mobile Previous Button */}
+            <button
+              type="button"
+              onClick={goToPrev}
+              aria-label="Banner sebelumnya"
+              className="md:hidden flex h-7 w-7 items-center justify-center rounded-full text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            {/* Slide Dots / Progress */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {items.map((slide, index) => {
+                const isCurrent = index === active
+                return (
+                  <button
+                    key={slide.id || index}
+                    type="button"
+                    onClick={() => setActive(index)}
+                    aria-label={`Tampilkan banner ${index + 1}`}
+                    aria-current={isCurrent}
+                    className={`relative h-2 rounded-full transition-all duration-500 overflow-hidden cursor-pointer ${
+                      isCurrent ? 'w-8 sm:w-10 bg-white/30' : 'w-2 sm:w-2.5 bg-white/40 hover:bg-white/70'
+                    }`}
+                  >
+                    {isCurrent && (
+                      <span
+                        key={`progress-${active}`}
+                        className="absolute inset-0 bg-[var(--accent-gold)] rounded-full animate-hero-progress origin-left"
+                        style={{
+                          animationDuration: `${AUTOPLAY_MS}ms`,
+                        }}
+                      />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            <span className="text-[11px] font-mono font-medium text-white/70 pl-2 border-l border-white/20 select-none">
               0{active + 1} / 0{items.length}
             </span>
+
+            {/* Mobile Next Button */}
+            <button
+              type="button"
+              onClick={goToNext}
+              aria-label="Banner berikutnya"
+              className="md:hidden flex h-7 w-7 items-center justify-center rounded-full text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+            >
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            </button>
           </div>
         </>
       ) : null}
