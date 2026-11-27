@@ -126,12 +126,6 @@ export class SessionManager extends EventEmitter {
         executablePath,
         args: puppeteerArgs,
       },
-      webVersion: "2.3000.1023204227-alpha",
-      webVersionCache: {
-        type: "remote",
-        remotePath:
-          "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1023204227-alpha.html",
-      },
     });
 
     this.attachEventHandlers();
