@@ -527,7 +527,7 @@
     {
       "id": "news-kit-1",
       "slug": "dua-santri-ptd-ar-rahman-tuntaskan-tasmi-30-juz-bil-ghoib",
-      "image": null,
+      "image": "/images/news/seminar-kristologi.jpg",
       "category": "Tahfidz & Tasmi'",
       "date": "2024-06-05",
       "gallery": null,
@@ -536,7 +536,7 @@
     {
       "id": "news-kit-5",
       "slug": "evaluasi-kompetensi-digital-ujian-praktik-iot-dan-basis-data",
-      "image": null,
+      "image": "/images/news/sharing-session-gojek.jpg",
       "category": "Teknologi Digital",
       "date": "2024-12-10",
       "gallery": null,
@@ -545,7 +545,7 @@
     {
       "id": "31da2d8d-7f6c-4ff9-9f9e-76c3d13dc68d",
       "slug": "seminar-keislaman-ustaz-ahmad-kainama-kupas-kristologi-dan-perbandingan-agama",
-      "image": "https://webbackend.arrahmanic.org/storage/posts/t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx.jpg",
+      "image": "/images/news/seminar-kristologi.jpg",
       "category": "news",
       "date": "",
       "gallery": null,
@@ -554,7 +554,7 @@
     {
       "id": "5ca1451e-3a94-4666-899e-d92c8b09520a",
       "slug": "ptd-ar-rahman-gelar-lomba-hut-ri-ke-80",
-      "image": "https://webbackend.arrahmanic.org/storage/posts/BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1.jpg",
+      "image": "/images/news/lomba-hut-ri-80.jpg",
       "category": "news",
       "date": "",
       "gallery": null,
@@ -563,7 +563,7 @@
     {
       "id": "70ac27c2-5f9f-4e88-9ef7-8ace36eeceb2",
       "slug": "upacara-hut-kemerdekaan-ke-80-di-ptd-arrahman",
-      "image": "https://webbackend.arrahmanic.org/storage/posts/ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ.jpg",
+      "image": "/images/news/upacara-hut-ri-80.jpg",
       "category": "news",
       "date": "",
       "gallery": null,
@@ -572,7 +572,7 @@
     {
       "id": "93ddcaeb-a164-4539-9dfd-331a31750bfe",
       "slug": "santri-ptd-ar-rahman-tunjukkan-semangat-juang-di-porseni-pontren-2025-kabupaten-bekasi",
-      "image": "https://webbackend.arrahmanic.org/storage/posts/wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97.jpg",
+      "image": "/images/news/porseni-pontren-2025.jpg",
       "category": "Kegiatan & Prestasi",
       "date": "2025-10-19",
       "gallery": "[]",
@@ -581,7 +581,7 @@
     {
       "id": "a2169dee-29f0-4590-b4b8-ff1a6f81763d",
       "slug": "sharing-session-ptd-arrahman-hadirkan-senior-engineer-gojek-kupas-tuntas-next-js",
-      "image": "https://webbackend.arrahmanic.org/storage/posts/FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8.jpg",
+      "image": "/images/news/sharing-session-gojek.jpg",
       "category": "Teknologi Digital",
       "date": "2025-09-19",
       "gallery": null,
@@ -590,7 +590,7 @@
     {
       "id": "d78bd9dd-8f07-4855-90b6-99bc7fd2680f",
       "slug": "menjemput-keberkahan-ramadhan-santri-ptd-ar-rahman-gotong-royong-bersihkan-pesantren",
-      "image": "https://webbackend.arrahmanic.org/storage/posts/MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k.png",
+      "image": "/images/news/ramadhan-gotong-royong.png",
       "category": "Kehidupan Asrama",
       "date": "2025-03-12",
       "gallery": null,
@@ -600,33 +600,33 @@
   "staff": [
     {
       "id": "2ca6c358-4e1f-456c-97d6-6bd7032593a0",
-      "image": "",
+      "image": "/images/pengurus/ustd-ahmad.png",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Murtadho Tumari\", \"level\": 2, \"position\": \"Kepala Pengasuhan\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 3, \"nama\": \"Ustadz Murtadho Tumari\", \"jabatan\": \"Kepala Pengasuhan\"}"
+      "content": "{\"name\": \"Ustadz Murtadho Tumari\", \"level\": 2, \"position\": \"Kepala Pengasuhan\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 3, \"nama\": \"Ustadz Murtadho Tumari\", \"jabatan\": \"Kepala Pengasuhan\", \"image\": \"/images/pengurus/ustd-ahmad.png\"}"
     },
     {
       "id": "31aaddf7-3645-41c6-b792-1864f786c32e",
-      "image": "",
+      "image": "/images/pengurus/ahmad-mahfud.png",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Mahrozal Mizan\", \"level\": 2, \"position\": \"Administator\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 2, \"nama\": \"Ustadz Mahrozal Mizan\", \"jabatan\": \"Administator\"}"
+      "content": "{\"name\": \"Ustadz Mahrozal Mizan\", \"level\": 2, \"position\": \"Administator\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 2, \"nama\": \"Ustadz Mahrozal Mizan\", \"jabatan\": \"Administator\", \"image\": \"/images/pengurus/ahmad-mahfud.png\"}"
     },
     {
       "id": "679c2350-b8b8-4f27-888f-afccd92727a3",
-      "image": "",
+      "image": "/images/pengurus/leo-latul.png",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Ian\", \"level\": 3, \"position\": \"Guru IT\", \"parentId\": \"31aaddf7-3645-41c6-b792-1864f786c32e\", \"order\": 4, \"nama\": \"Ustadz Ian\", \"jabatan\": \"Guru IT\"}"
+      "content": "{\"name\": \"Ustadz Ian\", \"level\": 3, \"position\": \"Guru IT\", \"parentId\": \"31aaddf7-3645-41c6-b792-1864f786c32e\", \"order\": 4, \"nama\": \"Ustadz Ian\", \"jabatan\": \"Guru IT\", \"image\": \"/images/pengurus/leo-latul.png\"}"
     },
     {
       "id": "962203c2-8840-475e-b441-13876bbe27d3",
-      "image": "",
+      "image": "/images/pengurus/ruswandri.png",
       "role": "teacher",
-      "content": "{\"name\": \"Ustadz Nur Fatoni\", \"level\": 3, \"position\": \"Musyrif & Guru B.Arab\", \"parentId\": \"2ca6c358-4e1f-456c-97d6-6bd7032593a0\", \"order\": 5, \"nama\": \"Ustadz Nur Fatoni\", \"jabatan\": \"Musyrif & Guru B.Arab\"}"
+      "content": "{\"name\": \"Ustadz Nur Fatoni\", \"level\": 3, \"position\": \"Musyrif & Guru B.Arab\", \"parentId\": \"2ca6c358-4e1f-456c-97d6-6bd7032593a0\", \"order\": 5, \"nama\": \"Ustadz Nur Fatoni\", \"jabatan\": \"Musyrif & Guru B.Arab\", \"image\": \"/images/pengurus/ruswandri.png\"}"
     },
     {
       "id": "d25d0845-2a58-4266-b8fc-d4f740e7c6bd",
-      "image": "",
+      "image": "/images/pengurus/ustd-ziyad.png",
       "role": "leader",
-      "content": "{\"name\": \"Ustadz Ziyad Khairy\", \"level\": 1, \"position\": \"Mudir PTD Arrahman\", \"order\": 1, \"nama\": \"Ustadz Ziyad Khairy\", \"jabatan\": \"Mudir PTD Arrahman\"}"
+      "content": "{\"name\": \"Ustadz Ziyad Khairy\", \"level\": 1, \"position\": \"Mudir PTD Arrahman\", \"order\": 1, \"nama\": \"Ustadz Ziyad Khairy\", \"jabatan\": \"Mudir PTD Arrahman\", \"image\": \"/images/pengurus/ustd-ziyad.png\"}"
     }
   ],
   "leadership_members": [
@@ -634,92 +634,92 @@
       "id": "leadership-08",
       "board": "islamic-center",
       "order": 1,
-      "image": null,
-      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"President Director\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu chandra.png\"}"
+      "image": "/images/pengurus/chandra-sari.png",
+      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"President Director\", \"image\": \"/images/pengurus/chandra-sari.png\"}"
     },
     {
       "id": "leadership-09",
       "board": "islamic-center",
       "order": 2,
-      "image": null,
-      "content": "{\"name\": \"Fathya Irsalina M\", \"position\": \"AVP Performance Management\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/ka fathya.png\"}"
+      "image": "/images/pengurus/fathya-irsalina.png",
+      "content": "{\"name\": \"Fathya Irsalina M\", \"position\": \"AVP Performance Management\", \"image\": \"/images/pengurus/fathya-irsalina.png\"}"
     },
     {
       "id": "leadership-10",
       "board": "islamic-center",
       "order": 3,
-      "image": null,
-      "content": "{\"name\": \"Mira Susanti\", \"position\": \"AVP Internal Auditor\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu mira.png\"}"
+      "image": "/images/pengurus/mira-susanti.png",
+      "content": "{\"name\": \"Mira Susanti\", \"position\": \"AVP Internal Auditor\", \"image\": \"/images/pengurus/mira-susanti.png\"}"
     },
     {
       "id": "leadership-11",
       "board": "islamic-center",
       "order": 4,
-      "image": null,
-      "content": "{\"name\": \"Leo Latul Agusta\", \"position\": \"Director of Education Center\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/pa leo.png\"}"
+      "image": "/images/pengurus/leo-latul.png",
+      "content": "{\"name\": \"Leo Latul Agusta\", \"position\": \"Director of Education Center\", \"image\": \"/images/pengurus/leo-latul.png\"}"
     },
     {
       "id": "leadership-12",
       "board": "islamic-center",
       "order": 5,
-      "image": null,
-      "content": "{\"name\": \"Ahmad Mahfud\", \"position\": \"Director of Support & Development\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/pa mahfud.png\"}"
+      "image": "/images/pengurus/ahmad-mahfud.png",
+      "content": "{\"name\": \"Ahmad Mahfud\", \"position\": \"Director of Support & Development\", \"image\": \"/images/pengurus/ahmad-mahfud.png\"}"
     },
     {
       "id": "leadership-13",
       "board": "islamic-center",
       "order": 6,
-      "image": null,
-      "content": "{\"name\": \"Dewi Nareswari\", \"position\": \"Vice President of Branding & Development\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu dewi.png\"}"
+      "image": "/images/pengurus/dewi-nareswari.png",
+      "content": "{\"name\": \"Dewi Nareswari\", \"position\": \"Vice President of Branding & Development\", \"image\": \"/images/pengurus/dewi-nareswari.png\"}"
     },
     {
       "id": "leadership-14",
       "board": "islamic-center",
       "order": 7,
-      "image": null,
-      "content": "{\"name\": \"Dahniar\", \"position\": \"Vice President of Finance & Support\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu niar.png\"}"
+      "image": "/images/pengurus/dahniar.png",
+      "content": "{\"name\": \"Dahniar\", \"position\": \"Vice President of Finance & Support\", \"image\": \"/images/pengurus/dahniar.png\"}"
     },
     {
       "id": "leadership-15",
       "board": "islamic-center",
       "order": 8,
-      "image": null,
-      "content": "{\"name\": \"Ruswandri\", \"position\": \"Head of Lembaga Pengelolaan Ziswaf\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/pa ruswandri.png\"}"
+      "image": "/images/pengurus/ruswandri.png",
+      "content": "{\"name\": \"Ruswandri\", \"position\": \"Head of Lembaga Pengelolaan Ziswaf\", \"image\": \"/images/pengurus/ruswandri.png\"}"
     },
     {
       "id": "leadership-16",
       "board": "islamic-center",
       "order": 9,
-      "image": null,
-      "content": "{\"name\": \"Silvi Laeli Kodaria\", \"position\": \"Head of Sekolah Alam Qurani Ar Rahman\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu silvi.png\"}"
+      "image": "/images/pengurus/silvi-laeli.png",
+      "content": "{\"name\": \"Silvi Laeli Kodaria\", \"position\": \"Head of Sekolah Alam Qurani Ar Rahman\", \"image\": \"/images/pengurus/silvi-laeli.png\"}"
     },
     {
       "id": "leadership-17",
       "board": "islamic-center",
       "order": 10,
-      "image": null,
-      "content": "{\"name\": \"Ziyad Khairy\", \"position\": \"Head of Pesantren Tahfidz Qur'an dan Digital Ar-Rahman\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/ustd ziyad.png\"}"
+      "image": "/images/pengurus/ustd-ziyad.png",
+      "content": "{\"name\": \"Ziyad Khairy\", \"position\": \"Head of Pesantren Tahfidz Qur'an dan Digital Ar-Rahman\", \"image\": \"/images/pengurus/ustd-ziyad.png\"}"
     },
     {
       "id": "leadership-18",
       "board": "islamic-center",
       "order": 11,
-      "image": null,
-      "content": "{\"name\": \"Ahmad Khaeruddin\", \"position\": \"Head of Lembaga Pendidikan Al Quran\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/ustd ahmad.png\"}"
+      "image": "/images/pengurus/ustd-ahmad.png",
+      "content": "{\"name\": \"Ahmad Khaeruddin\", \"position\": \"Head of Lembaga Pendidikan Al Quran\", \"image\": \"/images/pengurus/ustd-ahmad.png\"}"
     },
     {
       "id": "leadership-19",
       "board": "islamic-center",
       "order": 12,
-      "image": null,
-      "content": "{\"name\": \"Susilawati\", \"position\": \"Head of Lembaga Pembinaan Masyarakat\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu susi.png\"}"
+      "image": "/images/pengurus/susilawati.png",
+      "content": "{\"name\": \"Susilawati\", \"position\": \"Head of Lembaga Pembinaan Masyarakat\", \"image\": \"/images/pengurus/susilawati.png\"}"
     },
     {
       "id": "leadership-01",
       "board": "yayasan",
       "order": 1,
-      "image": null,
-      "content": "{\"name\": \"Indra Setiawan\", \"position\": \"Pembina\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Pa Indra Setiawan.png\"}"
+      "image": "/images/pengurus/indra-setiawan.png",
+      "content": "{\"name\": \"Indra Setiawan\", \"position\": \"Pembina\", \"image\": \"/images/pengurus/indra-setiawan.png\"}"
     },
     {
       "id": "leadership-02",
@@ -732,36 +732,36 @@
       "id": "leadership-03",
       "board": "yayasan",
       "order": 3,
-      "image": null,
-      "content": "{\"name\": \"Rini Widiastuti Rahayu\", \"position\": \"Pengawas\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Bu Rini Widiastuti.png\"}"
+      "image": "/images/pengurus/rini-widiastuti.png",
+      "content": "{\"name\": \"Rini Widiastuti Rahayu\", \"position\": \"Pengawas\", \"image\": \"/images/pengurus/rini-widiastuti.png\"}"
     },
     {
       "id": "leadership-04",
       "board": "yayasan",
       "order": 4,
-      "image": null,
-      "content": "{\"name\": \"Eko Santoso\", \"position\": \"Ketua\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Pa Eko.png\"}"
+      "image": "/images/pengurus/eko-santoso.png",
+      "content": "{\"name\": \"Eko Santoso\", \"position\": \"Ketua\", \"image\": \"/images/pengurus/eko-santoso.png\"}"
     },
     {
       "id": "leadership-05",
       "board": "yayasan",
       "order": 5,
-      "image": null,
-      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"Bendahara\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu chandra.png\"}"
+      "image": "/images/pengurus/chandra-sari.png",
+      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"Bendahara\", \"image\": \"/images/pengurus/chandra-sari.png\"}"
     },
     {
       "id": "leadership-06",
       "board": "yayasan",
       "order": 6,
-      "image": null,
-      "content": "{\"name\": \"Noor Kartika Muliawati\", \"position\": \"Sekretaris\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Bu Noor.png\"}"
+      "image": "/images/pengurus/noor-kartika.png",
+      "content": "{\"name\": \"Noor Kartika Muliawati\", \"position\": \"Sekretaris\", \"image\": \"/images/pengurus/noor-kartika.png\"}"
     },
     {
       "id": "leadership-07",
       "board": "yayasan",
       "order": 7,
-      "image": null,
-      "content": "{\"name\": \"Rachmania Kurniawati\", \"position\": \"Sekretaris\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Bu Rachmania.png\"}"
+      "image": "/images/pengurus/rachmania-kurniawati.png",
+      "content": "{\"name\": \"Rachmania Kurniawati\", \"position\": \"Sekretaris\", \"image\": \"/images/pengurus/rachmania-kurniawati.png\"}"
     }
   ]
 }

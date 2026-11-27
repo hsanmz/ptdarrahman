@@ -11,8 +11,7 @@ export const FALLBACK_NEWS: NewsArticle[] = [
     slug: 'dua-santri-ptd-ar-rahman-tuntaskan-tasmi-30-juz-bil-ghoib',
     category: "Tahfidz & Tasmi'",
     date: '2024-06-05',
-    image:
-      'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop',
+    image: '/images/news/seminar-kristologi.jpg',
     content: {
       title:
         "Alhamdulillah, Dua Santri PTD Ar-Rahman Tuntaskan Tasmi' 30 Juz Bil Ghoib dan Khotmul Qur'an",
@@ -28,8 +27,7 @@ export const FALLBACK_NEWS: NewsArticle[] = [
     slug: 'sharing-session-ptd-ar-rahman-senior-engineer-gojek-nextjs',
     category: 'Teknologi Digital',
     date: '2025-09-19',
-    image:
-      'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop',
+    image: '/images/news/sharing-session-gojek.jpg',
     content: {
       title:
         'Sharing Session PTD Ar-Rahman Hadirkan Senior Engineer Gojek, Kupas Tuntas Framework Next.js',
@@ -45,8 +43,7 @@ export const FALLBACK_NEWS: NewsArticle[] = [
     slug: 'santri-ptd-ar-rahman-porseni-pontren-2025-kabupaten-bekasi',
     category: 'Kegiatan & Prestasi',
     date: '2025-10-19',
-    image:
-      'https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=1200&auto=format&fit=crop',
+    image: '/images/news/porseni-pontren-2025.jpg',
     content: {
       title:
         'Santri PTD Ar-Rahman Tunjukkan Semangat Juang di PORSENI PONTREN 2025 Kabupaten Bekasi',
@@ -62,8 +59,7 @@ export const FALLBACK_NEWS: NewsArticle[] = [
     slug: 'tradisi-tasmi-10-juz-sekali-duduk-dan-medali-emas-olimpiade-tafsir',
     category: "Tahfidz & Tasmi'",
     date: '2024-07-15',
-    image:
-      'https://images.unsplash.com/photo-1576767475305-ce65f5cbb67e?q=80&w=1200&auto=format&fit=crop',
+    image: '/images/news/lomba-hut-ri-80.jpg',
     content: {
       title:
         "Tradisi Tasmi' 10 Juz Sekali Duduk dan Raihan Medali Emas Olimpiade Tafsir Qur'an Nasional",
@@ -79,8 +75,7 @@ export const FALLBACK_NEWS: NewsArticle[] = [
     slug: 'evaluasi-kompetensi-digital-ujian-praktik-iot-dan-basis-data',
     category: 'Teknologi Digital',
     date: '2024-12-10',
-    image:
-      'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
+    image: '/images/news/sharing-session-gojek.jpg',
     content: {
       title:
         'Evaluasi Kompetensi Digital: Santri PTD Ar-Rahman Jalani Ujian Praktik IoT dan Basis Data',
@@ -96,8 +91,7 @@ export const FALLBACK_NEWS: NewsArticle[] = [
     slug: 'gerakan-lingkungan-indah-ramadhan-dan-ukhuwah-santri-ptd-ar-rahman',
     category: 'Kehidupan Asrama',
     date: '2025-03-12',
-    image:
-      'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop',
+    image: '/images/news/ramadhan-gotong-royong.png',
     content: {
       title:
         'Menjemput Keberkahan Ramadhan dan Memupuk Ukhuwah Lewat Gerakan Lingkungan Indah Santri',

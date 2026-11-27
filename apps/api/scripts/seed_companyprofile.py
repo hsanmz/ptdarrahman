@@ -826,6 +826,7 @@ def seed_leadership_members() -> None:
             payload = {
                 "board": m.get("board") or "yayasan",
                 "order": int(m.get("order") or 0),
+                "image": m.get("image") or None,
                 "content": c_json,
                 "updated_at": now,
             }
