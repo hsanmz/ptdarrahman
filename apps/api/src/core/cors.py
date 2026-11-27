@@ -40,9 +40,9 @@ DEFAULT_ORIGINS: list[str] = [
     "http://103.55.37.77",
 ]
 
-# Covers every local dev port, any IPv4 address, arrahmanic.org subdomains, and ptdarrahman.sch.id subdomains
+# Covers every local dev port, any IPv4 address, and arrahmanic.org subdomains
 DEFAULT_ORIGIN_REGEX = re.compile(
-    r"^https?://(localhost|127\.0\.0\.1|\[::1\]|(\d{1,3}\.){3}\d{1,3}|([a-zA-Z0-9-]+\.)*arrahmanic\.org|([a-zA-Z0-9-]+\.)*ptdarrahman\.sch\.id)(:\d+)?$"
+    r"^https?://(localhost|127\.0\.0\.1|\[::1\]|(\d{1,3}\.){3}\d{1,3}|([a-zA-Z0-9-]+\.)*arrahmanic\.org)(:\d+)?$"
 )
 
 

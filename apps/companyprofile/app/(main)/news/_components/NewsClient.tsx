@@ -204,15 +204,15 @@ export default function NewsClient({ news }: { news: NewsArticle[] }) {
                 href={`/news/${featuredArticle.slug}`}
                 className="group glass-card rounded-3xl overflow-hidden !no-underline grid grid-cols-1 lg:grid-cols-12 border border-[var(--border)] hover:border-[var(--accent)]/40 hover:shadow-xl transition-all duration-300"
               >
-                <div className="lg:col-span-7 aspect-[16/10] lg:aspect-auto lg:min-h-[360px] relative overflow-hidden bg-[var(--bg-secondary)]">
+                <div className="lg:col-span-7 aspect-[16/10] lg:aspect-auto lg:min-h-[360px] relative overflow-hidden bg-[var(--bg-secondary)] shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={resolveImageSrc(featuredArticle.image) || FALLBACK_IMAGES.news}
                     alt={featuredArticle.content?.title || 'Sorotan Berita Utama'}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.news)}
                   />
-                  <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                  <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-md">
                       <Sparkles className="w-3.5 h-3.5" />
                       Sorotan Utama
@@ -278,20 +278,20 @@ export default function NewsClient({ news }: { news: NewsArticle[] }) {
                     <Link
                       key={article.id || article.slug}
                       href={`/news/${article.slug}`}
-                      className="group glass-card rounded-2xl overflow-hidden !no-underline flex flex-col border border-[var(--border)] hover:border-[var(--accent)]/40 hover:shadow-lg transition-all duration-300"
+                      className="group glass-card rounded-2xl overflow-hidden !no-underline flex flex-col h-full border border-[var(--border)] hover:border-[var(--accent)]/40 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="aspect-[16/10] overflow-hidden relative bg-[var(--bg-secondary)]">
+                      <div className="relative w-full aspect-[16/10] overflow-hidden bg-[var(--bg-secondary)] shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={resolveImageSrc(article.image) || FALLBACK_IMAGES.news}
                           alt={info?.title || 'Gambar berita'}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           loading="lazy"
                           onError={(e) => handleImageFallback(e, FALLBACK_IMAGES.news)}
                         />
                         {article.category && (
-                          <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-[var(--accent)] text-white shadow-sm">
+                          <span className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-[var(--accent)] text-white shadow-sm">
                             {article.category}
                           </span>
                         )}
