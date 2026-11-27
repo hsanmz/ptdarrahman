@@ -8,7 +8,6 @@ import { DashboardShell } from '@repo/ui'
 import { ProfilePage as SharedProfilePage, type ProfileSession } from '@repo/ui/profile'
 import {
   AdminDashboardLink,
-  AdminSidebarFooter,
   buildAdminNavGroups,
   useAdminFavicon,
 } from '../_admin-shell'
@@ -148,7 +147,6 @@ export default function AdminProfilePage() {
             router.push('/auth/login')
           }
         }}
-        sidebarFooter={<AdminSidebarFooter />}
       >
         <SharedProfilePage
           user={adminUser}
