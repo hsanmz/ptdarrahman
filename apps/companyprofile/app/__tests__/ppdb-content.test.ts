@@ -39,7 +39,7 @@ describe('STATIC_PPDB_CONTENT — konten statis halaman /ppdb', () => {
   it('memuat konten lengkap tanpa bergantung pada CMS/API', () => {
     expect(STATIC_PPDB_CONTENT.jalur).toHaveLength(4)
     expect(STATIC_PPDB_CONTENT.pillars).toHaveLength(4)
-    expect(STATIC_PPDB_CONTENT.steps).toHaveLength(6)
+    expect(STATIC_PPDB_CONTENT.steps).toHaveLength(5)
     for (const step of STATIC_PPDB_CONTENT.steps) {
       expect(step.content?.title).toBeTruthy()
       expect(step.content?.desc).toBeTruthy()

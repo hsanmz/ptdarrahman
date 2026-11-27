@@ -1,0 +1,767 @@
+{
+  "gallery_items": [
+    {
+      "id": "7f766f2e-e635-4fae-98f1-dc5d1392f18e",
+      "image": "http://localhost:8000/uploads/3340a321-acd9-49fd-a4a6-a4b94908d829",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Berenang Bersama Santri\"}"
+    },
+    {
+      "id": "c41eb3a8-6181-4bd4-bea2-820fc1f8aa9e",
+      "image": "http://localhost:8000/uploads/750b3575-4471-49b0-afe5-8196f153132a",
+      "category": "Kegiatan Santri",
+      "content": "{\"title\": \"Podcast\"}"
+    },
+    {
+      "id": "ef55dde4-f33e-486b-9b6c-66335a04a42f",
+      "image": "http://localhost:8000/uploads/d715d435-2cdf-4865-aaad-25cde6a2631c",
+      "category": "Kegiatan Tahfidz & Al-Qur'an",
+      "content": "{\"title\": \"Pembacaan Kitab Hadisul Sholihin\"}"
+    },
+    {
+      "id": "8eb3fcef-043b-4947-b2db-ade42ea2bf46",
+      "image": "http://localhost:8000/uploads/63ff389d-7398-4bd6-880d-23a846efeb83",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Agenda Doa Bersama\"}"
+    },
+    {
+      "id": "b15ac018-d9db-4528-8bfc-4c2d4988ebd6",
+      "image": "http://localhost:8000/uploads/72c2deff-370d-4365-b7ed-84f2685171d7",
+      "category": "Kegiatan Akademik",
+      "content": "{\"title\": \"Belajar Bersama\"}"
+    },
+    {
+      "id": "4db53a69-1b65-4146-aa84-5efbb2803dc1",
+      "image": "http://localhost:8000/uploads/4cd28cb1-abbe-4779-a5b6-f5bc6922a063",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Latihan Futsal\",\"desc\":\"Latihan Fustal Bersama Ust.japar\"}"
+    },
+    {
+      "id": "b190ad11-3b5f-4287-b197-e06cc8954be0",
+      "image": "http://localhost:8000/uploads/c5ef76a2-fe4a-494f-8a61-f08e909e6504",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Futsal\"}"
+    },
+    {
+      "id": "0d76d81d-0a52-4715-b5cc-f3b821b1edff",
+      "image": "http://localhost:8000/uploads/c70459d0-05a8-411c-abf6-7487d3c2df49",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\":\"Penghargaan Juara 3 Lomba Nasyid\",\"desc\":\"Merayakan maulid nabi\"}"
+    },
+    {
+      "id": "516e43ad-1ea1-44d0-9a3e-ca8e27ed582e",
+      "image": "http://localhost:8000/uploads/b9ea9049-f8c9-4769-a7ba-a7b2564a40e3",
+      "category": "Kehidupan Asrama",
+      "content": "{\"title\": \"Iftar Jama'i Bersama Wali Santri\"}"
+    },
+    {
+      "id": "54429169-1893-4c37-8195-8cbdfd2a4ca9",
+      "image": "http://localhost:8000/uploads/b9febcea-04a6-4138-ab5f-5d260c527242",
+      "category": "Kegiatan Tahfidz & Al-Qur'an",
+      "content": "{\"title\": \"Halaqoh\"}"
+    },
+    {
+      "id": "55cb1cbe-b25f-4a82-ae0c-c246f8ead843",
+      "image": "http://localhost:8000/uploads/e7d0c465-6169-42b7-84d5-e009e9a1853d",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "a8594637-5394-4eb0-b3fd-be606261511d",
+      "image": "http://localhost:8000/uploads/9e88398e-fee1-4bcd-a22f-42d3c83653c6",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "be98277c-06ec-486e-87d8-1850f11c3417",
+      "image": "http://localhost:8000/uploads/a560ac9f-7214-40ba-be8b-afa23c838be6",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Istirahat Selepas Futsal\"}"
+    },
+    {
+      "id": "50569347-26e6-4941-a37a-734bbd2dfe31",
+      "image": "http://localhost:8000/uploads/30e15081-ed6b-443d-bdf4-8f09f95439e5",
+      "category": "Kegiatan Tahfidz & Al-Qur'an",
+      "content": "{\"title\": \"Khotmul Quran Keliling\"}"
+    },
+    {
+      "id": "c13b9b80-9db1-4410-b472-728fa53f7c64",
+      "image": "http://localhost:8000/uploads/6d25be78-ee60-47d3-acf2-0c82302a70b1",
+      "category": "Perlombaan & Prestasi",
+      "content": "{\"title\": \"Lomba MHQ dan Ceramah\"}"
+    },
+    {
+      "id": "3e2f82ce-7767-412c-904e-dc5aa4fb5ed1",
+      "image": "http://localhost:8000/uploads/fa5f230e-e173-4648-8c2a-6932fc0d6878",
+      "category": "Kegiatan Sekolah",
+      "content": "{\"title\": \"Persiapan Agenda Berbagi Ilmu\"}"
+    },
+    {
+      "id": "413ed275-78f8-41e0-8760-34a7b5778fe9",
+      "image": "http://localhost:8000/uploads/8b33c192-699d-4223-a08c-732f829c28ba",
+      "category": "Kegiatan Organisasi",
+      "content": "{\"title\":\"Nasihat Dari Ketua Yayasan (Pak Eko)\",\"desc\":\"Ketua Yayasan Arrahman Berbagi Nasihat\"}"
+    },
+    {
+      "id": "55b029e6-5327-4aab-b851-f9e73a18c82b",
+      "image": "http://localhost:8000/uploads/673fe386-e29f-4cf0-8aa6-e737071ea19e",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Muhadhoroh Mingguan\"}"
+    },
+    {
+      "id": "5cc1dfd6-4f53-4a7c-8e7b-07dff5658b05",
+      "image": "http://localhost:8000/uploads/16acfaae-a12d-4cc0-93ef-1f9f1af2e82f",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Muhadhoroh Mingguan\"}"
+    },
+    {
+      "id": "c7d6a198-f994-4a99-a6ac-66d9dba2a678",
+      "image": "http://localhost:8000/uploads/9f3fcc82-6d33-40ab-bbc6-3375fd357467",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Muhadasah Mingguan\"}"
+    },
+    {
+      "id": "eb4a3350-6ac3-49d9-ad64-82e8866d9c7a",
+      "image": "http://localhost:8000/uploads/97bc7e24-4bc8-4a05-ad2c-e6a98d11b7db",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Muhadhoroh Mingguan\"}"
+    },
+    {
+      "id": "99856612-05dc-4020-ae7c-0173c7426d86",
+      "image": "http://localhost:8000/uploads/3e73c5ba-5ac7-482f-b942-7efee1668369",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Pemanasan Olahraga\"}"
+    },
+    {
+      "id": "77878f7c-50cc-4d95-8205-d91b641a1e54",
+      "image": "http://localhost:8000/uploads/889e2b83-4e6a-4928-a9c7-4f1259b5f7a3",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Pemanasan Olahraga\"}"
+    },
+    {
+      "id": "aed20f7f-13b6-4271-9739-9ee937dc4b83",
+      "image": "http://localhost:8000/uploads/f3b1d54f-b909-40bd-b548-3ab1b960c439",
+      "category": "Kegiatan Tahfidz & Al-Qur'an",
+      "content": "{\"title\": \"Pembacaan Kitab Hadist Harian\"}"
+    },
+    {
+      "id": "b23c1868-0055-40b7-8b72-d24e2aa110aa",
+      "image": "http://localhost:8000/uploads/c3f3203b-0a01-4cc1-9551-6bc1a2dd0bab",
+      "category": "Kegiatan Tahfidz & Al-Qur'an",
+      "content": "{\"title\": \"Pembacaan Kitab Hadist Harian\"}"
+    },
+    {
+      "id": "e17eb185-a6c1-4161-b50f-79ec7e171032",
+      "image": "http://localhost:8000/uploads/dc212d67-9e11-4770-b809-95ac43c7b623",
+      "category": "Perlombaan & Prestasi",
+      "content": "{\"title\": \"Pemberangkatan Menuju Lomba Espeto9\"}"
+    },
+    {
+      "id": "3ccba8c1-54c6-4011-9122-36172546eb90",
+      "image": "http://localhost:8000/uploads/0608b5f7-e13b-4986-a950-2d5d816abddd",
+      "category": "Perlombaan & Prestasi",
+      "content": "{\"title\":\"Penghargaan Juara 2 Story Telling PTD\",\"desc\":\"Merayakan Hari lahir Baginda Nabi Muhammad SAW\"}"
+    },
+    {
+      "id": "b8c09b83-dd58-41b4-9946-a80e7f56a5e4",
+      "image": "http://localhost:8000/uploads/399466bb-8601-46b9-be37-5c0234e2ccef",
+      "category": "Acara & Perayaan",
+      "content": "{\"title\": \"Penghargaan Lomba 17 Agustus 1945\"}"
+    },
+    {
+      "id": "964d42a4-f6b6-4ae7-be10-b5bcbcf5c0f9",
+      "image": "http://localhost:8000/uploads/1bc25b3e-960e-451c-9294-674b3ea35607",
+      "category": "Perlombaan & Prestasi",
+      "content": "{\"title\": \"Lomba Espeto9 MHQ dan Story Telling\"}"
+    },
+    {
+      "id": "df0fb169-876c-4c66-b1f5-251972e9cdce",
+      "image": "http://localhost:8000/uploads/b8de27f1-fc34-4196-a84e-44b79ae485f4",
+      "category": "Kegiatan Sekolah",
+      "content": "{\"title\": \"Persiapan Agenda Berbagi Ilmu\"}"
+    },
+    {
+      "id": "ac448795-b88a-4206-bc77-d1c155a6e936",
+      "image": "http://localhost:8000/uploads/7bdc533f-9a82-4fe7-b3e2-11d876c3a3b4",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "d8d5f588-4704-4d2b-ad2c-2c4d770f5e94",
+      "image": "http://localhost:8000/uploads/a35ee620-350f-4edc-a1f2-cb86a2c0b485",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "ebf942cd-dc07-4b0b-8a8c-885e8e973eb3",
+      "image": "http://localhost:8000/uploads/4424cb34-6d51-4a43-9f3a-c70b2df538f4",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "a3097553-d6fc-4d7e-a411-e25e26b7bd11",
+      "image": "http://localhost:8000/uploads/42db7ca0-d20d-4e0f-8a11-fd1020099e3d",
+      "category": "Kunjungan & Studi Banding",
+      "content": "{\"title\": \"Photo Bersama di Kota Tua\"}"
+    },
+    {
+      "id": "bf2c51fa-89e9-4b88-bcf0-4f968ec86b5f",
+      "image": "http://localhost:8000/uploads/82dedf94-5b7f-4b6e-a83e-b1bd71963cb0",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "c3e7602c-4abf-46bc-aeca-503c5563bfd2",
+      "image": "http://localhost:8000/uploads/bd98fafd-b56e-4066-9603-3adbc9fe6c4b",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "fdf864d7-2048-4bd2-ad5d-43f81e7deba4",
+      "image": "http://localhost:8000/uploads/c763f9df-bc38-46f1-8e6c-ada1c2d73cb4",
+      "category": "Dokumentasi Umum",
+      "content": "{\"title\": \"Photo Bersama\"}"
+    },
+    {
+      "id": "7c970b39-0d65-42f2-93db-b48ede36856f",
+      "image": "http://localhost:8000/uploads/64192fdd-7c1c-4d1a-8429-1293c60fd25c",
+      "category": "Kegiatan Pesantren",
+      "content": "{\"title\": \"Photo Bersama Persiapan Ujian Tahfidz\"}"
+    },
+    {
+      "id": "dad20360-4493-44f5-a3c0-073401e96ea0",
+      "image": "http://localhost:8000/uploads/f918a2e8-7a7d-4302-afec-b6d86df83847",
+      "category": "Kunjungan & Studi Banding",
+      "content": "{\"title\": \"Kunjungi Masjid Istiqlal\"}"
+    },
+    {
+      "id": "e5e4002a-cc2f-418a-8e62-c7e8b56bef8f",
+      "image": "http://localhost:8000/uploads/9d0d1442-de4d-4584-bd97-a668f4b77543",
+      "category": "Kunjungan & Studi Banding",
+      "content": "{\"title\": \"Photo di Kereta Kunjungan ke Kota Tua\"}"
+    },
+    {
+      "id": "1735f044-16b5-47fd-b88a-14fd1114de89",
+      "image": "http://localhost:8000/uploads/164939a2-8e36-45ad-9b07-77bd2e22fa25",
+      "category": "Kegiatan Akademik",
+      "content": "{\"title\": \"Pelaksanaan Ujian UTS\"}"
+    },
+    {
+      "id": "3b684568-e04c-4a78-8584-a3805cec3872",
+      "image": "http://localhost:8000/uploads/1ee73ed9-fdcf-4202-918b-cdc7ef117b89",
+      "category": "Kegiatan Akademik",
+      "content": "{\"title\":\"Pelaksanaan Ujian UTS\",\"desc\":\"Ujian Tengah Semester Santri PTD\"}"
+    },
+    {
+      "id": "6b704b6c-260c-41cf-b7a4-8b8f3c450630",
+      "image": "http://localhost:8000/uploads/09972c0f-dd90-43ca-b6d0-320559ea6778",
+      "category": "Kegiatan Pesantren",
+      "content": "{\"title\": \"Upacara Bendera\"}"
+    },
+    {
+      "id": "a5c28454-64a1-443b-b717-147c6cf07e8f",
+      "image": "http://localhost:8000/uploads/4bdb0ec0-11b9-48b0-bf11-e996909bb045",
+      "category": "Kegiatan Pesantren",
+      "content": "{\"title\": \"Upacara Bendera\"}"
+    },
+    {
+      "id": "d4af0ad3-78c7-4d24-b548-ca3d44b79897",
+      "image": "http://localhost:8000/uploads/2baf8be8-3f34-429c-829b-f9100ccc3f5d",
+      "category": "Kegiatan Akademik",
+      "content": "{\"title\": \"Pelaksanaan Ujian UTS\"}"
+    },
+    {
+      "id": "e8bea269-9124-48ae-80fa-55a3f0605284",
+      "image": "http://localhost:8000/uploads/9b1dac79-6453-466c-a7f7-d41f5f839782",
+      "category": "Kegiatan Pesantren",
+      "content": "{\"title\": \"Upacara Bendera\"}"
+    },
+    {
+      "id": "139bea39-b343-4a8d-899f-d455815ce006",
+      "image": "http://localhost:8000/uploads/1c6265f6-d3e7-4f51-aabe-8f79f9ec2c35",
+      "category": "Kegiatan Pesantren",
+      "content": "{\"title\": \"Upacara Bendera\"}"
+    },
+    {
+      "id": "28b8b72c-910a-4d45-8eac-d7f26a3a70af",
+      "image": "http://localhost:8000/uploads/034a33de-1adc-4860-b262-1dd40561cffc",
+      "category": "Kegiatan Pesantren",
+      "content": "{\"title\": \"Upacara Bendera\"}"
+    },
+    {
+      "id": "a744a27b-ba2e-4a76-be57-d7c18c06911b",
+      "image": "http://localhost:8000/uploads/08ba4071-6e38-4116-9307-5669ea4af7ca",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Latihan体能 di Lapangan\"}"
+    },
+    {
+      "id": "8efff451-6468-4214-a6b4-db31c10e4554",
+      "image": "http://localhost:8000/uploads/1c8484a5-88de-4f41-b292-f3bee86b2eb0",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Senam Pemanasan Bersama\"}"
+    },
+    {
+      "id": "7bf2db17-4398-47bf-a004-cf3d280cde12",
+      "image": "http://localhost:8000/uploads/a6171560-3499-44eb-87d5-8e19cc7e6369",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Pemanasan Sebelum olahraga\"}"
+    },
+    {
+      "id": "87b06c18-ad10-4b63-a7c0-3b8175db49a9",
+      "image": "http://localhost:8000/uploads/e5fd6212-019b-46af-9be5-7dd0ebb07600",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Stretching Bersama\"}"
+    },
+    {
+      "id": "4977d5aa-76a3-4fa2-b79d-d0f389c6186e",
+      "image": "http://localhost:8000/uploads/f5bdabe9-17e8-46e7-bcad-cd923bc20996",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Latihan Agility Train Your Attitude\",\"desc\":\"Makan Ubi Unggu Bersama Santri Train Your Attitude\"}"
+    },
+    {
+      "id": "e2530a3d-841b-4f8f-bbfe-51ec2ebc8ae5",
+      "image": "http://localhost:8000/uploads/fbec6305-cac3-4aef-ac94-08772c7ee0b4",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Drill Kaki Cepat\"}"
+    },
+    {
+      "id": "c8dccb01-b2dc-491b-a91a-7d85718584eb",
+      "image": "http://localhost:8000/uploads/e16aa369-6fb0-489d-8e2c-93cb155ff290",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Lari Pemanasan круг\"}"
+    },
+    {
+      "id": "d7b2455c-82d7-4c79-ae85-1eb38d4404ca",
+      "image": "http://localhost:8000/uploads/e00bac4a-b99c-42f6-bd68-00a85a495556",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Sprint Latihan\"}"
+    },
+    {
+      "id": "6333d6bf-bf73-4988-954c-623494f027cf",
+      "image": "http://localhost:8000/uploads/29e8fbae-93d5-4e69-8ebe-df0be832d8e6",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Latihan Power\"}"
+    },
+    {
+      "id": "7888e1d6-718f-4e3b-9f0f-f98105889fa0",
+      "image": "http://localhost:8000/uploads/c4fd1d27-908b-4251-9ac0-936dad08cf17",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Push-up Bersama\"}"
+    },
+    {
+      "id": "b2ed3ad4-87b9-4ea0-97f6-603f76d96da0",
+      "image": "http://localhost:8000/uploads/073d33b8-7665-4cd6-87ff-04613367f492",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Sit-up Training\"}"
+    },
+    {
+      "id": "aed47206-2f9a-41cb-94a9-c2391a5850c5",
+      "image": "http://localhost:8000/uploads/06e2e58e-dac2-4306-8cdb-23a48281dc8d",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Pull-up Exercise\"}"
+    },
+    {
+      "id": "aac5382a-b957-4735-b09d-da3449af1c89",
+      "image": "http://localhost:8000/uploads/51d524c4-bc43-4c5f-a8cc-a9ba0bffabfc",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Plank Hold\"}"
+    },
+    {
+      "id": "35e85333-1ce2-48f5-948b-a5b4c6a0deb8",
+      "image": "http://localhost:8000/uploads/e634d789-bef9-4c31-a604-5dd53fee4af9",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Latihan Back Strength\"}"
+    },
+    {
+      "id": "03778d43-3996-47d6-bf13-78e9a0f0f917",
+      "image": "http://localhost:8000/uploads/8959f567-8bd0-4aed-82b8-c27d41fb2a67",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Team Building Exercis Train Your Attitude\",\"desc\":\"Pembagian Tugas Setiap masing kelompok \"}"
+    },
+    {
+      "id": "76e4fae5-ad15-4b92-a5da-98c26012185a",
+      "image": "http://localhost:8000/uploads/e3116588-b092-4477-95bb-380cf18a4aeb",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Fun Game Olahraga\"}"
+    },
+    {
+      "id": "f5de4636-5529-4460-b9dc-67890d80ca1c",
+      "image": "http://localhost:8000/uploads/2c4b99e1-18f2-45b5-a2fe-25333f3453df",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Relay Race Training\"}"
+    },
+    {
+      "id": "b5c640e9-f33e-43a3-b97e-3be8d4b6cfef",
+      "image": "http://localhost:8000/uploads/62385b2f-ae1d-41fd-a70e-c88a27fec963",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Basket Skill Drill\"}"
+    },
+    {
+      "id": "3a4be213-86bb-4d94-bcfa-f41b783be17e",
+      "image": "http://localhost:8000/uploads/9cab513e-d2ee-49b0-a8aa-1783d1cef150",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Penampilan Nasyid Train Your Attitude \",\"desc\":\"Penampilan Naysid yang di bawakan oleh para-ustadz\"}"
+    },
+    {
+      "id": "0f8b6e8e-3644-4977-b42d-9b2f88df35e6",
+      "image": "http://localhost:8000/uploads/b812c5cf-ff1e-4dac-a53a-0ccdd2fafc40",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Train Your Attitude\",\"desc\":\"Pemberian arahan Train Your Attitude\"}"
+    },
+    {
+      "id": "37e16bcc-29a7-4c36-b3b8-59910c41bbfd",
+      "image": "http://localhost:8000/uploads/c6360d42-eb6e-4c74-9e9a-3704c786f64a",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Practice Train Your Attitude\",\"desc\":\"Menonton pertunjukan Akting Train Your Attitude setiap masing regu\"}"
+    },
+    {
+      "id": "49b91315-8f6f-4988-92c0-2c7258b1b42f",
+      "image": "http://localhost:8000/uploads/bf94f759-4949-475a-b698-16daaeebd432",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Perakitan Tenda Train Your Attitude\",\"desc\":\"Merakit Tenda setiap masing regu kelompok Train Your Attitude\"}"
+    },
+    {
+      "id": "5f5f8203-a48d-400f-bb5d-3d0668e8b615",
+      "image": "http://localhost:8000/uploads/f33e1212-57ec-418f-bdf7-86ff94b23ca9",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Train Your Attitude\",\"desc\":\"Merapihkan Area sekitar Tenda Masing-masing regu\"}"
+    },
+    {
+      "id": "7a6d92f7-4fab-42eb-9a21-317c1ef467f9",
+      "image": "http://localhost:8000/uploads/39cab3fa-cd3d-478e-bcb1-d99f81efc511",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Swimming Training\"}"
+    },
+    {
+      "id": "0207a3de-bb91-4204-84a6-40a306bffc5b",
+      "image": "http://localhost:8000/uploads/f7d36381-494a-44af-95ae-7836504df421",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Upacara Train Your Attitude\",\"desc\":\"Pelatihan kemandirian dan survival \"}"
+    },
+    {
+      "id": "f12d2eb4-2387-4fb1-b359-88767b180eaf",
+      "image": "http://localhost:8000/uploads/6ef59116-7f69-47fe-ac95-bda0a3494669",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Jogging Sore\"}"
+    },
+    {
+      "id": "d0ed0cb0-6965-46ca-94ad-06afff4fec9b",
+      "image": "http://localhost:8000/uploads/67495631-0aef-4980-b3c1-b51462d2e14e",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Cycling Exercise\"}"
+    },
+    {
+      "id": "c462fe8e-d989-464f-8300-6696e3e2d836",
+      "image": "http://localhost:8000/uploads/816e4fe4-fddc-427e-8bb1-38e111e6535c",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Yoga untuk Santri\"}"
+    },
+    {
+      "id": "77893033-2a89-4fda-9563-b5c581f667de",
+      "image": "http://localhost:8000/uploads/d9a33e2c-dc26-404d-b64f-514ce593bed3",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Train Your Attitude\",\"desc\":\"Melatih dan Belajar Baris Berbaris\"}"
+    },
+    {
+      "id": "4283c530-3487-46c3-a3ec-2fb3810b616e",
+      "image": "http://localhost:8000/uploads/65389836-333d-4463-b6f6-c791cc53c8f5",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\":\"Latihan Baris berbaris Train Your Attitude\",\"desc\":\"Bermain Baris Berbaris Santri PTD arrahman\"}"
+    },
+    {
+      "id": "80234726-f56b-47da-8ded-3ff80aabc2ab",
+      "image": "http://localhost:8000/uploads/e44d4d99-de7e-49ab-b5c5-6a5c9687a140",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Wushu Practice\"}"
+    },
+    {
+      "id": "865a3401-d115-4ee1-9caf-e6995062465a",
+      "image": "http://localhost:8000/uploads/267400ea-fde9-4c81-a945-49f3c0124aa8",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Self Defense Class\"}"
+    },
+    {
+      "id": "b0e5c4a9-8f48-4a7f-8b54-097c022384a3",
+      "image": "http://localhost:8000/uploads/cb4b772d-c058-42c6-9168-e2ffa40e9cc8",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Obstacle Course\"}"
+    },
+    {
+      "id": "a1c9fcb5-fb30-41f5-b536-9761c88d96b1",
+      "image": "http://localhost:8000/uploads/0e7fd869-3444-4dff-8379-45fc9c42295f",
+      "category": "Olahraga & Kebugaran",
+      "content": "{\"title\": \"Tough Mudder TA\"}"
+    },
+    {
+      "id": "3880528e-a24e-467c-9324-c2e44167a4e0",
+      "image": "http://localhost:8000/uploads/1ab2deeb-f563-4a03-ba6a-ae69ecbd099b",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\":\"Motivasi Dari Ust.Farrel Muhammad Rizqi, Lc, S.T.l, M.Ec.\",\"desc\":\"Pembinaan dan Motivasi mengenal Sejarah Islam\"}"
+    },
+    {
+      "id": "d686ccb9-4c60-4450-a604-7b7f0d129389",
+      "image": "http://localhost:8000/uploads/3752da4c-fdc1-4e8d-8626-08da70f1980a",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Pemberian Al-Quran untuk Santri Baru\"}"
+    },
+    {
+      "id": "77452c97-cc73-435f-a0e3-8b2441c3e36e",
+      "image": "http://localhost:8000/uploads/b5b81026-7c84-43a1-805a-53927817e593",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\":\"Motivasi Dari Ust.Farrel Muhammad Rizqi, Lc, S.T.l, M.Ec.\",\"desc\":\"Motivasi dan Shearing ilmu\"}"
+    },
+    {
+      "id": "c7d0469a-4642-45d7-9bdb-74c0d6535292",
+      "image": "http://localhost:8000/uploads/5f3df4a5-6a20-4c03-96c8-6bf259faec4a",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Doa Bersama Setelah Pemberian\"}"
+    },
+    {
+      "id": "c704153b-25a2-4528-9c70-0db4e35c58e0",
+      "image": "http://localhost:8000/uploads/0014a419-42f5-4387-8c28-1716f5f9b293",
+      "category": "Kegiatan Keagamaan",
+      "content": "{\"title\": \"Foto Bersama Sesudah Pemberian Al-Quran\"}"
+    }
+  ],
+  "news_articles": [
+    {
+      "id": "news-kit-1",
+      "slug": "dua-santri-ptd-ar-rahman-tuntaskan-tasmi-30-juz-bil-ghoib",
+      "image": null,
+      "category": "Tahfidz & Tasmi'",
+      "date": "2024-06-05",
+      "gallery": null,
+      "content": "{\"title\": \"Alhamdulillah, Dua Santri PTD Ar-Rahman Tuntaskan Tasmi' 30 Juz Bil Ghoib dan Khotmul Qur'an\", \"excerpt\": \"Dua santri putra PTD Ar-Rahman, Alvito Syarman Siregar dan Muhammad Ardan Sunda, menuntaskan ujian setoran hafalan 30 Juz Bil Ghoib dari Juz 1 hingga Juz 30, ditutup prosesi Khotmul Qur'an pada 5 Juni 2024.\", \"content\": \"Suasana haru dan penuh kesyukuran menyelimuti keluarga besar Pesantren Tahfidz & Digital (PTD) Ar-Rahman. Dua santri putra terbaik, yakni Alvito Syarman Siregar dan Muhammad Ardan Sunda, berhasil menuntaskan ujian setoran hafalan Al-Qur'an 30 Juz Bil Ghoib (tanpa melihat mushaf) dari Juz 1 hingga Juz 30.\\n\\nRangkaian ujian Tasmi' 30 Juz Bil Ghoib dilaksanakan selama dua hari penuh pada Senin hingga Selasa, 3-4 Juni 2024 mulai ba'da Subuh hingga selesai bertempat di Kampus PTD Ar-Rahman, Mangunjaya, Tambun Selatan, Bekasi. Setelah dinyatakan tuntas menyetorkan seluruh hafalannya, prosesi puncak Khotmul Qur'an digelar secara khidmat pada hari Rabu, 5 Juni 2024 di Gedung Ar-Rahman, Jatimakmur.\\n\\nCapaian ini menjadi bukti nyata bahwa kurikulum terpadu di PTD Ar-Rahman mampu mengantarkan para santri mencapai target hafalan tertinggi sembari tetap aktif mempelajari teknologi informasi. Semoga Allah SWT senantiasa memberikan keberkahan dan keistiqamahan kepada ananda berdua dalam menjaga Kalamullah sepanjang hayat.\", \"author\": \"\"}"
+    },
+    {
+      "id": "news-kit-5",
+      "slug": "evaluasi-kompetensi-digital-ujian-praktik-iot-dan-basis-data",
+      "image": null,
+      "category": "Teknologi Digital",
+      "date": "2024-12-10",
+      "gallery": null,
+      "content": "{\"title\": \"Evaluasi Kompetensi Digital: Santri PTD Ar-Rahman Jalani Ujian Praktik IoT dan Basis Data\", \"excerpt\": \"Pada Sumatif Akhir Semester, santri PTD Ar-Rahman menjalani ujian praktik perakitan dan pemrograman IoT serta perancangan dan pengelolaan basis data di laboratorium.\", \"content\": \"Sebagai pesantren yang memadukan tahfidz Al-Qur'an dan teknologi informasi, pelaksanaan Sumatif Akhir Semester (SAS) di PTD Ar-Rahman tidak hanya menguji capaian hafalan Al-Qur'an, tetapi juga menguji keterampilan rekayasa teknologi para santri secara langsung di laboratorium.\\n\\nDalam rangkaian ujian praktik IT, para santri mendemonstrasikan proyek perakitan dan pemrograman Internet of Things (IoT) yang mengintegrasikan perangkat keras (hardware) dengan logika pemrograman. Selain itu, santri juga menjalani ujian praktik perancangan serta pengelolaan Basis Data (Database) untuk memastikan mereka menguasai fondasi penyimpanan data aplikasi modern. Melalui metode evaluasi berbasis praktik ini, setiap santri terlatih menyelesaikan permasalahan teknis secara mandiri dan terukur.\", \"author\": \"\"}"
+    },
+    {
+      "id": "31da2d8d-7f6c-4ff9-9f9e-76c3d13dc68d",
+      "slug": "seminar-keislaman-ustaz-ahmad-kainama-kupas-kristologi-dan-perbandingan-agama",
+      "image": "https://webbackend.arrahmanic.org/storage/posts/t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx.jpg",
+      "category": "news",
+      "date": "",
+      "gallery": null,
+      "content": "{\"title\": \"Seminar Keislaman: Ustaz Ahmad Kainama Kupas Kristologi dan Perbandingan Agama\", \"body\": \"BEKASI - Kajian Kristologi diadakan di Pesantren Tahfidz dan Digital (PTD) pada Hari Minggu (10/3/2025) tepatnya di mushola gedung gedung Pesantren Tahfidz dan Digital (PTD), Jatimulya,Tambun Selatan, Kota Bekasi.\\n\\nTempat ini menjadi wadah bagi para santri dan ustadz untuk memperdalam ilmu agama serta berdiskusi tentang berbagai topik keislaman.\\n\\nKajian kali ini menghadirkan Ustadz Ahmad Kainama, seorang pendakwah yang aktif dalam diskusi lintas agama, khususnya di bidang Kristologi dan perbandingan agama. Dalam ceramahnya, beliau membahas Kristologi dari perspektif Islam guna meningkatkan pemahaman umat Muslim terhadap ajaran agama lain serta mencegah mereka dari pengaruh yang dapat menyebabkan perpindahan keyakinan (murtad).\\n\\nKajian berlangsung dengan penuh antusias. Para santri dan ustad tampak fokus mendengarkan penjelasan dari Ustadz Ahmad Kainama. Beberapa santri mencatat poin-poin penting, sementara yang lain sesekali mengajukan pertanyaan untuk memperjelas pemahaman. Suasana menjadi semakin menarik saat Ustadz Kainama memberikan contoh-contoh nyata dalam kehidupan sehari-hari yang berkaitan dengan perbandingan agama. Diskusi berjalan dengan penuh semangat namun tetap dalam suasana santun dan ilmiah.\\n\\nKristologi penting untuk dipelajari oleh umat Islam karena beberapa alasan:\\n\\n- Memperkuat Pemahaman Agama – Dengan memahami ajaran agama lain, umat Islam bisa lebih yakin terhadap keyakinannya sendiri.\\n- Memudahkan Dakwah – Pengetahuan tentang Kristologi membantu umat Islam dalam menyampaikan dakwah dengan lebih baik, terutama dalam diskusi dengan pemeluk Kristen.\\n- Mencegah Kesalahpahaman – Memahami dasar ajaran Kristen membantu menghindari kesalahpahaman dalam perbandingan agama.\\n- Menjaga Keimanan – Dengan mengetahui konsep agama lain, umat Islam tidak mudah terpengaruh atau tergoda untuk berpindah keyakinan.\\n\\nKajian ini menjadi langkah penting dalam memperkuat keimanan serta meningkatkan wawasan santri dan jamaah dalam memahami ajaran Islam dan agama lain.\"}"
+    },
+    {
+      "id": "5ca1451e-3a94-4666-899e-d92c8b09520a",
+      "slug": "ptd-ar-rahman-gelar-lomba-hut-ri-ke-80",
+      "image": "https://webbackend.arrahmanic.org/storage/posts/BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1.jpg",
+      "category": "news",
+      "date": "",
+      "gallery": null,
+      "content": "{\"title\": \"PTD Ar Rahman Gelar Lomba HUT RI ke-80\", \"body\": \"BEKASI – Dalam rangka memeriahkan Hari Ulang Tahun (HUT) Kemerdekaan Republik Indonesia ke-80, Pesantren Tahfidz dan Digital (PTD) Ar Rahman menggelar serangkaian perlombaan seru yang diikuti oleh seluruh santri. Kegiatan ini berlangsung pada Ahad (17/08/2025) dengan penuh antusias dan keceriaan.\\n\\nTerdapat beragam perlombaan yang dipertandingkan, mulai dari lomba tradisional hingga lomba kreatif, di antaranya balap kardus, estafet sarung, tarik sarung, memakai baju tampa menjatuhkan balon , tampar balon tutup mata . Semua santri bersemangat mengikuti jalannya perlombaan, terlihat dari sorak-sorai dan tawa yang menghiasi suasana pesantren sejak pagi hari.\\n\\nPerlombaan diawali dengan lomba balap karung yang langsung mengundang gelak tawa penonton, diikuti dengan makan kerupuk yang selalu menjadi lomba favorit di setiap perayaan kemerdekaan. Suasana semakin meriah saat perlombaan tarik tambang digelar, di mana kekompakan dan semangat gotong royong benar-benar diuji.\\n\\nAcara berlangsung dari pagi hingga sore hari dengan jeda istirahat dan sholat berjamaah. Tidak hanya sekadar bermain dan berkompetisi, melalui perlombaan ini para santri belajar arti kebersamaan, sportivitas, dan kerja sama tim.\\n\\n“Kami berharap perlombaan ini dapat menjadi ajang kebersamaan, meningkatkan semangat nasionalisme, serta menjadikan momentum kemerdekaan sebagai pengingat bahwa perjuangan butuh kekompakan dan semangat pantang menyerah,” ujar salah satu ustadz yang turut mendampingi kegiatan.\\n\\nDengan penuh keceriaan, kegiatan perlombaan HUT RI ke-80 PTD Ar Rahman ditutup dengan doa bersama dan pembagian hadiah bagi para pemenang lomba.\"}"
+    },
+    {
+      "id": "70ac27c2-5f9f-4e88-9ef7-8ace36eeceb2",
+      "slug": "upacara-hut-kemerdekaan-ke-80-di-ptd-arrahman",
+      "image": "https://webbackend.arrahmanic.org/storage/posts/ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ.jpg",
+      "category": "news",
+      "date": "",
+      "gallery": null,
+      "content": "{\"title\": \"Upacara HUT Kemerdekaan ke-80 di PTD Arrahman\", \"body\": \"BEKASI – Peringatan Hari Ulang Tahun (HUT) Kemerdekaan Republik Indonesia ke-80 berlangsung khidmat dan penuh semangat di Pesantren Tahfidz dan Digital (PTD) Arrahman pada Minggu (17/08/2025). Upacara detik-detik proklamasi digelar mulai pukul 08:00 hingga 09:00 WIB dengan suasana tertib dan penuh penghormatan.\\n\\nBapak Arpen, Direktur Pendidikan PTD Arrahman, bertindak sebagai Pembina Upacara didampingi oleh seluruh Dewan Asatidz. Jalannya upacara dipimpin oleh Hudazifah Ali Miftah, yang dipercaya sebagai Pemimpin Upacara bersama para santri lain yang mengemban tugas masing-masing.\\n\\nDalam amanatnya, Pembina Upacara menyampaikan rasa syukur atas nikmat kemerdekaan yang diperjuangkan para pahlawan bangsa. Beliau menegaskan bahwa salah satu wujud nyata dari kemerdekaan adalah kebebasan dalam beragama.\\n\\n“Sebagai warga Indonesia, kita patut bersyukur karena memiliki kebebasan dalam menjalankan ajaran agama. Kebebasan ini adalah amanah yang harus dijaga, bukan hanya untuk diri sendiri, tetapi juga demi kerukunan bangsa. Kemerdekaan harus kita isi dengan hal-hal yang bermanfaat, menjaga persatuan, dan menguatkan nilai keislaman,” tuturnya.\\n\\nSetelah upacara, rangkaian acara dilanjutkan dengan pidato tiga bahasa (Bahasa Indonesia, Bahasa Arab, dan Bahasa Inggris) yang disampaikan oleh perwakilan santri. Kegiatan ini menjadi ajang untuk melatih keberanian, kemampuan komunikasi, sekaligus menunjukkan semangat santri dalam menguasai bahasa dunia.\\n\\nAcara kemudian berlanjut dengan presentasi progres pengembangan project web oleh tim santri yang mengikuti lomba. Dalam kesempatan tersebut, mereka memaparkan hasil kerja dan inovasi yang telah dicapai sebagai bentuk kontribusi nyata dalam bidang teknologi.\\n\\nSeluruh peserta kemudian bersama-sama mengikuti doa bersama untuk mendoakan para pahlawan bangsa, keberkahan bagi negeri, serta kemajuan pesantren.\\n\\nSebagai penutup, suasana kembali meriah dengan digelarnya berbagai lomba kemerdekaan yang diikuti oleh para santri. Keceriaan, kekompakan, dan semangat kebersamaan mewarnai akhir acara, menjadikan peringatan HUT RI ke-80 di PTD Arrahman tidak hanya khidmat, tetapi juga penuh makna dan inspirasi.\"}"
+    },
+    {
+      "id": "93ddcaeb-a164-4539-9dfd-331a31750bfe",
+      "slug": "santri-ptd-ar-rahman-tunjukkan-semangat-juang-di-porseni-pontren-2025-kabupaten-bekasi",
+      "image": "https://webbackend.arrahmanic.org/storage/posts/wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97.jpg",
+      "category": "Kegiatan & Prestasi",
+      "date": "2025-10-19",
+      "gallery": "[]",
+      "content": "{\"title\":\"Santri PTD Ar Rahman Tunjukkan Semangat Juang di PORSENI PONTREN 2025 Kabupaten Bekasi\",\"body\":\"BEKASI – Pesantren Tahfidz dan Digital (PTD) Ar Rahman kembali menunjukkan semangatnya dalam ajang Pekan Olahraga dan Seni Pondok Pesantren (PORSENI PONTREN) Tahun 2025 tingkat Kabupaten Bekasi yang digelar pada Kamis (16/10/2025) di Pesantren Darul Azhar, Kecamatan Setu, Bekasi.\\n\\nKegiatan tahunan ini diikuti oleh sekitar 73 Pondok Pesantren se‑Kabupaten Bekasi, yang turut memeriahkan berbagai cabang perlombaan hasil kolaborasi antara Forum Pondok Pesantren (FPP) dan Pemerintah Kabupaten Bekasi. Lebih dari 2100 santri menjadi peserta utama dalam beragam kegiatan olahraga dan seni yang digelar.\\n\\nTahun ini, terdapat sembilan cabang perlombaan yang dipertandingkan, di antaranya futsal, badminton, tenis meja, voli, pidato (bahasa Arab, bahasa Inggris, dan bahasa Indonesia), hadroh, serta kaligrafi.\\n\\nPTD Ar Rahman mengirimkan wakil terbaiknya untuk mengikuti enam cabang lomba, yaitu badminton, futsal, kaligrafi, tenis meja, serta pidato bahasa Arab, bahasa Inggris, dan bahasa Indonesia.\\n\\nMeskipun hanya diwakili oleh beberapa santri dalam setiap cabang lomba, 19 santri PTD Ar Rahman tetap hadir ke lokasi perlombaan sebagai bentuk dukungan dan semangat kebersamaan kepada rekan‑rekan mereka yang tengah bertanding.\\n\\n“Harapan kami, dengan ikut sertanya PTD dalam kegiatan PORSENI ini dapat menambah motivasi santri untuk terus melatih kemampuan, semangat juang, dan memberikan yang terbaik bagi pesantren,” ujar Ustadz Nur, salah satu pembimbing PTD Ar Rahman.\\n\\n“Menang atau kalah bukan hal utama, yang terpenting adalah pengalaman dan pembelajaran berharga yang didapat oleh para santri,” tambahnya.\\n\\nLebih dari sekadar ajang perlombaan, PORSENI menjadi wadah bagi santri untuk membangun karakter, menanamkan sportivitas, serta menumbuhkan rasa cinta terhadap pesantren dan ilmu.\\n\\nSemangat para santri PTD Ar Rahman bukan hanya untuk membawa pulang piala, tapi juga membawa pulang pelajaran tentang perjuangan, kebersamaan, dan keikhlasan dalam setiap langkah.\",\"excerpt\":\"Sebanyak 19 santri PTD Ar-Rahman berlaga pada enam cabang lomba di PORSENI PONTREN 2025 Kabupaten Bekasi, bersaing bersama 73 pesantren dan lebih dari 2.100 santri.\",\"content\":\"<p>Santri Pesantren Tahfidz &amp; Digital (PTD) Ar-Rahman turut ambil bagian dalam perhelatan Pekan Olahraga dan Seni Antar Pondok Pesantren (PORSENI PONTREN) 2025 Tingkat Kabupaten Bekasi yang diselenggarakan pada Kamis, 16 Oktober 2025 di Pesantren Darul Azhar, Kecamatan Setu, Kabupaten Bekasi. Ajang bergengsi ini diikuti oleh 73 pondok pesantren dengan total lebih dari 2.100 santri se-Kabupaten Bekasi.</p><p>Pada perhelatan ini, PTD Ar-Rahman mengutus kontingen santri untuk berlaga pada enam cabang perlombaan sekaligus, meliputi Pidato Bahasa Arab, Pidato Bahasa Inggris, Pidato Bahasa Indonesia, Kaligrafi, Badminton, Futsal, dan Tenis Meja. Sebanyak 19 santri PTD Ar-Rahman hadir langsung di lokasi guna bertanding sekaligus memberikan dukungan penuh bagi rekan-rekan mereka.</p><p>Pembimbing santri PTD Ar-Rahman, Ustadz Nur, menyampaikan bahwa keikutsertaan ini bertujuan memotivasi santri untuk terus mengasah bakat bahasa, seni, dan olahraga mereka. Beliau menekankan bahwa pengalaman bertanding, keberanian tampil di depan publik, dan silaturahmi antar-pesantren merupakan pembelajaran berharga yang membentuk mental juara para santri.</p>\",\"author\":\"\"}"
+    },
+    {
+      "id": "a2169dee-29f0-4590-b4b8-ff1a6f81763d",
+      "slug": "sharing-session-ptd-arrahman-hadirkan-senior-engineer-gojek-kupas-tuntas-next-js",
+      "image": "https://webbackend.arrahmanic.org/storage/posts/FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8.jpg",
+      "category": "Teknologi Digital",
+      "date": "2025-09-19",
+      "gallery": null,
+      "content": "{\"title\": \"Sharing Session PTD Ar-Rahman Hadirkan Senior Engineer Gojek, Kupas Tuntas Framework Next.js\", \"body\": \"Bekasi – Pesantren Tahfidz dan Digital (PTD) Arrahman kembali menggelar kegiatan Sharing Session yang penuh inspirasi pada Ahad (14/09/2025). Kali ini, acara menghadirkan Mas Hendiri Sudianto, seorang profesional berpengalaman dari Gojek yang telah berkarya selama 9 tahun di perusahaan teknologi ternama tersebut.\\n\\nDalam kesempatan ini, Mas Hendiri membawakan materi seputar Next.js, framework modern berbasis React yang banyak digunakan dalam pengembangan aplikasi web berskala besar. Ia menjelaskan konsep dasar, best practice, hingga tips praktis yang bisa diterapkan langsung oleh para santri.\\n\\n“Next.js itu bukan sekadar framework, tapi fondasi penting untuk membangun aplikasi web yang cepat, efisien, dan scalable. Penguasaan framework ini akan membuka peluang besar di dunia kerja teknologi,” ungkap Mas Hendiri dalam sesi presentasinya.\\n\\nAntusiasme peserta terlihat dari banyaknya pertanyaan yang muncul, mulai dari cara optimasi performa website hingga integrasi Next.js dengan API. Mas Hendiri pun menjawab dengan lugas, sembari membagikan pengalaman nyata selama hampir satu dekade di Gojek.\\n\\nKegiatan ini menjadi momen berharga bagi santri PTD Arrahman untuk belajar langsung dari praktisi industri. Selain menambah wawasan tentang teknologi terkini, acara ini juga memotivasi peserta agar terus mengasah kemampuan coding dan siap menghadapi tantangan dunia digital.\\n\\nSharing Session ditutup dengan sesi foto bersama serta pesan motivasi dari Mas Hendiri agar para santri tidak takut untuk mencoba dan terus berinovasi.\", \"excerpt\": \"PTD Ar-Rahman menggelar Sharing Session bersama Hendiri Sudianto, Senior Software Engineer Gojek, membedah Next.js: arsitektur, best practices, optimasi performa, hingga integrasi API.\", \"content\": \"Dalam rangka mendekatkan pembelajaran teknologi santri dengan standar industri perangkat lunak nasional, Pesantren Tahfidz & Digital (PTD) Ar-Rahman menggelar kegiatan Sharing Session inspiratif pada hari Ahad, 14 September 2025. Acara ini menghadirkan narasumber tamu Hendiri Sudianto, seorang Senior Software Engineer di Gojek yang telah berpengalaman selama 9 tahun di bidang rekayasa perangkat lunak.\\n\\nPada sesi tersebut, para santri PTD Ar-Rahman diajak mengupas tuntas Next.js, salah satu framework pengembangan web modern berbasis React yang digunakan secara luas untuk membangun aplikasi berskala besar. Materi yang dibahas mencakup konsep fundamental arsitektur Next.js, penerapan best practices di dunia kerja, teknik optimasi performa aplikasi web, hingga cara mengintegrasikan Application Programming Interface (API).\\n\\nPara santri tampak sangat antusias mengajukan pertanyaan pada sesi diskusi interaktif sebelum acara ditutup dengan foto bersama. Kehadiran praktisi industri ini semakin memperkuat motivasi santri PTD Ar-Rahman untuk menjadi penghafal Al-Qur'an yang unggul dalam rekayasa teknologi.\"}"
+    },
+    {
+      "id": "d78bd9dd-8f07-4855-90b6-99bc7fd2680f",
+      "slug": "menjemput-keberkahan-ramadhan-santri-ptd-ar-rahman-gotong-royong-bersihkan-pesantren",
+      "image": "https://webbackend.arrahmanic.org/storage/posts/MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k.png",
+      "category": "Kehidupan Asrama",
+      "date": "2025-03-12",
+      "gallery": null,
+      "content": "{\"title\": \"Menjemput Keberkahan Ramadhan dan Memupuk Ukhuwah Lewat Kegiatan Kebersamaan Santri PTD Ar-Rahman\", \"body\": \"Bekasi – Menyambut datangnya bulan Ramadhan, Pesantren Tahfidz dan Digital (PTD) Ar Rahman mengadakan kegiatan bersih‑bersih lingkungan pesantren. Kegiatan bertajuk Gerakan Lingkungan Indah (GLI) ini berlangsung pada Kamis (27/02/2025) ba’da shalat Dhuha, melibatkan para santri dan dewan asatidz.\\n\\nFokus utama kegiatan ini adalah membersihkan area yang rawan kotor, seperti toilet, ruang makan, ruang tamu, kamar tidur, ruang kelas, hingga dapur. Para santri dibagi ke dalam empat kelompok dengan tugas yang telah ditentukan.\\n\\nKelompok pertama bertugas membersihkan area rooftop pesantren. Selanjutnya, kelompok kedua bertanggung jawab atas kebersihan lantai tiga, termasuk tempat wudhu, ruang kelas, musholla, hingga ruang programming.\\n\\nSementara itu, kelompok ketiga di lantai dua difokuskan pada kebersihan ruang podcast, kamar santri, dan aula. Di lantai satu, kelompok terakhir bertugas membersihkan kamar mandi, kantin, ruang tamu, teras depan, serta ruang makan santri.\\n\\nPartisipasi aktif para santri dan ustadz dalam kegiatan ini mencerminkan kekompakan serta semangat gotong royong dalam menjaga kebersihan lingkungan pesantren. Dengan adanya Gerakan Lingkungan Indah (GLI), diharapkan suasana pesantren menjadi lebih nyaman dan kondusif dalam menyambut ibadah di bulan suci Ramadhan.\", \"excerpt\": \"Gerakan Lingkungan Indah menyambut Ramadhan dan aneka lomba kemerdekaan HUT RI ke-80 memupuk kemandirian, kebersamaan, dan kepemimpinan santri PTD Ar-Rahman.\", \"content\": \"Pembentukan karakter kepemimpinan, kemandirian, dan kebersamaan menjadi bagian tak terpisahkan dari keseharian santri di Pesantren Tahfidz & Digital (PTD) Ar-Rahman. Menjelang datangnya bulan suci Ramadhan (Kamis, 27 Februari 2025 ba'da shalat Dhuha), seluruh santri dan asatidz melaksanakan program Gerakan Lingkungan Indah (GLI) dengan bergotong royong membersihkan seluruh area gedung pesantren.\\n\\nPara santri dibagi ke dalam empat kelompok kerja terpadu: Kelompok 1 menata area rooftop gedung pesantren; Kelompok 2 membersihkan Lantai 3 yang meliputi musholla, tempat wudhu, ruang kelas, dan ruang programming; Kelompok 3 merapikan Lantai 2 yang mencakup kamar santri, aula, dan ruang podcast; sedangkan Kelompok 4 membersihkan Lantai 1 mulai dari ruang makan, kantin, kamar mandi, ruang tamu, hingga teras depan.\\n\\nSelain budaya gotong royong, keakraban santri juga terus dipupuk melalui berbagai perlombaan ketangkasan dan kekompakan pada peringatan HUT Kemerdekaan RI ke-80 (17 Agustus 2025), seperti estafet sarung, balap kardus, dan tarik tambang yang ditutup dengan doa bersama serta pembagian hadiah.\"}"
+    }
+  ],
+  "staff": [
+    {
+      "id": "2ca6c358-4e1f-456c-97d6-6bd7032593a0",
+      "image": "",
+      "role": "teacher",
+      "content": "{\"name\": \"Ustadz Murtadho Tumari\", \"level\": 2, \"position\": \"Kepala Pengasuhan\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 3, \"nama\": \"Ustadz Murtadho Tumari\", \"jabatan\": \"Kepala Pengasuhan\"}"
+    },
+    {
+      "id": "31aaddf7-3645-41c6-b792-1864f786c32e",
+      "image": "",
+      "role": "teacher",
+      "content": "{\"name\": \"Ustadz Mahrozal Mizan\", \"level\": 2, \"position\": \"Administator\", \"parentId\": \"d25d0845-2a58-4266-b8fc-d4f740e7c6bd\", \"order\": 2, \"nama\": \"Ustadz Mahrozal Mizan\", \"jabatan\": \"Administator\"}"
+    },
+    {
+      "id": "679c2350-b8b8-4f27-888f-afccd92727a3",
+      "image": "",
+      "role": "teacher",
+      "content": "{\"name\": \"Ustadz Ian\", \"level\": 3, \"position\": \"Guru IT\", \"parentId\": \"31aaddf7-3645-41c6-b792-1864f786c32e\", \"order\": 4, \"nama\": \"Ustadz Ian\", \"jabatan\": \"Guru IT\"}"
+    },
+    {
+      "id": "962203c2-8840-475e-b441-13876bbe27d3",
+      "image": "",
+      "role": "teacher",
+      "content": "{\"name\": \"Ustadz Nur Fatoni\", \"level\": 3, \"position\": \"Musyrif & Guru B.Arab\", \"parentId\": \"2ca6c358-4e1f-456c-97d6-6bd7032593a0\", \"order\": 5, \"nama\": \"Ustadz Nur Fatoni\", \"jabatan\": \"Musyrif & Guru B.Arab\"}"
+    },
+    {
+      "id": "d25d0845-2a58-4266-b8fc-d4f740e7c6bd",
+      "image": "",
+      "role": "leader",
+      "content": "{\"name\": \"Ustadz Ziyad Khairy\", \"level\": 1, \"position\": \"Mudir PTD Arrahman\", \"order\": 1, \"nama\": \"Ustadz Ziyad Khairy\", \"jabatan\": \"Mudir PTD Arrahman\"}"
+    }
+  ],
+  "leadership_members": [
+    {
+      "id": "leadership-08",
+      "board": "islamic-center",
+      "order": 1,
+      "image": null,
+      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"President Director\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu chandra.png\"}"
+    },
+    {
+      "id": "leadership-09",
+      "board": "islamic-center",
+      "order": 2,
+      "image": null,
+      "content": "{\"name\": \"Fathya Irsalina M\", \"position\": \"AVP Performance Management\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/ka fathya.png\"}"
+    },
+    {
+      "id": "leadership-10",
+      "board": "islamic-center",
+      "order": 3,
+      "image": null,
+      "content": "{\"name\": \"Mira Susanti\", \"position\": \"AVP Internal Auditor\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu mira.png\"}"
+    },
+    {
+      "id": "leadership-11",
+      "board": "islamic-center",
+      "order": 4,
+      "image": null,
+      "content": "{\"name\": \"Leo Latul Agusta\", \"position\": \"Director of Education Center\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/pa leo.png\"}"
+    },
+    {
+      "id": "leadership-12",
+      "board": "islamic-center",
+      "order": 5,
+      "image": null,
+      "content": "{\"name\": \"Ahmad Mahfud\", \"position\": \"Director of Support & Development\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/pa mahfud.png\"}"
+    },
+    {
+      "id": "leadership-13",
+      "board": "islamic-center",
+      "order": 6,
+      "image": null,
+      "content": "{\"name\": \"Dewi Nareswari\", \"position\": \"Vice President of Branding & Development\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu dewi.png\"}"
+    },
+    {
+      "id": "leadership-14",
+      "board": "islamic-center",
+      "order": 7,
+      "image": null,
+      "content": "{\"name\": \"Dahniar\", \"position\": \"Vice President of Finance & Support\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu niar.png\"}"
+    },
+    {
+      "id": "leadership-15",
+      "board": "islamic-center",
+      "order": 8,
+      "image": null,
+      "content": "{\"name\": \"Ruswandri\", \"position\": \"Head of Lembaga Pengelolaan Ziswaf\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/pa ruswandri.png\"}"
+    },
+    {
+      "id": "leadership-16",
+      "board": "islamic-center",
+      "order": 9,
+      "image": null,
+      "content": "{\"name\": \"Silvi Laeli Kodaria\", \"position\": \"Head of Sekolah Alam Qurani Ar Rahman\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu silvi.png\"}"
+    },
+    {
+      "id": "leadership-17",
+      "board": "islamic-center",
+      "order": 10,
+      "image": null,
+      "content": "{\"name\": \"Ziyad Khairy\", \"position\": \"Head of Pesantren Tahfidz Qur'an dan Digital Ar-Rahman\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/ustd ziyad.png\"}"
+    },
+    {
+      "id": "leadership-18",
+      "board": "islamic-center",
+      "order": 11,
+      "image": null,
+      "content": "{\"name\": \"Ahmad Khaeruddin\", \"position\": \"Head of Lembaga Pendidikan Al Quran\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/ustd ahmad.png\"}"
+    },
+    {
+      "id": "leadership-19",
+      "board": "islamic-center",
+      "order": 12,
+      "image": null,
+      "content": "{\"name\": \"Susilawati\", \"position\": \"Head of Lembaga Pembinaan Masyarakat\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu susi.png\"}"
+    },
+    {
+      "id": "leadership-01",
+      "board": "yayasan",
+      "order": 1,
+      "image": null,
+      "content": "{\"name\": \"Indra Setiawan\", \"position\": \"Pembina\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Pa Indra Setiawan.png\"}"
+    },
+    {
+      "id": "leadership-02",
+      "board": "yayasan",
+      "order": 2,
+      "image": null,
+      "content": "{\"name\": \"Tri Indra Basoeki\", \"position\": \"Pembina\"}"
+    },
+    {
+      "id": "leadership-03",
+      "board": "yayasan",
+      "order": 3,
+      "image": null,
+      "content": "{\"name\": \"Rini Widiastuti Rahayu\", \"position\": \"Pengawas\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Bu Rini Widiastuti.png\"}"
+    },
+    {
+      "id": "leadership-04",
+      "board": "yayasan",
+      "order": 4,
+      "image": null,
+      "content": "{\"name\": \"Eko Santoso\", \"position\": \"Ketua\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Pa Eko.png\"}"
+    },
+    {
+      "id": "leadership-05",
+      "board": "yayasan",
+      "order": 5,
+      "image": null,
+      "content": "{\"name\": \"Chandra Sari Nugraheni\", \"position\": \"Bendahara\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/bu chandra.png\"}"
+    },
+    {
+      "id": "leadership-06",
+      "board": "yayasan",
+      "order": 6,
+      "image": null,
+      "content": "{\"name\": \"Noor Kartika Muliawati\", \"position\": \"Sekretaris\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Bu Noor.png\"}"
+    },
+    {
+      "id": "leadership-07",
+      "board": "yayasan",
+      "order": 7,
+      "image": null,
+      "content": "{\"name\": \"Rachmania Kurniawati\", \"position\": \"Sekretaris\", \"image\": \"https://arrahmanic.org/assets/images/pengurus/Bu Rachmania.png\"}"
+    }
+  ]
+}
