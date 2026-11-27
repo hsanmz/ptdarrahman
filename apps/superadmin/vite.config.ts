@@ -26,6 +26,7 @@ export default defineConfig({
     // mengasumsikan port ini).
     strictPort: true,
     proxy: {
+      '/auth': apiProxy,
       '/companyprofile': apiProxy,
       '/users': apiProxy,
       '/roles': apiProxy,
@@ -34,6 +35,7 @@ export default defineConfig({
       '/ppdb': apiProxy,
       '/notifications': apiProxy,
       '/whatsapp': apiProxy,
+      '/settings': apiProxy,
     },
   },
   preview: {

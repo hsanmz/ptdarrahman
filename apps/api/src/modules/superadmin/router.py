@@ -202,12 +202,6 @@ def get_dashboard(
     wave_id: str | None = Query(None),
     user: dict[str, Any] = Depends(require_superadmin),
 ):
-    total_users_res = search_paginated("users", per_page=1)
-    total_users = total_users_res.get("total", 0)
-
-    total_roles_res = search_paginated("roles", per_page=1)
-    total_roles = total_roles_res.get("total", 0)
-
     # Metrik PPDB: seluruh pendaftar dari semua periode & gelombang secara
     # default. Filter periode/gelombang bersifat opsional untuk mempersempit.
     active_wave_id, active_wave = _get_active_wave()
@@ -258,8 +252,8 @@ def get_dashboard(
     )[0]
 
     stats = {
-        "total_users": int(user_agg.get("total") or total_users),
-        "total_roles": int(role_agg.get("total") or total_roles),
+        "total_users": int(user_agg.get("total") or 0),
+        "total_roles": int(role_agg.get("total") or 0),
         "total_applicants": total_applicants,
         "users_by_type": _group_counts("users", "user_type"),
         "users_active": int(user_agg.get("active") or 0),
@@ -294,9 +288,16 @@ def get_dashboard(
         "sent_today": sent_today,
     }
 
-    # Get recent Audit Logs (max 5)
-    recent_logs_res = search_paginated("audit_log", per_page=5, order="created_at.desc")
-    recent_logs = recent_logs_res.get("data", [])
+    # Get recent Audit Logs (max 5) secara instan tanpa paginator reflection
+    recent_logs = (
+        execute_raw(
+            "SELECT al.id, al.action, al.entity_type, al.entity_id, al.user_id, "
+            "al.created_at, COALESCE(u.username, '') AS user_username "
+            "FROM audit_log al LEFT JOIN users u ON al.user_id = u.id "
+            "ORDER BY al.created_at DESC LIMIT 5"
+        )
+        or []
+    )
 
     return {
         "stats": stats,

@@ -32,6 +32,16 @@ export const FALLBACK_API = (process.env.NEXT_PUBLIC_FALLBACK_API_URL || '').rep
 /** Resolusi URL API dinamis: di browser, sesuaikan otomatis ke same-origin relative URL */
 export function getApiBase(): string {
   if (typeof window !== 'undefined') {
+    // Jika halaman dibuka via HTTPS, browser akan memblokir request ke HTTP (Mixed Content).
+    // Kembalikan relative URL ('') agar request otomatis diproxy oleh Next.js via HTTPS same-origin.
+    if (window.location.protocol === 'https:') {
+      const envApi = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '')
+      if (envApi && envApi.startsWith('https://') && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
+        return envApi
+      }
+      return ''
+    }
+
     const envApi = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '')
     // Jika env API adalah URL eksternal/publik yang valid (bukan localhost/127.0.0.1/internal docker), gunakan itu
     if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1') && !envApi.includes('http://api:')) {

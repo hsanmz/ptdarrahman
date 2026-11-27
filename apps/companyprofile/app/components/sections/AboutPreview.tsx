@@ -6,7 +6,6 @@ import { motion } from 'framer-motion'
 import MagneticButton from '../ui/MagneticButton'
 
 import { ArrowRight, BookOpen, Cpu, Heart } from 'lucide-react'
-import { API_BASE } from '@/app/lib/api'
 import { resolveImageSrc } from '@/app/lib/image-file'
 import type { AboutContentData } from '@/app/lib/types'
 
@@ -47,7 +46,7 @@ export default function AboutPreview({ settings = {}, content = null }: { settin
             <div className="space-y-2 sm:space-y-4">
               <div className="img-overlay aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
                 <img
-                  src={resolveImageSrc(images[0], API_BASE) || defaultImages[0]}
+                  src={resolveImageSrc(images[0]) || defaultImages[0]}
                   alt="Boarding School"
                   className="h-full w-full object-cover"
                   onError={(e) => { e.currentTarget.src = defaultImages[0] }}
@@ -55,7 +54,7 @@ export default function AboutPreview({ settings = {}, content = null }: { settin
               </div>
               <div className="img-overlay aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
                 <img
-                  src={resolveImageSrc(images[1], API_BASE) || defaultImages[1]}
+                  src={resolveImageSrc(images[1]) || defaultImages[1]}
                   alt="Students"
                   className="h-full w-full object-cover"
                   onError={(e) => { e.currentTarget.src = defaultImages[1] }}
@@ -65,7 +64,7 @@ export default function AboutPreview({ settings = {}, content = null }: { settin
             <div className="space-y-2 sm:space-y-4 pt-4 sm:pt-8">
               <div className="img-overlay aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
                 <img
-                  src={resolveImageSrc(images[2], API_BASE) || defaultImages[2]}
+                  src={resolveImageSrc(images[2]) || defaultImages[2]}
                   alt="Technology Lab"
                   className="h-full w-full object-cover"
                   onError={(e) => { e.currentTarget.src = defaultImages[2] }}
@@ -73,7 +72,7 @@ export default function AboutPreview({ settings = {}, content = null }: { settin
               </div>
               <div className="img-overlay aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden shadow-md relative">
                 <img
-                  src={resolveImageSrc(images[3], API_BASE) || defaultImages[3]}
+                  src={resolveImageSrc(images[3]) || defaultImages[3]}
                   alt="Sports"
                   className="h-full w-full object-cover"
                   onError={(e) => { e.currentTarget.src = defaultImages[3] }}

@@ -2,18 +2,21 @@ const USER_KEY = 'ppdb_user'
 
 export function getApiBase(): string {
   if (typeof window !== 'undefined') {
-    // Jika diakses via HTTPS (domain resmi via Cloudflare/Reverse Proxy), gunakan same-origin relative URL
-    // agar di-proxy mulus oleh spa-server tanpa mixed-content atau CORS error.
+    // Jika halaman dibuka via HTTPS, browser memblokir request ke HTTP (Mixed Content).
+    // Kembalikan relative URL ('') agar request otomatis diproxy oleh spa-server via HTTPS same-origin.
     if (window.location.protocol === 'https:') {
+      const envApi = import.meta.env.VITE_API_URL?.trim().replace(/\/+$/, '')
+      if (envApi && envApi.startsWith('https://') && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
+        return envApi
+      }
       return ''
     }
-    const envApi = import.meta.env.VITE_API_URL
+    const envApi = import.meta.env.VITE_API_URL?.trim().replace(/\/+$/, '')
     if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
-      return envApi.replace(/\/+$/, '')
+      return envApi
     }
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return `${window.location.protocol}//${window.location.hostname}:8000`
-    }
+    // Di browser selalu gunakan relative URL ('') agar diproxy langsung oleh spa-server / Vite proxy
+    return ''
   }
   return (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 }
@@ -92,9 +95,23 @@ export function isApiError(err: unknown): err is ApiError {
   return err instanceof ApiError
 }
 
+const REQUEST_TIMEOUT_MS = 15_000
+
 async function fetchWithFallback(url: string, opts?: RequestInit): Promise<Response> {
-  const options = { ...opts, credentials: 'include' as RequestCredentials }
-  return fetch(url, options)
+  if (opts?.signal) {
+    return fetch(url, { ...opts, credentials: 'include' as RequestCredentials })
+  }
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+  try {
+    return await fetch(url, {
+      ...opts,
+      credentials: 'include' as RequestCredentials,
+      signal: controller.signal,
+    })
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 /**

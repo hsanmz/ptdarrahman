@@ -102,12 +102,21 @@ export class SessionManager extends EventEmitter {
       "--disable-dev-shm-usage",
       "--disable-accelerated-2d-canvas",
       "--disable-gpu",
-      "--window-size=1280,720",
+      "--window-size=800,600",
       "--no-first-run",
+      "--no-default-browser-check",
       "--disable-crash-reporter",
       "--disk-cache-size=10485760",
       "--media-cache-size=10485760",
       "--aggressive-cache-discard",
+      "--disable-extensions",
+      "--disable-background-networking",
+      "--disable-default-apps",
+      "--disable-sync",
+      "--mute-audio",
+      "--renderer-process-limit=1",
+      "--js-flags=--max-old-space-size=256",
+      "--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process,TranslateUI",
     ];
 
     if (process.platform === "linux") {

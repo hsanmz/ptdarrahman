@@ -29,21 +29,28 @@ function stopSharedSource() {
   }
 }
 
+function cleanBaseForProtocol(base: string): string {
+  const clean = (base || "").replace(/\/+$/, "")
+  if (typeof window !== "undefined" && window.location.protocol === "https:" && clean.startsWith("http://")) {
+    return ""
+  }
+  return clean
+}
+
 function ensureSharedSource(base: string) {
-  if (sharedSource && sharedBase === base) return
+  const safeBase = cleanBaseForProtocol(base)
+  if (sharedSource && sharedBase === safeBase) return
   stopSharedSource()
-  sharedBase = base
-  sharedSource = new EventSource(`${base}/companyprofile/events`)
+  sharedBase = safeBase
+  sharedSource = new EventSource(`${safeBase}/companyprofile/events`)
   sharedSource.addEventListener("change", notify)
 }
 
 export function useBrand(apiBase: string): BrandAssets {
-  const serviceUrl = useMemo(() => (apiBase || "").replace(/\/+$/, ""), [apiBase])
+  const serviceUrl = useMemo(() => cleanBaseForProtocol(apiBase), [apiBase])
   const [assets, setAssets] = useState<BrandAssets>({ logoUrl: "", faviconUrl: "" })
 
   useEffect(() => {
-    if (!serviceUrl) return
-
     let cancelled = false
 
     const load = async () => {

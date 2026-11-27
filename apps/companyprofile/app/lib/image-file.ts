@@ -284,6 +284,11 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
     return ''
   }
 
+  // Jika src mengandung hash legacy yang hilang dari disk / 404 (seperti f59f244c9b8e433595c99504575bb45c)
+  if (src.includes('f59f244c9b8e433595c99504575bb45c')) {
+    return FALLBACK_IMAGES.about
+  }
+
   // Normalisasi URL /uploads/... dari host manapun (localhost, IP server, atau path relatif)
   let normalized = src
   if (normalized.startsWith('uploads/')) {
@@ -292,8 +297,10 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
   const uploadsIdx = normalized.indexOf('/uploads/')
   if (uploadsIdx !== -1) {
     const uploadPath = normalized.slice(uploadsIdx)
-    const cleanBase = apiBase.trim().replace(/\/+$/, '')
-    return cleanBase ? `${cleanBase}${uploadPath}` : uploadPath
+    // Selalu kembalikan path relatif /uploads/...
+    // Next.js rewrites dan spa-server sudah mem-proxy /uploads langsung ke API backend.
+    // Menggunakan path relatif menjamin 0% risiko Mixed Content baik pada SSR maupun Client di HTTPS.
+    return uploadPath
   }
 
   return optimizeCloudinaryUrl(src)

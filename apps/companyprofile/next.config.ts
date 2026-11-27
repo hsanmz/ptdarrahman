@@ -162,7 +162,7 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
-          { key: "Content-Security-Policy", value: `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.gstatic.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src ${cspImageSrc}; font-src 'self' data: https:; connect-src ${cspConnectSrc} blob:; frame-src 'self' https://www.youtube.com https://www.google.com https://maps.google.com; media-src 'self' data: blob: https:; object-src 'none'; base-uri 'self'; form-action 'self'` },
+          { key: "Content-Security-Policy", value: `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.gstatic.com https://static.cloudflareinsights.com https://*.cloudflareinsights.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src ${cspImageSrc}; font-src 'self' data: https:; connect-src ${cspConnectSrc} https://cloudflareinsights.com https://*.cloudflareinsights.com blob:; frame-src 'self' https://www.youtube.com https://www.google.com https://maps.google.com; media-src 'self' data: blob: https:; object-src 'none'; base-uri 'self'; form-action 'self'` },
         ],
       },
     ];

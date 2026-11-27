@@ -115,7 +115,7 @@ export default function WhatsAppPage() {
   }, [fetchSession, fetchQueueStats])
 
   useEffect(() => {
-    // Jangan polling tiap 8 detik bila WA microservice tidak dikonfigurasi.
+    // Jangan polling bila WA microservice tidak dikonfigurasi.
     if (session?.configured === false) {
       if (pollRef.current) {
         clearInterval(pollRef.current)
@@ -123,17 +123,36 @@ export default function WhatsAppPage() {
       }
       return
     }
-    pollRef.current = setInterval(() => {
+
+    // Polling cerdas & adaptif:
+    // - Jika status sudah 'ready' (terhubung), polling santai tiap 30 detik (hemat bandwidth & CPU VPS)
+    // - Jika sedang proses login ('qr' atau 'initializing'), polling tiap 8 detik
+    // - Jika tab browser sedang di-minimize/background (hidden), hentikan polling
+    const pollIntervalMs = session?.status === 'ready' ? 30_000 : 8_000
+
+    const executePoll = () => {
+      if (typeof document !== 'undefined' && document.hidden) return
       fetchSession(true)
       fetchQueueStats()
-    }, 8_000)
+    }
+
+    pollRef.current = setInterval(executePoll, pollIntervalMs)
+
+    const onVisibilityChange = () => {
+      if (!document.hidden) {
+        executePoll()
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+
     return () => {
       if (pollRef.current) {
         clearInterval(pollRef.current)
         pollRef.current = null
       }
+      document.removeEventListener('visibilitychange', onVisibilityChange)
     }
-  }, [session?.configured, fetchSession, fetchQueueStats])
+  }, [session?.configured, session?.status, fetchSession, fetchQueueStats])
 
   useEffect(() => {
     document.documentElement.classList.add('no-scrollbar')

@@ -28,6 +28,7 @@ const PROXY_PREFIXES = [
   "/payment",
   "/notifications",
   "/whatsapp",
+  "/superadmin",
   "/uploads",
   "/health",
   "/docs",
@@ -72,6 +73,18 @@ function proxyRequest(req, res) {
     if (!res.headersSent) {
       res.writeHead(502, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ detail: "Bad Gateway: Backend API service unreachable" }));
+    }
+  });
+
+  // Cegah dangling socket di backend jika client browser membatalkan request atau berpindah halaman
+  req.on("close", () => {
+    if (!proxyReq.destroyed) {
+      proxyReq.destroy();
+    }
+  });
+  res.on("close", () => {
+    if (!proxyReq.destroyed) {
+      proxyReq.destroy();
     }
   });
 
