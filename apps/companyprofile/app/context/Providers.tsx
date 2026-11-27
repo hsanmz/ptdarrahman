@@ -2,11 +2,10 @@
 
 import { type ReactNode, useEffect } from 'react'
 import { useBrand } from '@repo/ui'
-
-const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/+$/, '')
+import { getApiBase } from '@/app/lib/api'
 
 export function Providers({ children }: { children: ReactNode }) {
-  const { faviconUrl } = useBrand(API_BASE)
+  const { faviconUrl } = useBrand(getApiBase?.() ?? '')
 
   useEffect(() => {
     const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement

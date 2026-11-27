@@ -113,8 +113,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const targetApi =
       process.env.INTERNAL_API_URL?.trim().replace(/\/+$/, '') ||
-      process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '') ||
-      'http://localhost:8000';
+      (process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes('localhost')
+        ? process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/+$/, '')
+        : '') ||
+      (process.env.NODE_ENV === 'production' ? 'http://api:8000' : 'http://localhost:8000');
     return [
       {
         source: '/uploads/:path*',
@@ -127,6 +129,10 @@ const nextConfig: NextConfig = {
       {
         source: '/auth/:path*',
         destination: `${targetApi}/auth/:path*`,
+      },
+      {
+        source: '/users/:path*',
+        destination: `${targetApi}/users/:path*`,
       },
       {
         source: '/notifications/:path*',

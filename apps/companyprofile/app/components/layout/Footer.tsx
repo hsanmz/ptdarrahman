@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react'
 import ShapeDividerDiagonal from '../ui/ShapeDividerDiagonal'
 import { socialLinks as staticSocialLinks } from '@/app/data/social'
-import { getContactInfo, getSocialLinks } from '@/app/lib/api'
+import { getContactInfo, getSocialLinks, getApiBase } from '@/app/lib/api'
 import { programMenuLinks } from '@/app/lib/programs'
 import type { Program } from '@/app/lib/types'
 import { useBrand } from '@repo/ui'
@@ -31,7 +31,7 @@ const FALLBACK_CONTACT: ContactState = {
 }
 
 export default function Footer({ programs = [] }: { programs?: Program[] }) {
-  const { logoUrl } = useBrand(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
+  const { logoUrl } = useBrand(getApiBase?.() ?? '')
   const [socials, setSocials] = useState<SocialItem[]>(staticSocialLinks)
   const [contact, setContact] = useState<ContactState>(FALLBACK_CONTACT)
   const [wave, setWave] = useState<ActivePpdbWave | null>(null)

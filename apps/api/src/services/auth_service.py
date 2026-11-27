@@ -189,6 +189,29 @@ class AuthService:
         if ("ppdb" in role_permissions or is_sa) and "dashboard" not in page_keys:
             page_keys.append("dashboard")
 
+        # Company profile modules: ensure all 15 tabs are available for AdminCP / CP CRUD / superadmin
+        cp_perm = role_permissions.get("companyprofile")
+        if cp_perm == "crud" or role_name == "AdminCP" or is_sa:
+            cp_all_pages = [
+                "hero", "ppdb", "news", "programs", "facilities", "staff",
+                "about", "faq", "leadership", "achievements", "gallery",
+                "testimonials", "social", "contact", "settings",
+            ]
+            for p in cp_all_pages:
+                if p not in page_keys:
+                    page_keys.append(p)
+                if p not in crud_keys:
+                    crud_keys.append(p)
+        elif cp_perm in ("view", "read"):
+            cp_all_pages = [
+                "hero", "ppdb", "news", "programs", "facilities", "staff",
+                "about", "faq", "leadership", "achievements", "gallery",
+                "testimonials", "social", "contact", "settings",
+            ]
+            for p in cp_all_pages:
+                if p not in page_keys:
+                    page_keys.append(p)
+
         payment_status = None
         payment_deadline = None
         if user.user_type == "applicant":

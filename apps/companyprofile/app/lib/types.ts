@@ -83,6 +83,7 @@ export interface Staff {
   id: string
   image: string
   role: string
+  name?: string
   content: StaffContent | null
 }
 

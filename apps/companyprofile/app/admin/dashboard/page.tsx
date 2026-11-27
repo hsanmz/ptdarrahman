@@ -288,8 +288,14 @@ export default function AdminDashboard() {
   const isSuperadmin =
     adminUser?.user_type === 'superadmin' || adminUser?.is_superadmin === true
 
-  const canCrud =
+  const hasFullCpAccess =
     isSuperadmin ||
+    adminUser?.permissions?.companyprofile === 'crud' ||
+    adminUser?.role_name === 'AdminCP' ||
+    adminUser?.role_name === 'Admin Company Profile'
+
+  const canCrud =
+    hasFullCpAccess ||
     (crudPermissions !== null
       ? crudPermissions.includes(activeTab)
       : adminUser?.crud_permissions
@@ -297,9 +303,9 @@ export default function AdminDashboard() {
       : adminUser?.permissions?.companyprofile === 'crud')
 
   const filteredTabs =
-    isSuperadmin
+    hasFullCpAccess
       ? TABS
-      : pagePermissions !== null
+      : pagePermissions !== null && pagePermissions.length > 0
       ? TABS.filter((tab) => pagePermissions.includes(tab.key))
       : TABS
 
@@ -349,9 +355,9 @@ export default function AdminDashboard() {
   // ── Data fetching ─────────────────────────────────────────────────────────
   const fetchData = useCallback(async () => {
     const currentTabs =
-      isSuperadmin
+      hasFullCpAccess
         ? TABS
-        : pagePermissions !== null
+        : pagePermissions !== null && pagePermissions.length > 0
         ? TABS.filter((tab) => pagePermissions.includes(tab.key))
         : TABS
 
@@ -386,7 +392,7 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }, [activeTab, handle401, isSuperadmin, pagePermissions])
+  }, [activeTab, handle401, hasFullCpAccess, pagePermissions])
 
   const loadMore = useCallback(async () => {
     const tab = TABS.find((t) => t.key === activeTab)

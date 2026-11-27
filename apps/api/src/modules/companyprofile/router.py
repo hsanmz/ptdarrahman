@@ -114,6 +114,9 @@ RESERVED_SEGMENTS: frozenset[str] = frozenset(
     }
 )
 
+# `stats` sudah ada di RESERVED_SEGMENTS — rute spesifik /stats didefinisikan
+# di atas sebelum handler generik /{entity}, sehingga tidak terjadi tumbukan.
+
 
 def get_table(entity: str) -> str:
     table = TABLES.get(entity)
@@ -749,6 +752,37 @@ class ContactInfoUpdateReq(BaseModel):
     address: str | None = Field(default=None, max_length=2000)
     office_hours: str | None = Field(default=None, max_length=255)
     maps_embed: str | None = Field(default=None, max_length=4000)
+
+
+@router.get("/stats")
+def cp_stats(user: dict[str, Any] = Depends(require_cp_read())):
+    """
+    Satu-satunya query untuk ringkasan jumlah konten overview admin.
+    Jauh lebih cepat dari memanggil 10 endpoint list terpisah.
+    """
+    table_keys = {
+        "news": "news_articles",
+        "programs": "programs",
+        "facilities": "facilities",
+        "staff": "staff",
+        "achievements": "achievements",
+        "gallery": "gallery_items",
+        "testimonials": "testimonials",
+        "social": "social_links",
+        "hero": "hero_slides",
+        "leadership": "leadership_members",
+        "about": "about_content",
+        "faq": "faq_items",
+        "ppdb": "ppdb_content",
+    }
+    counts: dict[str, int] = {}
+    for key, table in table_keys.items():
+        try:
+            rows = execute_raw(f"SELECT COUNT(*) AS cnt FROM {table}")
+            counts[key] = int(rows[0]["cnt"]) if rows else 0
+        except Exception:
+            counts[key] = 0
+    return counts
 
 
 @router.get("/contact-info")

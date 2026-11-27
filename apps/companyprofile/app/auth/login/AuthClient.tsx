@@ -3,9 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ShieldCheck } from 'lucide-react'
-import { login } from '@/app/lib/api'
+import { login, getApiBase } from '@/app/lib/api'
 import { AuthCard, useBrand } from '@repo/ui'
-import { API_BASE } from '@/app/lib/api'
 
 export default function AuthClient() {
   const router = useRouter()
@@ -14,8 +13,9 @@ export default function AuthClient() {
   const [success, setSuccess] = useState(false)
   const [successName, setSuccessName] = useState('')
 
+  const apiBase = getApiBase?.() ?? ''
   // Logo dinamis via useBrand (GET /companyprofile/settings/logo + live SSE).
-  const { logoUrl } = useBrand(API_BASE)
+  const { logoUrl } = useBrand(apiBase)
 
   const handleLogin = async (username: string, password: string) => {
     setError('')
@@ -53,7 +53,7 @@ export default function AuthClient() {
         submitText="Masuk"
         forgotText="Lupa username/password?"
         recoveryMode="staff"
-        recoveryApiBase={API_BASE}
+        recoveryApiBase={apiBase}
         badgeText="Akses Terbatas"
         badgeIcon={<ShieldCheck className="w-3.5 h-3.5 text-[#D4A853]" />}
       />

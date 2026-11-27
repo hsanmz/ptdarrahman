@@ -29,21 +29,19 @@ export const PRIMARY_API = (
 // menonaktifkan mekanisme fallback; JANGAN fallback ke localhost di produksi.
 export const FALLBACK_API = (process.env.NEXT_PUBLIC_FALLBACK_API_URL || '').replace(/\/+$/, '')
 
-/** Resolusi URL API dinamis: di browser, sesuaikan otomatis ke host pemanggil jika env localhost */
+/** Resolusi URL API dinamis: di browser, sesuaikan otomatis ke same-origin relative URL */
 export function getApiBase(): string {
   if (typeof window !== 'undefined') {
-    // Jika diakses via HTTPS (domain resmi via Cloudflare/Reverse Proxy), gunakan same-origin relative URL
-    // agar di-proxy mulus oleh Next.js rewrites tanpa mixed-content atau CORS error.
-    if (window.location.protocol === 'https:') {
-      return ''
+    const envApi = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, '')
+    // Jika env API adalah URL eksternal/publik yang valid (bukan localhost/127.0.0.1/internal docker), gunakan itu
+    if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1') && !envApi.includes('http://api:')) {
+      return envApi
     }
-    const envApi = process.env.NEXT_PUBLIC_API_URL
-    if (envApi && !envApi.includes('localhost') && !envApi.includes('127.0.0.1')) {
-      return envApi.replace(/\/+$/, '')
-    }
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return `${window.location.protocol}//${window.location.hostname}:8000`
-    }
+    // Di browser di production atau remote device (mis. mobile/laptop lain), SELALU gunakan
+    // relative URL ('') agar semua request diproxy oleh Next.js rewrites.
+    // JANGAN PERNAH fallback ke hostname:8000 karena port 8000 tidak terbuka untuk publik
+    // dan menyebabkan timeout 2-3 menit pada device luar (failed to fetch).
+    return ''
   }
   return PRIMARY_API
 }
@@ -108,27 +106,66 @@ function isRetryableStatus(status: number): boolean {
 
 async function fetchWithFallback(url: string, opts?: RequestInit): Promise<Response> {
   const currentBase = getApiBase()
-  if (!FALLBACK_API || !currentBase || currentBase === FALLBACK_API) return fetch(url, opts)
+  
+  // Timeout pelindung 15 detik agar koneksi macet/timeout tidak membuat browser gantung 2-3 menit
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 15000)
 
-  const fallbackUrl = url.replace(currentBase, FALLBACK_API)
-
-  let res: Response
-  try {
-    const signal = opts?.body ? undefined : AbortSignal.timeout(3000)
-    res = await fetch(url, signal ? { ...opts, signal } : opts)
-  } catch {
-    // API lokal tidak terjangkau atau timeout -> coba API produksi
-    return fetch(fallbackUrl, opts)
-  }
-
-  if (isRetryableStatus(res.status)) {
-    try {
-      return await fetch(fallbackUrl, opts)
-    } catch {
-      return res
+  // Gabungkan signal jika caller sudah menyediakan AbortSignal
+  let signal = controller.signal
+  if (opts?.signal) {
+    const parentSignal = opts.signal
+    if (parentSignal.aborted) {
+      clearTimeout(timer)
+      controller.abort()
+    } else {
+      parentSignal.addEventListener('abort', () => {
+        clearTimeout(timer)
+        controller.abort()
+      }, { once: true })
     }
   }
-  return res
+
+  const finalOpts: RequestInit = {
+    ...opts,
+    signal,
+  }
+
+  try {
+    if (!FALLBACK_API || !currentBase || currentBase === FALLBACK_API) {
+      const res = await fetch(url, finalOpts)
+      clearTimeout(timer)
+      return res
+    }
+
+    const fallbackUrl = url.replace(currentBase, FALLBACK_API)
+
+    let res: Response
+    try {
+      res = await fetch(url, finalOpts)
+    } catch {
+      // API lokal/primer gagal atau timeout -> coba API fallback jika ada
+      const fallbackRes = await fetch(fallbackUrl, finalOpts)
+      clearTimeout(timer)
+      return fallbackRes
+    }
+
+    if (isRetryableStatus(res.status)) {
+      try {
+        const fallbackRes = await fetch(fallbackUrl, finalOpts)
+        clearTimeout(timer)
+        return fallbackRes
+      } catch {
+        clearTimeout(timer)
+        return res
+      }
+    }
+    clearTimeout(timer)
+    return res
+  } catch (err) {
+    clearTimeout(timer)
+    throw err
+  }
 }
 
 function _redirectLogin() {
@@ -584,6 +621,24 @@ export async function getSessions(): Promise<{ sessions: unknown[] }> {
 
 export async function revokeSession(id: string): Promise<void> {
   await fetchAuthApi(`/companyprofile/auth/sessions/${id}`, { method: 'DELETE' })
+}
+
+/**
+ * Ambil ringkasan jumlah konten semua modul dalam satu request.
+ * Jauh lebih cepat dari memanggil 10+ endpoint list terpisah hanya untuk count.
+ * Jika endpoint /stats belum tersedia (mis. backend lama), fallback ke 0 semua.
+ */
+export async function getCmsStats(): Promise<Record<string, number>> {
+  try {
+    const res = await fetchWithFallback(`${getApiBase()}/companyprofile/stats`, {
+      cache: 'no-store',
+      credentials: 'include' as RequestCredentials,
+    })
+    if (!res.ok) return {}
+    return parseJsonSafe<Record<string, number>>(res, 'Stats')
+  } catch {
+    return {}
+  }
 }
 
 export interface SiteSetting {

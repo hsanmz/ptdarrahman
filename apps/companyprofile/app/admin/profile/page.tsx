@@ -8,25 +8,11 @@ import { DashboardShell } from '@repo/ui'
 import { ProfilePage as SharedProfilePage, type ProfileSession } from '@repo/ui/profile'
 import {
   AdminDashboardLink,
+  AdminSidebarFooter,
   buildAdminNavGroups,
   useAdminFavicon,
 } from '../_admin-shell'
-
-const MODULES = [
-  { key: 'hero', label: 'Hero Beranda', href: '/admin/dashboard?tab=hero' },
-  { key: 'news', label: 'Berita', href: '/admin/dashboard?tab=news' },
-  { key: 'programs', label: 'Program', href: '/admin/dashboard?tab=programs' },
-  { key: 'facilities', label: 'Fasilitas', href: '/admin/dashboard?tab=facilities' },
-  { key: 'gallery', label: 'Galeri', href: '/admin/dashboard?tab=gallery' },
-  { key: 'testimonials', label: 'Testimoni', href: '/admin/dashboard?tab=testimonials' },
-  { key: 'staff', label: 'Staff', href: '/admin/dashboard?tab=staff' },
-  { key: 'about', label: 'Tentang Kami', href: '/admin/dashboard?tab=about' },
-  { key: 'leadership', label: 'Struktur Organisasi', href: '/admin/dashboard?tab=leadership' },
-  { key: 'achievements', label: 'Prestasi', href: '/admin/dashboard?tab=achievements' },
-  { key: 'social', label: 'Tautan Sosial', href: '/admin/dashboard?tab=social' },
-  { key: 'contact', label: 'Info Kontak', href: '/admin/dashboard?tab=contact' },
-  { key: 'settings', label: 'Pengaturan', href: '/admin/dashboard?tab=settings' },
-]
+import { TABS } from '../dashboard/_constants'
 
 interface SessionsApi {
   getSessions?: () => Promise<{ sessions?: ProfileSession[] } | ProfileSession[]>
@@ -123,7 +109,12 @@ export default function AdminProfilePage() {
   }
 
   const navGroups = buildAdminNavGroups(
-    MODULES.map((m) => ({ key: m.key, label: m.label, href: m.href })),
+    TABS.map((t) => ({
+      key: t.key,
+      label: t.label,
+      icon: t.icon,
+      href: `/admin/dashboard?tab=${t.key}`,
+    })),
     true,
   )
 
@@ -137,7 +128,7 @@ export default function AdminProfilePage() {
         onNavigate={(item) => {
           if (item?.href) router.push(item.href)
         }}
-        apiBase={api.API_BASE}
+        apiBase={api.getApiBase?.() ?? api.API_BASE}
         contentClassName="animate-fade-in no-scrollbar"
         storageKey="cp_collapsed"
         roleLabel={adminUser?.role_name || adminUser?.user_type}

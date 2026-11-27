@@ -30,6 +30,8 @@ services:
       - "3000:3000"   # companyprofile (Next.js)
       - "5173:5173"   # superadmin (Vite)
       - "5174:5174"   # ppdb (Vite)
+    environment:
+      INTERNAL_API_URL: http://api:8000
     depends_on:
       api:
         condition: service_healthy

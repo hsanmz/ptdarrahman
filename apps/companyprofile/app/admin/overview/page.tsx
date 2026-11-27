@@ -13,6 +13,7 @@ import {
   Home, Newspaper, GraduationCap, Building2, Users, Trophy,
   Image as ImageIcon, MessageSquare, Link as LinkIcon, Phone, Settings,
   ArrowRight, Calendar, Sparkles, PenSquare, PictureInPicture2, Network, Info,
+  HelpCircle, ClipboardList,
 } from 'lucide-react'
 import ProfileModal from '@/app/components/ProfileModal'
 import { DashboardShell } from '@repo/ui'
@@ -22,6 +23,7 @@ import {
   buildAdminNavGroups,
   useAdminFavicon,
 } from '../_admin-shell'
+import { TABS } from '../dashboard/_constants'
 import { buttonVariants } from '@/app/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/Card'
 import { cn } from '@/app/lib/utils'
@@ -49,13 +51,21 @@ interface SectionDef {
   description: string
 }
 
+/**
+ * SECTIONS diperluas agar mencakup semua modul CMS yang ada di TABS (_constants.ts).
+ * Urutan & key harus konsisten dengan TABS agar sidebar dan permissions bekerja benar.
+ * Ini adalah satu-satunya daftar authoritative untuk overview — sidebar dibangun
+ * dari TABS agar selalu sinkron dengan dashboard/page.tsx.
+ */
 const SECTIONS: SectionDef[] = [
   { key: 'hero', label: 'Hero Beranda', icon: Home, tint: 'from-emerald-600 to-emerald-800', href: '/admin/dashboard?tab=hero', description: 'Banner gambar beranda' },
+  { key: 'ppdb', label: 'PPDB Landing', icon: ClipboardList, tint: 'from-emerald-500 to-emerald-700', href: '/admin/dashboard?tab=ppdb', description: 'Halaman landing PPDB' },
   { key: 'news', label: 'Berita', icon: Newspaper, tint: 'from-emerald-500 to-emerald-700', href: '/admin/dashboard?tab=news', description: 'Artikel & berita terbaru' },
   { key: 'programs', label: 'Program', icon: GraduationCap, tint: 'from-sky-500 to-sky-700', href: '/admin/dashboard?tab=programs', description: 'Program pendidikan' },
   { key: 'facilities', label: 'Fasilitas', icon: Building2, tint: 'from-amber-500 to-amber-700', href: '/admin/dashboard?tab=facilities', description: 'Sarana & prasarana' },
   { key: 'staff', label: 'Staff', icon: Users, tint: 'from-violet-500 to-violet-700', href: '/admin/dashboard?tab=staff', description: 'Guru & pengurus' },
   { key: 'about', label: 'Tentang Kami', icon: Info, tint: 'from-emerald-500 to-emerald-700', href: '/admin/dashboard?tab=about', description: 'Konten profil institusi' },
+  { key: 'faq', label: 'FAQ', icon: HelpCircle, tint: 'from-orange-500 to-orange-700', href: '/admin/dashboard?tab=faq', description: 'Pertanyaan & jawaban umum' },
   { key: 'leadership', label: 'Struktur Organisasi', icon: Network, tint: 'from-emerald-600 to-emerald-800', href: '/admin/dashboard?tab=leadership', description: 'Susunan pengurus' },
   { key: 'achievements', label: 'Prestasi', icon: Trophy, tint: 'from-rose-500 to-rose-700', href: '/admin/dashboard?tab=achievements', description: 'Raihan & penghargaan' },
   { key: 'gallery', label: 'Galeri', icon: ImageIcon, tint: 'from-pink-500 to-pink-700', href: '/admin/dashboard?tab=gallery', description: 'Dokumentasi kegiatan' },
@@ -75,20 +85,26 @@ export default function AdminOverview() {
   const [latestNews, setLatestNews] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [profileOpen, setProfileOpen] = useState(false)
 
   const faviconUrl = useAdminFavicon()
 
   useSSE('companyprofile')
 
-  const canCrud =
+  const hasFullCpAccess =
     adminUser?.user_type === 'superadmin' ||
-    adminUser?.permissions?.companyprofile === 'crud'
+    adminUser?.is_superadmin === true ||
+    adminUser?.permissions?.companyprofile === 'crud' ||
+    adminUser?.role_name === 'AdminCP' ||
+    adminUser?.role_name === 'Admin Company Profile'
+
+  const canCrud = hasFullCpAccess
 
   const filteredSections =
-    pagePermissions && pagePermissions.length > 0
-      ? SECTIONS.filter((s) => pagePermissions.includes(s.key))
-      : SECTIONS
+    hasFullCpAccess || !pagePermissions || pagePermissions.length === 0
+      ? SECTIONS
+      : SECTIONS.filter((s) => pagePermissions.includes(s.key))
 
   const handle401 = useCallback(() => {
     localStorage.removeItem('admin_user')
@@ -99,7 +115,7 @@ export default function AdminOverview() {
   useEffect(() => {
     const saved = localStorage.getItem('admin_user')
     if (!saved) {
-      ; (async () => {
+      ;(async () => {
         try {
           const me = await api.getMe()
           if (me) {
@@ -134,40 +150,23 @@ export default function AdminOverview() {
     }
   }, [router])
 
-  // Ambil ringkasan data (count) seluruh modul + berita terbaru.
+  /**
+   * Ambil ringkasan data menggunakan endpoint /stats yang ringan (1 query COUNT semua tabel)
+   * + berita terbaru (limit 6 via pagination). Total: 2 request vs 10 request sebelumnya.
+   * Jika /stats belum tersedia di backend lama, fallback ke counts kosong secara graceful.
+   */
   const fetchOverview = useCallback(async () => {
     setError('')
     try {
-      const [news, programs, facilities, staff, achievements, gallery, testimonials, social, contact, settings] =
-        await Promise.all([
-          api.getNews(),
-          api.getPrograms(),
-          api.getFacilities(),
-          api.getStaff(),
-          api.getAchievements(),
-          api.getGallery(),
-          api.getTestimonials(),
-          api.getSocialLinks(),
-          api.getContactInfo(),
-          api.getAdminSettings(),
-        ])
-      setCounts({
-        news: news.length,
-        programs: programs.length,
-        facilities: facilities.length,
-        staff: staff.length,
-        achievements: achievements.length,
-        gallery: gallery.length,
-        testimonials: testimonials.length,
-        social: social.length,
-        contact: contact ? 1 : 0,
-        settings: settings.length,
-      })
-      setLatestNews(
-        [...news]
-          .sort((a, b) => String(b.date).localeCompare(String(a.date)))
-          .slice(0, 6)
-      )
+      const [stats, newsPage] = await Promise.all([
+        api.getCmsStats(),
+        api.getEntityPage('/news', 1, 6),
+      ])
+      setCounts(stats)
+      const sortedNews = [...newsPage]
+        .sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')))
+        .slice(0, 6)
+      setLatestNews(sortedNews as unknown as NewsArticle[])
     } catch (e: unknown) {
       if (e instanceof Error && (e.message?.includes('401') || e.message?.includes('Unauthorized'))) {
         handle401()
@@ -205,8 +204,24 @@ export default function AdminOverview() {
     year: 'numeric',
   })
 
+  /**
+   * Sidebar dibangun dari TABS (_constants.ts) sebagai single source of truth —
+   * sama persis dengan dashboard/page.tsx supaya sidebar identik di semua halaman admin.
+   * Ini yang menyebabkan PPDB Landing, FAQ, Tentang Kami, Struktur Organisasi
+   * sebelumnya hilang: overview memakai SECTIONS lokal yang tidak mencakup semua tab.
+   */
   const navGroups = buildAdminNavGroups(
-    filteredSections.map((s) => ({ key: s.key, label: s.label, icon: s.icon, href: s.href })),
+    TABS.filter((t) =>
+      hasFullCpAccess ||
+      !pagePermissions ||
+      pagePermissions.length === 0 ||
+      pagePermissions.includes(t.key)
+    ).map((t) => ({
+      key: t.key,
+      label: t.label,
+      icon: t.icon,
+      href: `/admin/dashboard?tab=${t.key}`,
+    })),
     true,
   )
 
@@ -229,7 +244,7 @@ export default function AdminOverview() {
           if (item.onClick) item.onClick()
           else if (item.href) router.push(item.href)
         }}
-        apiBase={api.API_BASE}
+        apiBase={api.getApiBase?.() ?? api.API_BASE}
         contentClassName="animate-fade-in"
         storageKey="cp_collapsed"
         roleLabel={adminUser?.role_name || adminUser?.user_type}
@@ -245,7 +260,6 @@ export default function AdminOverview() {
         onLogout={handleLogout}
         sidebarFooter={<AdminSidebarFooter />}
       >
-
 
           {/* Hero / Greeting */}
           <section className="relative overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-br from-primary via-emerald-700 to-[#145337] p-6 md:p-8 text-white shadow-lg">
@@ -402,6 +416,7 @@ export default function AdminOverview() {
                 </CardHeader>
                 <CardContent className="space-y-2.5">
                   <QuickLink href="/admin/dashboard?tab=news" icon={Newspaper} label="Kelola Berita" />
+                  <QuickLink href="/admin/dashboard?tab=ppdb" icon={ClipboardList} label="PPDB Landing" />
                   <QuickLink href="/admin/dashboard?tab=gallery" icon={ImageIcon} label="Kelola Galeri" />
                   <QuickLink href="/admin/dashboard?tab=programs" icon={GraduationCap} label="Kelola Program" />
                   <QuickLink href="/admin/dashboard?tab=contact" icon={Phone} label="Perbarui Info Kontak" />

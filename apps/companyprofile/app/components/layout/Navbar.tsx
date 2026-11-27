@@ -11,6 +11,7 @@ import MagneticButton from '../ui/MagneticButton'
 import { programMenuLinks } from '@/app/lib/programs'
 import type { Program } from '@/app/lib/types'
 import { useBrand, resolvePortalUrl } from '@repo/ui'
+import { getApiBase } from '@/app/lib/api'
 
 interface NavChild {
   href: string
@@ -54,7 +55,7 @@ export default function Navbar({ programs = [] }: { programs?: Program[] }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const { logoUrl } = useBrand(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
+  const { logoUrl } = useBrand(getApiBase?.() ?? '')
   const portalUrl = resolvePortalUrl(process.env.NEXT_PUBLIC_PORTAL_URL)
 
   const pathname = usePathname()

@@ -7,9 +7,18 @@
  * atau tahun ajaran yang diketik manual.
  */
 
-const PPDB_API_BASE = (
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-).replace(/\/+$/, '')
+import { getApiBase } from './api'
+
+function getPpdbApiBase(): string {
+  if (typeof window !== 'undefined') {
+    return getApiBase()
+  }
+  return (
+    process.env.INTERNAL_API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    'http://localhost:8000'
+  ).replace(/\/+$/, '')
+}
 
 export interface ActivePpdbWave {
   active: boolean
@@ -37,8 +46,8 @@ export interface ActivePpdbWave {
 /** Gelombang aktif, atau `null` bila belum ada / API tidak terjangkau. */
 export async function fetchActivePpdbWave(): Promise<ActivePpdbWave | null> {
   try {
-    // Server-side fetch wave aktif PPDB selalu up-to-date (no-store).
-    const res = await fetch(`${PPDB_API_BASE}/ppdb/waves/active-public`, {
+    // Server-side / client-side fetch wave aktif PPDB selalu up-to-date (no-store).
+    const res = await fetch(`${getPpdbApiBase()}/ppdb/waves/active-public`, {
       cache: 'no-store',
     })
     if (!res.ok) return null
