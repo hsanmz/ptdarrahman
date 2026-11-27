@@ -205,6 +205,25 @@ export const NEWS_CDN: Record<string, string> = {
 }
 
 /**
+ * Optimalkan URL Cloudinary dengan menyuntikkan transformasi format & kompresi otomatis (f_auto,q_auto).
+ * Cloudinary CDN akan otomatis mengonversi ke WebP/AVIF modern dan merampingkan ukuran gambar
+ * 70%–90% lebih kecil tanpa membebani CPU atau RAM server kita sama sekali.
+ */
+export function optimizeCloudinaryUrl(url: string, maxWidth = 1200): string {
+  if (!url || !url.includes('res.cloudinary.com')) return url
+  if (url.includes('/f_auto') || url.includes('/q_auto')) return url
+
+  const uploadSegment = '/image/upload/'
+  const uploadIdx = url.indexOf(uploadSegment)
+  if (uploadIdx === -1) return url
+
+  const before = url.slice(0, uploadIdx + uploadSegment.length)
+  const after = url.slice(uploadIdx + uploadSegment.length)
+
+  return `${before}f_auto,q_auto,c_limit,w_${maxWidth}/${after}`
+}
+
+/**
  * Normalisasi dan resolusi URL gambar untuk seluruh aplikasi Company Profile.
  * Menangani path relatif, domain nonaktif (arrahmanic.org), migrasi Cloudinary CDN, dan localhost mismatch.
  */
@@ -215,52 +234,52 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
   // Resolusi path lokal /images/pengurus/ ke Cloudinary CDN
   if (src.includes('/images/pengurus/')) {
     for (const [key, cdnUrl] of Object.entries(PENGURUS_CDN)) {
-      if (src.includes(key)) return cdnUrl
+      if (src.includes(key)) return optimizeCloudinaryUrl(cdnUrl)
     }
   }
 
   // Resolusi path lokal /images/news/ ke Cloudinary CDN
   if (src.includes('/images/news/')) {
     for (const [key, cdnUrl] of Object.entries(NEWS_CDN)) {
-      if (src.includes(key)) return cdnUrl
+      if (src.includes(key)) return optimizeCloudinaryUrl(cdnUrl)
     }
   }
 
   // Petakan domain lama arrahmanic.org / webbackend.arrahmanic.org ke Cloudinary CDN
   if (src.includes('arrahmanic.org')) {
     // Berita
-    if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) return NEWS_CDN['seminar-kristologi']
-    if (src.includes('BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1')) return NEWS_CDN['lomba-hut-ri-80']
-    if (src.includes('ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ')) return NEWS_CDN['upacara-hut-ri-80']
-    if (src.includes('wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97')) return NEWS_CDN['porseni-pontren-2025']
-    if (src.includes('FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8')) return NEWS_CDN['sharing-session-gojek']
-    if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) return NEWS_CDN['ramadhan-gotong-royong']
+    if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) return optimizeCloudinaryUrl(NEWS_CDN['seminar-kristologi'])
+    if (src.includes('BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1')) return optimizeCloudinaryUrl(NEWS_CDN['lomba-hut-ri-80'])
+    if (src.includes('ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ')) return optimizeCloudinaryUrl(NEWS_CDN['upacara-hut-ri-80'])
+    if (src.includes('wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97')) return optimizeCloudinaryUrl(NEWS_CDN['porseni-pontren-2025'])
+    if (src.includes('FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8')) return optimizeCloudinaryUrl(NEWS_CDN['sharing-session-gojek'])
+    if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) return optimizeCloudinaryUrl(NEWS_CDN['ramadhan-gotong-royong'])
 
     // Pengurus Yayasan & Manajemen Lembaga
     const lower = decodeURIComponent(src).toLowerCase()
-    if (lower.includes('indra setiawan')) return PENGURUS_CDN['indra-setiawan']
-    if (lower.includes('rini widiastuti')) return PENGURUS_CDN['rini-widiastuti']
-    if (lower.includes('eko')) return PENGURUS_CDN['eko-santoso']
-    if (lower.includes('chandra')) return PENGURUS_CDN['chandra-sari']
-    if (lower.includes('noor')) return PENGURUS_CDN['noor-kartika']
-    if (lower.includes('rachmania')) return PENGURUS_CDN['rachmania-kurniawati']
-    if (lower.includes('fathya')) return PENGURUS_CDN['fathya-irsalina']
-    if (lower.includes('mira')) return PENGURUS_CDN['mira-susanti']
-    if (lower.includes('leo')) return PENGURUS_CDN['leo-latul']
-    if (lower.includes('mahfud')) return PENGURUS_CDN['ahmad-mahfud']
-    if (lower.includes('dewi')) return PENGURUS_CDN['dewi-nareswari']
-    if (lower.includes('niar') || lower.includes('dahniar')) return PENGURUS_CDN['dahniar']
-    if (lower.includes('ruswandri')) return PENGURUS_CDN['ruswandri']
-    if (lower.includes('silvi')) return PENGURUS_CDN['silvi-laeli']
-    if (lower.includes('ziyad')) return PENGURUS_CDN['ustd-ziyad']
-    if (lower.includes('ahmad')) return PENGURUS_CDN['ustd-ahmad']
-    if (lower.includes('susi') || lower.includes('susilawati')) return PENGURUS_CDN['susilawati']
+    if (lower.includes('indra setiawan')) return optimizeCloudinaryUrl(PENGURUS_CDN['indra-setiawan'])
+    if (lower.includes('rini widiastuti')) return optimizeCloudinaryUrl(PENGURUS_CDN['rini-widiastuti'])
+    if (lower.includes('eko')) return optimizeCloudinaryUrl(PENGURUS_CDN['eko-santoso'])
+    if (lower.includes('chandra')) return optimizeCloudinaryUrl(PENGURUS_CDN['chandra-sari'])
+    if (lower.includes('noor')) return optimizeCloudinaryUrl(PENGURUS_CDN['noor-kartika'])
+    if (lower.includes('rachmania')) return optimizeCloudinaryUrl(PENGURUS_CDN['rachmania-kurniawati'])
+    if (lower.includes('fathya')) return optimizeCloudinaryUrl(PENGURUS_CDN['fathya-irsalina'])
+    if (lower.includes('mira')) return optimizeCloudinaryUrl(PENGURUS_CDN['mira-susanti'])
+    if (lower.includes('leo')) return optimizeCloudinaryUrl(PENGURUS_CDN['leo-latul'])
+    if (lower.includes('mahfud')) return optimizeCloudinaryUrl(PENGURUS_CDN['ahmad-mahfud'])
+    if (lower.includes('dewi')) return optimizeCloudinaryUrl(PENGURUS_CDN['dewi-nareswari'])
+    if (lower.includes('niar') || lower.includes('dahniar')) return optimizeCloudinaryUrl(PENGURUS_CDN['dahniar'])
+    if (lower.includes('ruswandri')) return optimizeCloudinaryUrl(PENGURUS_CDN['ruswandri'])
+    if (lower.includes('silvi')) return optimizeCloudinaryUrl(PENGURUS_CDN['silvi-laeli'])
+    if (lower.includes('ziyad')) return optimizeCloudinaryUrl(PENGURUS_CDN['ustd-ziyad'])
+    if (lower.includes('ahmad')) return optimizeCloudinaryUrl(PENGURUS_CDN['ustd-ahmad'])
+    if (lower.includes('susi') || lower.includes('susilawati')) return optimizeCloudinaryUrl(PENGURUS_CDN['susilawati'])
 
     if (src.includes('news') || src.includes('berita')) {
-      return NEWS_CDN['seminar-kristologi']
+      return optimizeCloudinaryUrl(NEWS_CDN['seminar-kristologi'])
     }
     if (src.includes('staff') || src.includes('guru') || src.includes('ustadz')) {
-      return PENGURUS_CDN['ustd-ziyad']
+      return optimizeCloudinaryUrl(PENGURUS_CDN['ustd-ziyad'])
     }
     return ''
   }
@@ -277,7 +296,7 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
     return cleanBase ? `${cleanBase}${uploadPath}` : uploadPath
   }
 
-  return src
+  return optimizeCloudinaryUrl(src)
 }
 
 /** Ambil URL gambar aman dengan fallback otomatis per kategori jika nilai kosong atau gagal */

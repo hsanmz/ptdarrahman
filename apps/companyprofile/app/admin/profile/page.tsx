@@ -148,6 +148,7 @@ export default function AdminProfilePage() {
             router.push('/auth/login')
           }
         }}
+        sidebarFooter={<AdminSidebarFooter />}
       >
         <SharedProfilePage
           user={adminUser}

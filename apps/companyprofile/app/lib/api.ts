@@ -112,7 +112,7 @@ async function fetchWithFallback(url: string, opts?: RequestInit): Promise<Respo
   const timer = setTimeout(() => controller.abort(), 15000)
 
   // Gabungkan signal jika caller sudah menyediakan AbortSignal
-  let signal = controller.signal
+  const signal = controller.signal
   if (opts?.signal) {
     const parentSignal = opts.signal
     if (parentSignal.aborted) {

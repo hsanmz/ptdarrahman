@@ -15,7 +15,6 @@ import {
   ArrowRight, Calendar, Sparkles, PenSquare, PictureInPicture2, Network, Info,
   HelpCircle, ClipboardList,
 } from 'lucide-react'
-import ProfileModal from '@/app/components/ProfileModal'
 import { DashboardShell } from '@repo/ui'
 import {
   AdminDashboardLink,
@@ -24,23 +23,12 @@ import {
   useAdminFavicon,
 } from '../_admin-shell'
 import { TABS } from '../dashboard/_constants'
+import type { AdminUser } from '../dashboard/_types'
 import { buttonVariants } from '@/app/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/Card'
 import { cn } from '@/app/lib/utils'
 
 // ─── Types ──────────────────────────────────────────────────
-
-interface AdminUser {
-  id?: string
-  username?: string
-  full_name?: string
-  email?: string
-  avatar_url?: string
-  role_name?: string
-  user_type?: string
-  permissions?: Record<string, string>
-  page_permissions?: string[]
-}
 
 interface SectionDef {
   key: string
@@ -85,8 +73,6 @@ export default function AdminOverview() {
   const [latestNews, setLatestNews] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [profileOpen, setProfileOpen] = useState(false)
 
   const faviconUrl = useAdminFavicon()
 
@@ -229,7 +215,6 @@ export default function AdminOverview() {
     <>
       <AdminToast />
       <CrossTabSync />
-      {false && profileOpen && <ProfileModal open onClose={() => setProfileOpen(false)} />}
 
       <DashboardShell
         brand={{

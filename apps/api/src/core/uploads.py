@@ -211,15 +211,22 @@ def _upload_cloudinary(
         else PUBLIC_ID_PREFIX
     )
     public_id = f"{folder}/{uuid.uuid4().hex}"
+    upload_kwargs: dict[str, Any] = {
+        "public_id": public_id,
+        "folder": None,  # public_id already contains the folder path
+        "resource_type": "auto",
+        "use_filename": False,
+        "overwrite": False,
+    }
+    if content_type.startswith("image/"):
+        upload_kwargs["transformation"] = [
+            {"width": 1920, "height": 1920, "crop": "limit"},
+            {"quality": "auto"},
+            {"fetch_format": "auto"},
+        ]
+
     try:
-        result = cloudinary.uploader.upload(
-            content,
-            public_id=public_id,
-            folder=None,  # public_id already contains the folder path
-            resource_type="auto",
-            use_filename=False,
-            overwrite=False,
-        )
+        result = cloudinary.uploader.upload(content, **upload_kwargs)
     except Exception as exc:
         logger.exception("Cloudinary upload failed for %s", original_name)
         raise HTTPException(
@@ -233,6 +240,17 @@ def _upload_cloudinary(
         raise HTTPException(
             status_code=502,
             detail="Layanan penyimpanan tidak mengembalikan URL berkas.",
+        )
+
+    # Pastikan URL yang disimpan ke DB otomatis memakai f_auto,q_auto dari CDN
+    if (
+        content_type.startswith("image/")
+        and "res.cloudinary.com" in str(public_url)
+        and "/image/upload/" in str(public_url)
+        and "/f_auto" not in str(public_url)
+    ):
+        public_url = str(public_url).replace(
+            "/image/upload/", "/image/upload/f_auto,q_auto,c_limit,w_1920/"
         )
 
     return UploadResult(
