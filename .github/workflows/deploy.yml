@@ -10,6 +10,7 @@ jobs:
   deploy:
     name: Deploy to IDCloudHost VPS
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - name: SSH and Deploy to Server
         uses: appleboy/ssh-action@v1.2.0
@@ -19,8 +20,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_SSH_PORT || 22 }}
-          timeout: 60s
-          command_timeout: 60m
+          timeout: 120s
+          command_timeout: 90m
           script_stop: true
           script: |
             echo "=== [CI/CD] 1. Mengambil pembaruan kode terbaru dari Git ==="
@@ -85,7 +86,7 @@ jobs:
                 } || true
               fi
 
-              $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml up -d --build --force-recreate
+              $DOCKER_CMD compose --env-file .env.ip -f docker-compose.ip.yml up -d --build
               
               # Tunggu sampai container API berstatus Up
               echo "Menunggu service API siap..."

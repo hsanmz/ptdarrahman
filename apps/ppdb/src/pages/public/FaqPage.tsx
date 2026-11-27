@@ -22,7 +22,7 @@ const FAQS_DATA: FaqItem[] = [
     category: 'curriculum',
     question: 'Jenjang pendidikan apa yang dibuka pada PPDB PTDARRAHMAN dan siapa sasaran pendaftarnya?',
     answer:
-      'PPDB Pesantren Tahfidz Qur\'an dan Digital Ar-Rahman dibuka khusus untuk jenjang Sekolah Menengah Kejuruan (SMK) dengan kompetensi keahlian Teknologi Informasi / Rekayasa Perangkat Lunak (RPL) terintegrasi Tahfidz Al-Qur\'an 30 Juz Bersanad. Sasaran pendaftar adalah calon santri putra lulusan SMP / MTs / sederajat (bukan lulusan SD/MI).',
+      'PPDB Pesantren Tahfidz Qur\'an dan Digital Ar-Rahman dibuka khusus untuk jenjang Sekolah Menengah Kejuruan (SMK) dengan masa pendidikan 3 tahun, fokus pada kompetensi keahlian Teknologi Informasi / Rekayasa Perangkat Lunak (RPL) terintegrasi Tahfidz Al-Qur\'an 30 Juz Bersanad. Sasaran pendaftar adalah calon santri putra lulusan SMP / MTs / sederajat (bukan lulusan SD/MI).',
   },
   {
     id: 'faq-1',

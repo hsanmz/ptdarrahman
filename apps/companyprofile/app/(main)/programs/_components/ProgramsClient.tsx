@@ -63,7 +63,7 @@ export default function ProgramsClient({ programs }: { programs: Program[] }) {
       <PageHeader
         variant="editorial"
         title="Program Unggulan Kami"
-        subtitle="Kurikulum terpadu 6 tahun yang mengintegrasikan kedalaman Al-Qur'an, keahlian rekayasa teknologi digital, kecakapan bahasa global, dan integritas kepemimpinan santri"
+        subtitle="Kurikulum kejuruan terpadu 3 tahun jenjang SMK yang mengintegrasikan kedalaman Al-Qur'an, keahlian rekayasa teknologi digital, kecakapan bahasa global, dan integritas kepemimpinan santri"
         badge="KURIKULUM & AKADEMIK PTDARRAHMAN"
       />
 
@@ -225,7 +225,7 @@ export default function ProgramsClient({ programs }: { programs: Program[] }) {
                         Durasi
                       </div>
                       <div className="text-xs sm:text-sm font-bold font-[var(--font-heading)] text-[var(--text)] truncate">
-                        {info.duration || 'Program 6 Tahun'}
+                        {info.duration || 'Program 3 Tahun'}
                       </div>
                     </div>
                   </div>

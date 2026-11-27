@@ -273,7 +273,7 @@ export interface PpdbCopyContent {
   // Copy hero 3D `/ppdb` — kini statis (lihat `ppdbContent.ts`).
   hero_title?: string
   hero_desc?: string
-  /** Poin unggulan, item dipisah `|` — mis. "30 Juz | 2 Jenjang | 1 Ekosistem". */
+  /** Poin unggulan, item dipisah `|` — mis. "30 Juz | Jenjang SMK | 1 Ekosistem". */
   hero_proof?: string
   hero_cta_label?: string
   hero_cta_href?: string

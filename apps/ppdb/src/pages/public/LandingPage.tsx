@@ -223,7 +223,7 @@ export default function LandingPage() {
             </h1>
 
             <p className="mt-5 max-w-2xl text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
-              Pendidikan kejuruan SMK berbasis pesantren bagi calon santri putra lulusan SMP / MTs / sederajat. Memadukan hafalan Al-Qur'an 30 juz mutqin bersanad dengan keahlian rekayasa teknologi digital modern (Coding, Web Development &amp; IoT).
+              Pendidikan kejuruan SMK 3 tahun berbasis pesantren bagi calon santri putra lulusan SMP / MTs / sederajat. Memadukan hafalan Al-Qur'an 30 juz mutqin bersanad dengan keahlian rekayasa teknologi digital modern (Coding, Web Development &amp; IoT).
             </p>
 
             {/* Daya Tampung & Kuota Card Banner (Modern Institutional Widget) */}

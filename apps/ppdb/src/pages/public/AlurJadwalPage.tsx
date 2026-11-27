@@ -125,7 +125,7 @@ export default function AlurJadwalPage() {
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-900 border border-emerald-200">
               <GraduationCap className="h-3.5 w-3.5 text-emerald-700" />
-              <span>Jenjang SMK — Calon Santri Lulusan SMP / MTs</span>
+              <span>Jenjang SMK (3 Tahun) — Calon Santri Lulusan SMP / MTs</span>
             </span>
           </div>
 

@@ -59,7 +59,7 @@ const faqs = [
   },
   {
     question: 'Program apa saja yang tersedia?',
-    answer: 'Kami menawarkan empat program unggulan: Tahfidz Al-Quran, Teknologi Digital, Program Bilingual, dan Akademi Kepemimpinan, dari tingkat SMP hingga SMA (program terpadu 6 tahun).',
+    answer: 'Kami menawarkan empat program unggulan: Tahfidz Al-Quran, Teknologi Digital, Program Bilingual, dan Akademi Kepemimpinan pada jenjang kejuruan SMK (program terpadu 3 tahun).',
   },
   {
     question: 'Apakah Ar-Rahman menawarkan beasiswa?',

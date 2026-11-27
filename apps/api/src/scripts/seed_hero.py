@@ -32,7 +32,7 @@ HERO_SLIDES_DATA = [
             "label": "Pesantren Tahfidz & Digital Khusus Putra • Berdiri Sejak 2021",
             "title": "Mencetak Hafidz\nAl-Qur'an 30 Juz\nyang Ahli di Bidang\nTeknologi Digital",
             "subtitle": (
-                "Pendidikan pesantren putra terpadu 6 tahun yang memadukan ketangguhan hafalan lewat "
+                "Pendidikan pesantren jenjang SMK 3 tahun yang memadukan ketangguhan hafalan lewat "
                 "tradisi Tasmi' 30 Juz Bil Ghoib dengan penguasaan rekayasa perangkat lunak modern (Next.js, Basis Data, IoT & Cloud)."
             ),
             "button_label": "Daftar PPDB Online",

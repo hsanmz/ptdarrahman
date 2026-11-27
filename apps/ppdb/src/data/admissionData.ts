@@ -11,9 +11,10 @@
 
 export const JENJANG_PPDB = {
   jenjang: 'SMK (Sekolah Menengah Kejuruan)',
+  durasi: '3 Tahun (6 Semester)',
   kejuruan: 'Teknologi Informasi & Rekayasa Perangkat Lunak',
   targetLulusan: 'Lulusan SMP / MTs / Sederajat',
-  keterangan: 'Penerimaan calon santri putra lulusan SMP / MTs / sederajat untuk jenjang kejuruan SMK Teknologi Digital dan Tahfidz 30 Juz Bersanad.',
+  keterangan: 'Penerimaan calon santri putra lulusan SMP / MTs / sederajat untuk jenjang kejuruan SMK Teknologi Digital (masa studi 3 tahun) dan Tahfidz 30 Juz Bersanad.',
 }
 
 export interface ProgramHarianItem {

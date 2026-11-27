@@ -31,7 +31,7 @@ const FEATURES = [
 const STATS = [
   { value: '30 Juz', label: "Tahfidz Qur'an" },
   { value: '4', label: 'Program Unggulan' },
-  { value: '6 Tahun', label: 'Pendidikan Terpadu' },
+  { value: '3 Tahun', label: 'Kejuruan SMK' },
 ]
 
 function translateLoginError(message: string): string {

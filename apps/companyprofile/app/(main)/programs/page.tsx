@@ -7,7 +7,7 @@ import type { Program } from '@/app/lib/types'
 export const metadata: Metadata = {
   title: 'Program Kami',
   description:
-    'Jelajahi program unggulan PTDARRAHMAN: Tahfidz Al-Quran, Teknologi Digital, Program Bilingual, dan Akademi Kepemimpinan. Program terpadu 6 tahun SMP-SMA.',
+    'Jelajahi program unggulan PTDARRAHMAN: Tahfidz Al-Quran, Teknologi Digital, Program Bilingual, dan Akademi Kepemimpinan. Program kejuruan terpadu 3 tahun jenjang SMK.',
   openGraph: {
     title: 'Program Kami | PTDARRAHMAN',
     description:

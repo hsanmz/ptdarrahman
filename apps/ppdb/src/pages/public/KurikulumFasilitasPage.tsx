@@ -70,7 +70,7 @@ export default function KurikulumFasilitasPage() {
         <div className="container mx-auto max-w-5xl text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-3.5 py-1 text-xs font-bold text-emerald-800">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Jenjang SMK — Khusus Lulusan SMP / MTs Sederajat</span>
+            <span>Jenjang SMK (3 Tahun) — Khusus Lulusan SMP / MTs Sederajat</span>
           </span>
 
           <h1 className="mt-4 font-heading text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
@@ -78,7 +78,7 @@ export default function KurikulumFasilitasPage() {
           </h1>
 
           <p className="mt-3 max-w-2xl mx-auto text-sm sm:text-base text-slate-600 leading-relaxed">
-            Pendidikan kejuruan SMK berbasis pesantren bagi calon santri putra lulusan SMP / MTs / sederajat. Menghadirkan perpaduan harmonis antara kedalaman hafalan Al-Qur'an 30 juz mutqin, adab kemandirian asrama, torehan prestasi kejuaraan, dan rekayasa teknologi digital modern di Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.
+            Pendidikan kejuruan SMK 3 tahun berbasis pesantren bagi calon santri putra lulusan SMP / MTs / sederajat. Menghadirkan perpaduan harmonis antara kedalaman hafalan Al-Qur'an 30 juz mutqin, adab kemandirian asrama, torehan prestasi kejuaraan, dan rekayasa teknologi digital modern di Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.
           </p>
 
           {/* 5 Tab Navigation Switcher */}

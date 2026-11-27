@@ -11,7 +11,7 @@ export default function SyaratKetentuanPage() {
   const generalRequirements = [
     {
       title: "Lulusan SMP / MTs / Sederajat (Calon Santri SMK)",
-      desc: "Telah lulus atau sedang duduk di kelas 9 SMP/MTs/sederajat dan siap melanjutkan pendidikan kejuruan SMK Teknologi Digital serta Tahfidz 30 Juz di Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.",
+      desc: "Telah lulus atau sedang duduk di kelas 9 SMP/MTs/sederajat dan siap melanjutkan pendidikan kejuruan SMK 3 tahun (Teknologi Digital & Tahfidz 30 Juz) di Pesantren Tahfidz Qur'an dan Digital Ar-Rahman.",
     },
     {
       title: "Komitmen Mukim di Asrama Penuh",

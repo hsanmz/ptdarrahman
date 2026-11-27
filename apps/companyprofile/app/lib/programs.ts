@@ -6,7 +6,7 @@ const FALLBACK_CONTENT: Record<string, ProgramContent> = {
     title: "Tahfidz Al-Qur'an 30 Juz & Ulumul Qur'an",
     tagline: "Dari Tahsin Bacaan hingga Ujian Terbuka Tasmi' 30 Juz Bil Ghoib",
     desc: "Program inti yang membimbing santri putra menghafal 30 juz Al-Qur'an secara bertahap, terukur, dan terjaga sanad bacaannya. Setiap santri mengikuti halaqah harian ba'da Subuh dan waktu-waktu utama, dievaluasi melalui Sumatif Akhir Semester (SAS) Tahfidz, serta diuji ketahanan hafalannya melalui sidang Tasmi' 10 Juz Sekali Duduk hingga Tasmi' 30 Juz Bil Ghoib dan seremoni Khotmul Qur'an. Selain hafalan, santri juga mendalami Tafsir Al-Qur'an hingga mampu berprestasi di tingkat olimpiade nasional.",
-    duration: 'Program Terpadu 6 Tahun',
+    duration: 'Program Terpadu 3 Tahun',
     level: '30 Juz Mutqin',
     highlights: [
       "Tradisi Tasmi' Bil Ghoib Terbuka: Uji hafalan 10 juz sekali duduk hingga 30 juz penuh yang disiarkan langsung (live streaming Zoom & Instagram) sebagai bukti transparansi mutu hafalan.",
@@ -29,7 +29,7 @@ const FALLBACK_CONTENT: Record<string, ProgramContent> = {
     tagline:
       'Menguasai Pemrograman Modern, Basis Data, dan Internet of Things di Ruang Programming Pesantren',
     desc: 'Program Teknologi Digital di PTD Ar-Rahman dirancang melampaui pelajaran komputer sekolah biasa. Bertempat di Ruang Programming Lantai 3, para santri mempelajari rekayasa perangkat lunak modern, perancangan Basis Data, pengembangan aplikasi web dengan framework industri seperti Next.js, hingga perakitan perangkat cerdas Internet of Things (IoT). Santri juga mendapatkan wawasan langsung melalui Sharing Session bersama praktisi teknologi (seperti Senior Software Engineer Gojek) dan diuji melalui Ujian Praktik IT pada setiap akhir semester.',
-    duration: 'Program Terpadu 6 Tahun',
+    duration: 'Program Terpadu 3 Tahun',
     level: 'Praktik Lab & Industri',
     highlights: [
       'Kurikulum Web Modern (Next.js & Basis Data): Mempelajari arsitektur aplikasi web skala besar, pengelolaan database, optimasi performa, dan integrasi API.',
@@ -52,7 +52,7 @@ const FALLBACK_CONTENT: Record<string, ProgramContent> = {
     tagline:
       'Cakap Berkomunikasi Global dan Tampil Percaya Diri di Panggung Pidato Tiga Bahasa',
     desc: "Program Bilingual membentuk kebiasaan berkomunikasi aktif dalam Bahasa Arab dan Bahasa Inggris di lingkungan asrama PTD Ar-Rahman. Selain menunjang pemahaman ayat-ayat Al-Qur'an dan dokumentasi pemrograman internasional, santri dilatih secara khusus dalam seni berpidato (public speaking) Bahasa Arab, Bahasa Inggris, dan Bahasa Indonesia-serta aktif diterjunkan mewakili pesantren dalam ajang perlombaan antar-pondok pesantren seperti PORSENI PONTREN.",
-    duration: 'Program Terpadu 6 Tahun',
+    duration: 'Program Terpadu 3 Tahun',
     level: 'Komunikasi & Khitobah Aktif',
     highlights: [
       'Pelatihan Pidato 3 Bahasa (Arab, Inggris, Indonesia): Pembinaan intensif retorika dan muhadharah untuk mencetak orator muda yang komunikatif.',
@@ -75,7 +75,7 @@ const FALLBACK_CONTENT: Record<string, ProgramContent> = {
     tagline:
       'Membentuk Pemimpin Muda yang Mandiri, Disiplin, Sportif, dan Peduli Lingkungan',
     desc: 'Akademi Kepemimpinan di PTD Ar-Rahman menempa mentalitas, adab, dan kemandirian santri putra melalui kehidupan berasrama yang terstruktur. Santri dilatih bertanggung jawab atas kebersihan dan kerapian lingkungan melalui program Gerakan Lingkungan Indah (GLI), mengasah sportivitas lewat olahraga prestasi (futsal, badminton, tenis meja), mengembangkan dakwah kreatif di Ruang Podcast, serta mengikuti kegiatan rihlah dan perlombaan kebangsaan.',
-    duration: 'Program Terpadu 6 Tahun',
+    duration: 'Program Terpadu 3 Tahun',
     level: 'Karakter Asrama & Organisasi',
     highlights: [
       'Budaya Kemandirian & Gerakan Lingkungan Indah (GLI): Pembagian tanggung jawab terorganisir dalam merawat seluruh area pesantren dari lantai 1 hingga rooftop.',
@@ -97,7 +97,7 @@ const FALLBACK_CONTENT: Record<string, ProgramContent> = {
     title: 'Dirasah Islamiyah (Studi Keislaman)',
     tagline: 'Memperkokoh Dasar Akidah, Fiqih, Akhlak, dan Kegiatan Kitab Kuning',
     desc: "Program Dirasah Islamiyah membekali santri dengan pemahaman keislaman yang berjenjang: akidah, fiqih, akhlak, ulumul Qur'an dan hadits, tarikh, serta kaidah bahasa Arab sebagai kunci membaca kitab kuning secara mandiri. Pembelajaran berlangsung melalui halaqah bersama guru dengan pendekatan bertahap: mulai dari kaidah dasar, penguatan bahasa, hingga praktik menelusuri kitab. Ilmu keislaman ini menjadi fondasi bagi program tahfidz karena santri memahami makna dan konteks ayat yang dihafalkannya.",
-    duration: 'Program Terpadu 6 Tahun',
+    duration: 'Program Terpadu 3 Tahun',
     level: 'Studi Keislaman Berjenjang',
     highlights: [
       'Pembelajaran Keislaman Berjenjang: Materi akidah, fiqih, dan akhlak disusun bertahap sesuai kesiapan santri agar dasar ilmu kokoh.',

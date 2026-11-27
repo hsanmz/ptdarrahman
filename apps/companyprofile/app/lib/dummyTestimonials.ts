@@ -6,7 +6,7 @@ const DUMMY_TESTIMONIALS: Testimonial[] = [
   {
     id: 'dummy-testi-1',
     name: 'H. Ahmad Fauzi',
-    child: 'Muhammad Rizky · Santri SMP',
+    child: 'Muhammad Rizky · Santri SMK',
     image: U('1507003211169-0a1dd7228f2d'),
     order: 1,
     content: {
@@ -28,7 +28,7 @@ const DUMMY_TESTIMONIALS: Testimonial[] = [
   {
     id: 'dummy-testi-3',
     name: 'Bapak Dedi Kurniawan',
-    child: 'Fathurrahman · Santri SMP',
+    child: 'Fathurrahman · Santri SMK',
     image: U('1500648767791-00dcc994a43e'),
     order: 3,
     content: {
@@ -50,7 +50,7 @@ const DUMMY_TESTIMONIALS: Testimonial[] = [
   {
     id: 'dummy-testi-5',
     name: 'Bapak Hendra Wijaya',
-    child: 'Abizar · Santri SMP',
+    child: 'Abizar · Santri SMK',
     image: U('1633332755192-727a05c4013d'),
     order: 5,
     content: {

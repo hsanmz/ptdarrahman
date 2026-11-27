@@ -4227,7 +4227,7 @@ function buildHeroCopy(heroCopy) {
 
   if (lines.length === 0) lines = defaultLines;
 
-  var rawProof = cleanHeroCopy(src.hero_proof) || "30 Juz | 2 Jenjang | 1 Ekosistem";
+  var rawProof = cleanHeroCopy(src.hero_proof) || "30 Juz | Jenjang SMK | 1 Ekosistem";
 
   var proof = rawProof.split("|").map(function (item) { return item.trim(); }).filter(Boolean);
 
@@ -4235,7 +4235,7 @@ function buildHeroCopy(heroCopy) {
     titleHead: lines.slice(0, -1),
     titleLast: lines[lines.length - 1],
     description: cleanHeroCopy(src.hero_desc) || "Mencetak santri penghafal Al-Qur'an mutqin yang berwawasan global dan menguasai teknologi digital masa depan. Bersama Pesantren Tahfidz Qur'an & Digital Ar-Rahman.",
-    proof: proof.length > 0 ? proof : ["30 Juz", "2 Jenjang", "1 Ekosistem"],
+    proof: proof.length > 0 ? proof : ["30 Juz", "Jenjang SMK", "1 Ekosistem"],
     ctaLabel: cleanHeroCopy(src.hero_cta_label) || "Lihat Program",
     ctaHref: cleanHeroCopy(src.hero_cta_href) || "#info-section",
     registerLabel: cleanHeroCopy(src.hero_register_label) || "Daftar PPDB",

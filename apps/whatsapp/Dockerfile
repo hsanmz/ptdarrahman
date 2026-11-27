@@ -36,23 +36,7 @@ FROM node:20-slim AS runtime
 # Install Chromium + dependencies untuk Puppeteer/whatsapp-web.js
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    libx11-xcb1 \
-    libxcb-dri3-0 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxi6 \
-    libxrandr2 \
-    libxss1 \
-    libxtst6 \
-    libnss3 \
-    libnspr4 \
-    libxshmfence1 \
-    fonts-noto \
-    fonts-noto-color-emoji \
+    fonts-freefont-ttf \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
@@ -61,13 +45,13 @@ RUN groupadd --system ppuser && useradd --system --create-home --gid ppuser ppus
 
 WORKDIR /app
 
-# Copy compiled output + production node_modules
+# Copy compiled output + production node_modules (sudah ber-owner ppuser:ppuser)
 COPY --from=builder --chown=ppuser:ppuser /app/dist ./dist
 COPY --from=builder --chown=ppuser:ppuser /app/node_modules ./node_modules
 COPY --chown=ppuser:ppuser package.json ./
 
-# Buat direktori yang dibutuhkan
-RUN mkdir -p /app/wa-session /app/logs && chmod 777 /app/wa-session /app/logs && chown -R ppuser:ppuser /app
+# Buat direktori yang dibutuhkan untuk session dan logs (hanya chown direktori ini, hindari chown /app yang duplikasi node_modules)
+RUN mkdir -p /app/wa-session /app/logs && chown -R ppuser:ppuser /app/wa-session /app/logs && chmod 777 /app/wa-session /app/logs
 
 USER ppuser
 

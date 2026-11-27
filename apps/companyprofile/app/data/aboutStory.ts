@@ -56,7 +56,7 @@ export const storyChapters: StoryChapter[] = [
     kicker: 'BAGIAN 03',
     title: 'Bagaimana Sistemnya?',
     body: [
-      'Kurikulum terpadu 6 tahun (SMP–SMA) memadukan hafalan Al-Quran, ilmu keislaman, sains digital — coding, AI, robotik — bahasa, dan pembinaan kepemimpinan dalam satu keseharian santri.',
+      'Kurikulum terpadu 3 tahun (SMK) memadukan hafalan Al-Quran, ilmu keislaman, sains digital — coding, AI, robotik — bahasa, dan pembinaan kepemimpinan dalam satu keseharian santri.',
       'Semuanya berjalan dalam satu tarikan napas: irama hafalan menjadi denyut utama hari santri, sementara kelas digital dan pembinaan karakter menyertainya tanpa saling meniadakan.',
     ],
   },
