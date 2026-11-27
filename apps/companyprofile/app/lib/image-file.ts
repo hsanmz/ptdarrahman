@@ -183,39 +183,43 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
   const src = (value ?? '').trim()
   if (!src || src === 'null' || src === 'undefined') return ''
 
-  // Ganti domain lama arrahmanic.org / webbackend.arrahmanic.org yang tidak aktif dengan foto Unsplash relevan
+  // Petakan domain lama arrahmanic.org / webbackend.arrahmanic.org ke aset lokal fisik yang tersimpan
   if (src.includes('arrahmanic.org')) {
-    if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) {
-      return 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop'
-    }
-    if (src.includes('ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ')) {
-      return 'https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=1200&auto=format&fit=crop'
-    }
-    if (src.includes('BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1')) {
-      return 'https://images.unsplash.com/photo-1576767475305-ce65f5cbb67e?q=80&w=1200&auto=format&fit=crop'
-    }
-    if (src.includes('FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8')) {
-      return 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop'
-    }
-    if (src.includes('wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97')) {
-      return 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop'
-    }
-    if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) {
-      return 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop'
-    }
+    // Berita
+    if (src.includes('t8idWMDX2JDprjytRu9tCET1vAMlOpds88w1PzTx')) return '/images/news/seminar-kristologi.jpg'
+    if (src.includes('BezTw4HF4lyumoRlvhj8fXNPTlGYCmy3U59ymwP1')) return '/images/news/lomba-hut-ri-80.jpg'
+    if (src.includes('ATZokVGOucW8UiBgBRDOTanvHK13qY0jrHzRhsrQ')) return '/images/news/upacara-hut-ri-80.jpg'
+    if (src.includes('wt1ZWCPtapJxmpARdm9QifHpC0c8lynN6UESaV97')) return '/images/news/porseni-pontren-2025.jpg'
+    if (src.includes('FOTesK9LtJ3rG9UjZRpyFFTRaokHNVrRmS2UGWt8')) return '/images/news/sharing-session-gojek.jpg'
+    if (src.includes('MUdyERwyKU5FmT5tP0O7p1b6EA0yrAbPZWBK883k')) return '/images/news/ramadhan-gotong-royong.png'
+
+    // Pengurus Yayasan & Manajemen Lembaga
+    const lower = decodeURIComponent(src).toLowerCase()
+    if (lower.includes('indra setiawan')) return '/images/pengurus/indra-setiawan.png'
+    if (lower.includes('rini widiastuti')) return '/images/pengurus/rini-widiastuti.png'
+    if (lower.includes('eko')) return '/images/pengurus/eko-santoso.png'
+    if (lower.includes('chandra')) return '/images/pengurus/chandra-sari.png'
+    if (lower.includes('noor')) return '/images/pengurus/noor-kartika.png'
+    if (lower.includes('rachmania')) return '/images/pengurus/rachmania-kurniawati.png'
+    if (lower.includes('fathya')) return '/images/pengurus/fathya-irsalina.png'
+    if (lower.includes('mira')) return '/images/pengurus/mira-susanti.png'
+    if (lower.includes('leo')) return '/images/pengurus/leo-latul.png'
+    if (lower.includes('mahfud')) return '/images/pengurus/ahmad-mahfud.png'
+    if (lower.includes('dewi')) return '/images/pengurus/dewi-nareswari.png'
+    if (lower.includes('niar') || lower.includes('dahniar')) return '/images/pengurus/dahniar.png'
+    if (lower.includes('ruswandri')) return '/images/pengurus/ruswandri.png'
+    if (lower.includes('silvi')) return '/images/pengurus/silvi-laeli.png'
+    if (lower.includes('ziyad')) return '/images/pengurus/ustd-ziyad.png'
+    if (lower.includes('ahmad')) return '/images/pengurus/ustd-ahmad.png'
+    if (lower.includes('susi') || lower.includes('susilawati')) return '/images/pengurus/susilawati.png'
+
     if (src.includes('news') || src.includes('berita')) {
-      return 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop'
-    }
-    if (src.includes('galeri') || src.includes('gallery')) {
-      return 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop'
-    }
-    if (src.includes('fasilitas') || src.includes('facility')) {
-      return 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?q=80&w=1200&auto=format&fit=crop'
+      return '/images/news/seminar-kristologi.jpg'
     }
     if (src.includes('staff') || src.includes('guru') || src.includes('ustadz')) {
-      return 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop'
+      return '/images/pengurus/ustd-ziyad.png'
     }
-    return 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop'
+    return ''
   }
 
   // Normalisasi URL /uploads/... dari host manapun (localhost, IP server, atau path relatif)
