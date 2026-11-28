@@ -12,8 +12,18 @@ const path = require("path");
 const port = parseInt(process.argv[2] || "8080", 10);
 const rootDir = path.resolve(process.argv[3] || ".");
 
-const API_HOST = process.env.INTERNAL_API_HOST || "api";
-const API_PORT = parseInt(process.env.INTERNAL_API_PORT || "8000", 10);
+let API_HOST = process.env.INTERNAL_API_HOST || "api";
+let API_PORT = parseInt(process.env.INTERNAL_API_PORT || "8000", 10);
+
+if (process.env.INTERNAL_API_URL) {
+  try {
+    const parsed = new URL(process.env.INTERNAL_API_URL);
+    if (parsed.hostname) API_HOST = parsed.hostname;
+    if (parsed.port) API_PORT = parseInt(parsed.port, 10);
+    else if (parsed.protocol === "https:") API_PORT = 443;
+    else if (parsed.protocol === "http:") API_PORT = 80;
+  } catch {}
+}
 
 const PROXY_PREFIXES = [
   "/auth",
@@ -76,14 +86,21 @@ function proxyRequest(req, res) {
     }
   });
 
-  // Cegah dangling socket di backend jika client browser membatalkan request atau berpindah halaman
-  req.on("close", () => {
+  // Khusus Server-Sent Events (SSE), jangan pasang timeout
+  if (req.headers["accept"] && req.headers["accept"].includes("text/event-stream")) {
+    proxyReq.setTimeout(0);
+    req.socket.setTimeout(0);
+    if (res.socket) res.socket.setTimeout(0);
+  }
+
+  // Cegah dangling socket di backend HANYA jika client browser membatalkan koneksi secara prematur
+  req.on("aborted", () => {
     if (!proxyReq.destroyed) {
       proxyReq.destroy();
     }
   });
   res.on("close", () => {
-    if (!proxyReq.destroyed) {
+    if (!res.writableEnded && !proxyReq.destroyed) {
       proxyReq.destroy();
     }
   });
