@@ -11,7 +11,7 @@ import PageHeader from '@/app/components/layout/PageHeader'
 import LeadershipBoards from './_components/LeadershipBoards'
 import type { AboutContent, AboutContentData, LeadershipBoard } from '@/app/lib/types'
 import { resolvePortalUrl } from '@repo/ui'
-import { resolveImageSrc, FALLBACK_IMAGES, handleImageFallback } from '@/app/lib/image-file'
+import { resolveImageSrc, handleImageFallback } from '@/app/lib/image-file'
 import { API_BASE } from '@/app/lib/api'
 
 const ICONS: Record<string, LucideIcon> = {
@@ -39,7 +39,7 @@ function text(value: unknown): string {
 function paragraphs(value: unknown): string[] {
   if (Array.isArray(value)) return value.filter((item): item is string => typeof item === 'string' && item.trim() !== '')
   const single = text(value)
-  return single.split(/\r?\n+/).map((item) => item.trim()).filter(Boolean)
+  return single.split(/\r?\n\s*\r?\n/).map((item) => item.trim()).filter(Boolean)
 }
 
 function items(value: unknown): string[] {
@@ -209,7 +209,7 @@ export default function AboutClient({
             >
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent)] text-fade-breathe">{text(storyHeading.eyebrow)}</p>
               <h2 className="mt-3 font-[var(--font-display)] text-3xl font-bold leading-tight sm:text-4xl">{text(storyHeading.title)}</h2>
-              <p className="mt-4 text-base leading-relaxed text-[var(--text-secondary)]">{text(storyHeading.body)}</p>
+              <p className="mt-4 text-base leading-relaxed text-[var(--text-secondary)] whitespace-pre-line">{text(storyHeading.body)}</p>
             </motion.div>
             <ol className="mt-10 grid gap-4 md:grid-cols-2">
               {rowsFor(rows, 'story').map((chapter, index) => {
@@ -225,7 +225,7 @@ export default function AboutClient({
                   >
                     <div className="flex items-center gap-3"><span className="font-mono text-xs font-bold tracking-[0.18em] text-[var(--accent-gold)]">{String(index + 1).padStart(2, '0')}</span><span className="h-px flex-1 bg-[var(--color-border)]" aria-hidden /><span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">{text(content.kicker)}</span></div>
                     <h3 className="mt-5 text-xl font-bold text-[var(--text)]">{text(content.title)}</h3>
-                    <div className="mt-3 space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">{paragraphs(content.body).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+                    <div className="mt-3 space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">{paragraphs(content.body).map((paragraph) => <p key={paragraph} className="whitespace-pre-line">{paragraph}</p>)}</div>
                   </motion.li>
                 )
               })}
@@ -425,7 +425,7 @@ export default function AboutClient({
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent)] text-fade-breathe">{text(valuesHeading.eyebrow)}</p>
                 <h2 className="mt-3 font-[var(--font-display)] text-3xl font-bold leading-tight sm:text-4xl">{text(valuesHeading.title)}</h2>
-                <p className="mt-4 text-base leading-relaxed text-[var(--text-secondary)]">{text(valuesHeading.body)}</p>
+                <p className="mt-4 text-base leading-relaxed text-[var(--text-secondary)] whitespace-pre-line">{text(valuesHeading.body)}</p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {rowsFor(rows, 'value').map((value) => {
@@ -435,7 +435,7 @@ export default function AboutClient({
                     <article key={value.id} className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
                       <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-subtle)] text-[var(--accent)]"><Icon className="h-5 w-5" /></span>
                       <h3 className="mt-4 text-base font-bold">{text(content.title)}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{text(content.description)}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)] whitespace-pre-line">{text(content.description)}</p>
                     </article>
                   )
                 })}

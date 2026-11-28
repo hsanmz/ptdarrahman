@@ -2,7 +2,6 @@
 
 import React, { useMemo } from 'react'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   GraduationCap,
@@ -10,7 +9,6 @@ import {
   Globe,
   Sparkles,
   ArrowRight,
-  Phone,
   Rocket,
   ShieldCheck,
   Target,
@@ -117,7 +115,7 @@ interface PpdbClientViewProps {
   wave: ActivePpdbWave | null
   settings: Record<string, string>
   portalUrl?: string
-  ppdbRows?: any[]
+  ppdbRows?: Array<Record<string, any>>
 }
 
 export default function PpdbClientView({
@@ -158,8 +156,8 @@ export default function PpdbClientView({
 
     const copy = {
       ...STATIC_PPDB_CONTENT.copy,
-      ...(heroContent as any),
-      ...(ctaContent as any),
+      ...(heroContent as Record<string, string>),
+      ...(ctaContent as Record<string, string>),
     }
 
     const jalur =
@@ -175,7 +173,7 @@ export default function PpdbClientView({
               desc: r.content?.desc || '',
               items: Array.isArray(r.content?.items) ? r.content.items : [],
               cta_label: r.content?.cta_label || 'Daftar Sekarang',
-              cta_href: r.content?.cta_href || '/register',
+              cta_href: r.content?.cta_href || `${portalUrl.replace(/\/+$/, '')}/register`,
             },
           }))
         : STATIC_PPDB_CONTENT.jalur
@@ -222,7 +220,7 @@ export default function PpdbClientView({
       steps,
       faqs,
     }
-  }, [ppdbRows])
+  }, [ppdbRows, portalUrl])
 
   // General contact number from settings
   const contactPhone = settings.phone || settings.contact_phone || ''
@@ -296,7 +294,7 @@ export default function PpdbClientView({
           <h2 className="mt-4 font-heading! text-3xl md:text-5xl font-bold tracking-tight text-emerald-950">
             {content.copy.jalur_title}
           </h2>
-          <p className="mt-4 text-[var(--text-secondary)] text-base md:text-lg leading-relaxed">
+          <p className="mt-4 text-[var(--text-secondary)] text-base md:text-lg leading-relaxed whitespace-pre-line">
             {content.copy.jalur_desc}
           </p>
         </motion.div>
@@ -334,7 +332,7 @@ export default function PpdbClientView({
                   {card.content?.title}
                 </h3>
 
-                <p className="mt-3 text-sm md:text-[15px] leading-relaxed text-[var(--text-secondary)]">
+                <p className="mt-3 text-sm md:text-[15px] leading-relaxed text-[var(--text-secondary)] whitespace-pre-line">
                   {card.content?.desc}
                 </p>
 
@@ -378,7 +376,7 @@ export default function PpdbClientView({
             <h3 className="font-heading! text-2xl md:text-3xl font-bold tracking-tight text-[var(--text)]">
               {content.copy.kurikulum_title}
             </h3>
-            <p className="mt-3 text-sm md:text-base text-[var(--text-secondary)]">
+            <p className="mt-3 text-sm md:text-base text-[var(--text-secondary)] whitespace-pre-line">
               {content.copy.kurikulum_desc}
             </p>
           </motion.div>
@@ -401,7 +399,7 @@ export default function PpdbClientView({
                   <h4 className="text-base font-bold text-[var(--text)]">
                     {pillar.content?.title}
                   </h4>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)] whitespace-pre-line">
                     {pillar.content?.desc}
                   </p>
                 </motion.div>
@@ -449,7 +447,7 @@ export default function PpdbClientView({
                 <h4 className="mt-4 text-base font-bold text-[var(--text)]">
                   {step.content?.title}
                 </h4>
-                <p className="mt-2 text-xs md:text-sm leading-relaxed text-[var(--text-secondary)]">
+                <p className="mt-2 text-xs md:text-sm leading-relaxed text-[var(--text-secondary)] whitespace-pre-line">
                   {step.content?.desc}
                 </p>
               </motion.li>
@@ -537,7 +535,7 @@ export default function PpdbClientView({
                   <div className="text-xs font-semibold text-emerald-700 mt-1">
                     Bidang Lomba: {p.field}
                   </div>
-                  <p className="mt-3 text-xs leading-relaxed text-[var(--text-secondary)]">
+                  <p className="mt-3 text-xs leading-relaxed text-[var(--text-secondary)] whitespace-pre-line">
                     {p.desc}
                   </p>
                 </div>
@@ -563,7 +561,7 @@ export default function PpdbClientView({
               18 Program Harian &amp; Ekstrakurikuler
             </h3>
             <p className="mt-2 text-xs md:text-sm text-[var(--text-secondary)]">
-              Rutinitas harian teratur dari Tahajud hingga Muthola'ah dipadu kegiatan olahraga dan outing class berkala.
+              Rutinitas harian teratur dari Tahajud hingga Muthola&apos;ah dipadu kegiatan olahraga dan outing class berkala.
             </p>
           </motion.div>
 
@@ -644,7 +642,7 @@ export default function PpdbClientView({
               <h3 className="font-heading! text-2xl md:text-3xl font-bold tracking-tight">
                 {content.copy.cta_title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-emerald-100/80 md:text-base">
+              <p className="mt-3 text-sm leading-relaxed text-emerald-100/80 md:text-base whitespace-pre-line">
                 {content.copy.cta_desc}
               </p>
             </div>

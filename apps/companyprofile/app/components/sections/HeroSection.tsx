@@ -10,6 +10,7 @@ import type { HeroSlide } from '@/app/lib/types'
 import { API_BASE } from '@/app/lib/api'
 import { resolveImageSrc } from '@/app/lib/image-file'
 import { prefersReducedMotion } from '@/app/lib/motion'
+import { resolvePortalUrl } from '@repo/ui'
 
 const AUTOPLAY_MS = 6000
 
@@ -53,7 +54,7 @@ const FALLBACK_SLIDES: HeroSlide[] = [
       subtitle:
         'Proses seleksi terintegrasi mulai dari pendaftaran akun calon santri, pembayaran QRIS dinamis, ujian seleksi terpadu CBT & Tahfidz, hingga terbit LoA digital resmi.',
       button_label: 'Mulai Pendaftaran PPDB',
-      button_href: '/register',
+      button_href: '/ppdb',
     },
   },
   {
@@ -211,22 +212,43 @@ export default function HeroSection({ slides = [] }: { slides?: HeroSlide[] }) {
 
               {/* Subtitle / Description */}
               {current.content?.subtitle ? (
-                <p className="text-sm sm:text-base lg:text-lg text-slate-200/90 leading-relaxed max-w-2xl drop-shadow mb-6 sm:mb-8 font-normal">
+                <p className="text-sm sm:text-base lg:text-lg text-slate-200/90 leading-relaxed max-w-2xl drop-shadow mb-6 sm:mb-8 font-normal whitespace-pre-line">
                   {current.content.subtitle}
                 </p>
               ) : null}
 
               {/* CTA Action Buttons */}
               <div className="flex flex-wrap items-center gap-3.5">
-                {current.content?.button_label ? (
-                  <Link
-                    href={current.content.button_href || '/ppdb'}
-                    className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[var(--accent-gold)] to-[#E5BE64] text-[#0E2E1D] shadow-[0_10px_25px_-5px_rgba(212,168,83,0.4)] hover:shadow-[0_15px_30px_-5px_rgba(212,168,83,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
-                  >
-                    <span>{current.content.button_label}</span>
-                    <ArrowRight className="w-4 h-4 shrink-0" />
-                  </Link>
-                ) : null}
+                {current.content?.button_label ? (() => {
+                  const rawHref = current.content.button_href || '/ppdb'
+                  const isRegister = rawHref === '/register' || rawHref === 'register'
+                  const finalHref = isRegister ? `${resolvePortalUrl()}/register` : rawHref
+                  const isExternal = finalHref.startsWith('http://') || finalHref.startsWith('https://')
+
+                  if (isExternal) {
+                    return (
+                      <a
+                        href={finalHref}
+                        target={isRegister ? '_blank' : undefined}
+                        rel={isRegister ? 'noopener noreferrer' : undefined}
+                        className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[var(--accent-gold)] to-[#E5BE64] text-[#0E2E1D] shadow-[0_10px_25px_-5px_rgba(212,168,83,0.4)] hover:shadow-[0_15px_30px_-5px_rgba(212,168,83,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+                      >
+                        <span>{current.content.button_label}</span>
+                        <ArrowRight className="w-4 h-4 shrink-0" />
+                      </a>
+                    )
+                  }
+
+                  return (
+                    <Link
+                      href={finalHref}
+                      className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[var(--accent-gold)] to-[#E5BE64] text-[#0E2E1D] shadow-[0_10px_25px_-5px_rgba(212,168,83,0.4)] hover:shadow-[0_15px_30px_-5px_rgba(212,168,83,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+                    >
+                      <span>{current.content.button_label}</span>
+                      <ArrowRight className="w-4 h-4 shrink-0" />
+                    </Link>
+                  )
+                })() : null}
 
                 <Link
                   href="/about"

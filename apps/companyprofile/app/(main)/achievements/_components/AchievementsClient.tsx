@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import Image from 'next/image'
 import PageHeader from '@/app/components/layout/PageHeader'
 import { useScrollReveal } from '@/app/hooks/useScrollAnimations'
 import type { Achievement } from '@/app/lib/types'
@@ -102,7 +101,7 @@ export default function AchievementsClient({ achievements }: { achievements: Ach
                   </div>
                   <div className="p-5">
                     <h3 className="font-[var(--font-heading)] text-base font-bold text-[var(--text)] group-hover:text-[var(--accent)] transition-colors duration-200 mb-2 leading-snug">{info.title}</h3>
-                    <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{info.desc}</p>
+                    <p className="text-sm text-[var(--text-secondary)] leading-relaxed whitespace-pre-line">{info.desc}</p>
                   </div>
                 </div>
               )

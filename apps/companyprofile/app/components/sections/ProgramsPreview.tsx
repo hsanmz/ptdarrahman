@@ -323,7 +323,7 @@ export default function ProgramsPreview({ programs = [] }: { programs?: Program[
                         {prog.title}
                       </h3>
 
-                      <p className="line-clamp-3 text-xs sm:text-sm leading-relaxed font-medium text-[var(--text-secondary)] group-hover:text-[var(--text)] transition-colors duration-300 mb-4">
+                      <p className="line-clamp-3 text-xs sm:text-sm leading-relaxed font-medium text-[var(--text-secondary)] group-hover:text-[var(--text)] transition-colors duration-300 mb-4 whitespace-pre-line">
                         {prog.desc}
                       </p>
 

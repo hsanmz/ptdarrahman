@@ -4239,7 +4239,21 @@ function buildHeroCopy(heroCopy) {
     ctaLabel: cleanHeroCopy(src.hero_cta_label) || "Lihat Program",
     ctaHref: cleanHeroCopy(src.hero_cta_href) || "#info-section",
     registerLabel: cleanHeroCopy(src.hero_register_label) || "Daftar PPDB",
-    registerHref: cleanHeroCopy(src.hero_register_href) || "/register",
+    registerHref: (() => {
+      var rawReg = cleanHeroCopy(src.hero_register_href);
+      if (rawReg && rawReg !== "/register") return rawReg;
+      if (typeof window !== "undefined") {
+        if (window.location.hostname.includes("arrahmanic.org")) {
+          return "https://ppdbptd.arrahmanic.org/register";
+        }
+        if (window.location.port) {
+          return window.location.protocol + "//" + window.location.hostname + ":5174/register";
+        }
+      } else if (typeof process !== "undefined" && process.env.NODE_ENV === "production") {
+        return "https://ppdbptd.arrahmanic.org/register";
+      }
+      return "/register";
+    })(),
   };
 
 }

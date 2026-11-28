@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useState, useEffect, useMemo } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import PageHeader from '@/app/components/layout/PageHeader'
 import { useScrollReveal } from '@/app/hooks/useScrollAnimations'
@@ -16,7 +15,6 @@ import {
   SearchX,
   Sparkles,
   Tag,
-  BookOpen,
 } from 'lucide-react'
 
 const POPULAR_TOPICS = [
@@ -242,7 +240,7 @@ export default function NewsClient({ news }: { news: NewsArticle[] }) {
                     <h2 className="font-[var(--font-heading)] text-xl sm:text-2xl font-bold text-[var(--text)] mb-3 leading-snug group-hover:text-[var(--accent)] transition-colors">
                       {featuredArticle.content?.title}
                     </h2>
-                    <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed line-clamp-3 sm:line-clamp-4 mb-6">
+                    <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed line-clamp-3 sm:line-clamp-4 mb-6 whitespace-pre-line">
                       {featuredArticle.content?.excerpt || featuredArticle.content?.body || ''}
                     </p>
                   </div>
@@ -306,7 +304,7 @@ export default function NewsClient({ news }: { news: NewsArticle[] }) {
                         <h3 className="font-[var(--font-heading)] text-base sm:text-lg font-bold text-[var(--text)] mb-2 leading-snug group-hover:text-[var(--accent)] transition-colors line-clamp-2">
                           {info.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-2 mb-4">
+                        <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-2 mb-4 whitespace-pre-line">
                           {info.excerpt || info.body || ''}
                         </p>
                         <div className="mt-auto pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs font-semibold text-[var(--accent)]">

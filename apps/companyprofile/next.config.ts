@@ -97,7 +97,23 @@ const nextConfig: NextConfig = {
     dangerouslyAllowLocalIP: allowLocalIp,
   },
   async redirects() {
+    const targetPortal =
+      process.env.NEXT_PUBLIC_PORTAL_URL?.trim().replace(/\/+$/, '') ||
+      (process.env.NODE_ENV === 'production'
+        ? 'https://ppdbptd.arrahmanic.org'
+        : 'http://localhost:5174');
+
     return [
+      {
+        source: '/register',
+        destination: `${targetPortal}/register`,
+        permanent: false,
+      },
+      {
+        source: '/login',
+        destination: `${targetPortal}/login`,
+        permanent: false,
+      },
       {
         source: '/program',
         destination: '/programs',

@@ -62,7 +62,7 @@ export default function RichContent({ content }: Props) {
       }
 
       // Regular paragraph
-      return `<p class="text-[var(--text-secondary)] leading-relaxed mb-5 text-base md:text-lg">${escapeHtml(trimmed)}</p>`
+      return `<p class="text-[var(--text-secondary)] leading-relaxed mb-5 text-base md:text-lg">${escapeHtml(trimmed).replace(/\r?\n/g, '<br />')}</p>`
     })
     .join('')
 

@@ -108,7 +108,7 @@ export default function AboutPreview({ settings = {}, content = null }: { settin
                     <span className="block text-sm font-semibold font-[var(--font-heading)] group-hover:text-[var(--accent)] transition-colors duration-300">
                       {v.idn}
                     </span>
-                    {v.description ? <span className="mt-0.5 block text-xs leading-relaxed text-[var(--text-muted)]">{v.description}</span> : null}
+                    {v.description ? <span className="mt-0.5 block text-xs leading-relaxed text-[var(--text-muted)] whitespace-pre-line">{v.description}</span> : null}
                   </div>
                 </div>
               ))}

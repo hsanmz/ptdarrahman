@@ -13,6 +13,7 @@ import type {
   PpdbStep,
   PpdbFaqItem,
 } from './types'
+import { resolvePortalUrl } from '@repo/ui'
 
 export interface PpdbContent {
   jalur: PpdbJalurCard[]
@@ -27,9 +28,7 @@ export interface PpdbContent {
  * Mencegah broken link 404 jika tombol pendaftaran diarahkan ke route internal Next.js.
  */
 export function getPortalUrl(path = ''): string {
-  const base = (
-    process.env.NEXT_PUBLIC_PORTAL_URL || 'http://localhost:5174'
-  ).replace(/\/+$/, '')
+  const base = resolvePortalUrl(process.env.NEXT_PUBLIC_PORTAL_URL)
   const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : ''
   return `${base}${cleanPath}`
 }

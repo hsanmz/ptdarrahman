@@ -289,7 +289,35 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
     return FALLBACK_IMAGES.about
   }
 
-  // Normalisasi URL /uploads/... dari host manapun (localhost, IP server, atau path relatif)
+  // 1. JIKA URL DARI CLOUDINARY (res.cloudinary.com):
+  // JANGAN PERNAH DI-SLICE DI /uploads/!
+  // Karena folder di Cloudinary menggunakan prefix 'uploads/ptdarrahman/...',
+  // pemotongan di /uploads/ akan membuang domain CDN dan merusaknya menjadi path 404 lokal!
+  if (src.includes('res.cloudinary.com')) {
+    return optimizeCloudinaryUrl(src)
+  }
+
+  // 2. JIKA URL EKSTERNAL ABSOLUT (http:// atau https://):
+  // Jika menunjuk ke domain luar (Unsplash, Google Drive, CDN lain), pertahankan utuh!
+  // Hanya host internal (localhost, 127.0.0.1, api) yang boleh dinormalisasi ke /uploads/...
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    try {
+      const parsed = new URL(src)
+      const hostname = parsed.hostname.toLowerCase()
+      const isInternalHost =
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname === 'api' ||
+        hostname === '0.0.0.0'
+      if (!isInternalHost) {
+        return src
+      }
+    } catch {
+      // Jika gagal parse URL, lanjutkan ke fallback normalisasi lokal
+    }
+  }
+
+  // 3. Normalisasi URL /uploads/... HANYA untuk file upload lokal internal / path relatif
   let normalized = src
   if (normalized.startsWith('uploads/')) {
     normalized = `/${normalized}`
@@ -297,9 +325,12 @@ export function resolveImageSrc(value: string | null | undefined, apiBase = ''):
   const uploadsIdx = normalized.indexOf('/uploads/')
   if (uploadsIdx !== -1) {
     const uploadPath = normalized.slice(uploadsIdx)
-    // Selalu kembalikan path relatif /uploads/...
-    // Next.js rewrites dan spa-server sudah mem-proxy /uploads langsung ke API backend.
-    // Menggunakan path relatif menjamin 0% risiko Mixed Content baik pada SSR maupun Client di HTTPS.
+    if (apiBase) {
+      if (typeof window !== 'undefined' && window.location.protocol === 'https:' && apiBase.startsWith('http://')) {
+        return uploadPath
+      }
+      return `${apiBase.replace(/\/+$/, '')}${uploadPath}`
+    }
     return uploadPath
   }
 

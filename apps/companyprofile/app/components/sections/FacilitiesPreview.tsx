@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 import { ArrowRight } from 'lucide-react'
@@ -85,7 +84,7 @@ export default function FacilitiesPreview({ facilities = [] }: { facilities?: Fa
                 <h3 className="text-base sm:text-xl md:text-2xl font-bold font-[var(--font-display)] text-white mb-0.5 sm:mb-1">
                   {first.name}
                 </h3>
-                <p className="text-xs sm:text-sm text-white/70">{first.desc}</p>
+                <p className="text-xs sm:text-sm text-white/70 whitespace-pre-line">{first.desc}</p>
               </div>
             </div>
           </TiltCard>
@@ -117,7 +116,7 @@ export default function FacilitiesPreview({ facilities = [] }: { facilities?: Fa
                     <h3 className="text-xs sm:text-base md:text-lg font-bold font-[var(--font-display)] text-white mb-0.5">
                       {f.name}
                     </h3>
-                    <p className="text-[10px] sm:text-xs text-white/70">{f.desc}</p>
+                    <p className="text-[10px] sm:text-xs text-white/70 whitespace-pre-line">{f.desc}</p>
                   </div>
                 </div>
               </TiltCard>

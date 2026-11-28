@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import PageHeader from '@/app/components/layout/PageHeader'
 import { useScrollReveal } from '@/app/hooks/useScrollAnimations'
@@ -90,7 +89,7 @@ export default function StaffClient({ staff }: { staff: Staff[] }) {
                   </div>
                 </div>
               </DialogHeader>
-              <DialogDescription className="leading-relaxed">
+              <DialogDescription className="leading-relaxed whitespace-pre-line">
                 {selected.content?.bio || 'Belum ada biografi.'}
               </DialogDescription>
               {(selected.content?.expertise ?? []).length > 0 && (

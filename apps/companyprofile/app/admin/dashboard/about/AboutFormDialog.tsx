@@ -101,7 +101,7 @@ export function AboutFormDialog({ mode, editingItem, formData, setFormData, onCl
         if (field.type === 'list') {
           content[field.name] = raw.split(/\r?\n/).map((value) => value.trim()).filter(Boolean)
         } else if (field.name === 'body' && section === 'story') {
-          content[field.name] = raw.split(/\r?\n+/).map((value) => value.trim()).filter(Boolean)
+          content[field.name] = raw.split(/\r?\n\s*\r?\n/).map((value) => value.trim()).filter(Boolean)
         } else {
           content[field.name] = raw
         }

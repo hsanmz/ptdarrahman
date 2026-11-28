@@ -40,7 +40,7 @@ export default function CTASection({ content, wave = null }: { content: HomeCtaC
               <h2 className="mt-4 font-[var(--font-display)] text-2xl font-bold leading-tight sm:text-3xl md:text-4xl text-white">
                 {content.title}
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
+              <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base whitespace-pre-line">
                 {content.description}
               </p>
 

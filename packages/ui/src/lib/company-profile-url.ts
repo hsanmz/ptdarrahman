@@ -30,21 +30,30 @@ export function isLocalOrIp(hostname: string): boolean {
  */
 export function resolveCompanyProfileUrl(configured?: string): string {
   if (configured) return configured.replace(/\/+$/, '')
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_COMPANY_URL) {
+    return process.env.NEXT_PUBLIC_COMPANY_URL.replace(/\/+$/, '')
+  }
 
   if (typeof window !== 'undefined') {
     const { hostname, protocol, port } = window.location
     if (isLocalOrIp(hostname)) {
       return `${protocol}//${hostname}:3000`
     }
-    const rootHost = hostname.replace(/^(?:ppdb|superadmin|admin|portal|www)\./i, '')
+    const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
+    if (hostname.includes('arrahmanic.org')) {
+      return `${protocol}//ptd.arrahmanic.org${portPart}`
+    }
+    const rootHost = hostname.replace(/^(?:ppdbptd|adminppdb|ppdb|superadmin|admin|portal|www)\./i, '')
     // Topologi IP/port atau custom domain port
     if (port === '3000' || port === '5173' || port === '5174') {
       return `${protocol}//${rootHost}:3000`
     }
-    const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
     return `${protocol}//${rootHost}${portPart}`
   }
 
+  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
+    return 'https://ptd.arrahmanic.org'
+  }
   return 'http://localhost:3000'
 }
 
@@ -53,25 +62,33 @@ export function resolveCompanyProfileUrl(configured?: string): string {
  */
 export function resolvePortalUrl(configured?: string): string {
   if (configured) return configured.replace(/\/+$/, '')
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_PORTAL_URL) {
+    return process.env.NEXT_PUBLIC_PORTAL_URL.replace(/\/+$/, '')
+  }
 
   if (typeof window !== 'undefined') {
     const { hostname, protocol, port } = window.location
     if (isLocalOrIp(hostname)) {
       return `${protocol}//${hostname}:5174`
     }
-    const rootHost = hostname.replace(/^(?:ppdb|superadmin|admin|portal|www)\./i, '')
+    const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
+    if (hostname.includes('arrahmanic.org')) {
+      return `${protocol}//ppdbptd.arrahmanic.org${portPart}`
+    }
+    const rootHost = hostname.replace(/^(?:ppdbptd|adminppdb|ppdb|superadmin|admin|portal|www)\./i, '')
     // Topologi port mandiri
     if (port === '3000' || port === '5173' || port === '5174') {
       return `${protocol}//${rootHost}:5174`
     }
     if (/^ppdb\./i.test(hostname)) {
-      const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
       return `${protocol}//${hostname}${portPart}`
     }
-    const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
     return `${protocol}//ppdb.${rootHost}${portPart}`
   }
 
+  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
+    return 'https://ppdbptd.arrahmanic.org'
+  }
   return 'http://localhost:5174'
 }
 
@@ -80,25 +97,33 @@ export function resolvePortalUrl(configured?: string): string {
  */
 export function resolveSuperadminUrl(configured?: string): string {
   if (configured) return configured.replace(/\/+$/, '')
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPERADMIN_URL) {
+    return process.env.NEXT_PUBLIC_SUPERADMIN_URL.replace(/\/+$/, '')
+  }
 
   if (typeof window !== 'undefined') {
     const { hostname, protocol, port } = window.location
     if (isLocalOrIp(hostname)) {
       return `${protocol}//${hostname}:5173`
     }
-    const rootHost = hostname.replace(/^(?:ppdb|superadmin|admin|portal|www)\./i, '')
+    const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
+    if (hostname.includes('arrahmanic.org')) {
+      return `${protocol}//adminppdb.arrahmanic.org${portPart}`
+    }
+    const rootHost = hostname.replace(/^(?:ppdbptd|adminppdb|ppdb|superadmin|admin|portal|www)\./i, '')
     // Topologi port mandiri
     if (port === '3000' || port === '5173' || port === '5174') {
       return `${protocol}//${rootHost}:5173`
     }
     if (/^(?:superadmin|admin)\./i.test(hostname)) {
-      const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
       return `${protocol}//${hostname}${portPart}`
     }
-    const portPart = port && port !== '80' && port !== '443' ? `:${port}` : ''
     return `${protocol}//admin.${rootHost}${portPart}`
   }
 
+  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
+    return 'https://adminppdb.arrahmanic.org'
+  }
   return 'http://localhost:5173'
 }
 

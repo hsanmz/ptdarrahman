@@ -41,7 +41,7 @@ function FaqItem({ item, index, defaultOpen }: { item: FaqItem; index: number; d
         className={`grid transition-all duration-300 ease-in-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
       >
         <div className="overflow-hidden" aria-hidden={!open}>
-          <p className="px-5 pb-5 text-sm text-[var(--text-secondary)] leading-relaxed">{item.answer}</p>
+          <p className="px-5 pb-5 text-sm text-[var(--text-secondary)] leading-relaxed whitespace-pre-line">{item.answer}</p>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Quote } from 'lucide-react'
 import * as api from '@/app/lib/api'
 import { resolveImageSrc } from '@/app/lib/image-file'
@@ -18,18 +19,20 @@ interface Props {
  * kutipan miring, foto bulat, lalu nama wali & santri.
  *
  * Komponen ini tidak menyimpan data dan tidak mengubah form; ia hanya membaca
- * nilai yang sedang diketik. Kutipan dipotong empat baris supaya tidak
- * mendorong bagian lain dari kolom form.
+ * nilai yang sedang diketik. Kutipan dipotong empat baris dengan opsi
+ * melihat versi lengkap jika teks panjang.
  */
 export function TestimonialPreview({ name, child, quote, image, className }: Props) {
+  const [isExpanded, setIsExpanded] = useState(false)
   const initial = name.trim().charAt(0).toUpperCase()
   const previewSrc = image ? resolveImageSrc(image, api.API_BASE) : ''
   const trimmedQuote = quote.trim()
+  const isLong = trimmedQuote.length > 150
 
   return (
     <div
       className={cn(
-        'rounded-2xl border border-[var(--border)]/60 bg-white/70 p-4',
+        'rounded-2xl border border-[var(--border)]/60 bg-white/70 p-4 transition-all',
         className,
       )}
     >
@@ -38,19 +41,32 @@ export function TestimonialPreview({ name, child, quote, image, className }: Pro
           Pratinjau halaman publik
         </p>
         <span className="shrink-0 rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[10px] font-semibold text-[var(--accent)]">
-          Ringkas
+          {isExpanded ? 'Penuh' : 'Ringkas'}
         </span>
       </div>
 
       <Quote className="mx-auto mb-2 h-5 w-5 text-[var(--accent)] opacity-25" aria-hidden="true" />
       <p
         className={cn(
-          'line-clamp-4 text-center text-sm leading-relaxed whitespace-pre-line italic',
+          'text-center text-sm leading-relaxed whitespace-pre-line italic transition-all',
+          !isExpanded && 'line-clamp-4',
           trimmedQuote ? 'text-[var(--text-secondary)]' : 'text-[var(--text-muted)]',
         )}
       >
         {trimmedQuote ? `\u201c${trimmedQuote}\u201d` : 'Kutipan testimoni akan tampil di sini.'}
       </p>
+
+      {isLong && (
+        <div className="text-center mt-1.5">
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-[11px] font-semibold text-[var(--accent)] hover:underline"
+          >
+            {isExpanded ? 'Tampilkan Ringkas ↑' : 'Lihat Selengkapnya ↓'}
+          </button>
+        </div>
+      )}
 
       <div className="mt-4 flex items-center justify-center gap-3 border-t border-[var(--border)]/60 pt-3">
         <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--accent)]/20 bg-[var(--accent)]/15 text-sm font-bold text-[var(--accent)]">

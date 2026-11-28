@@ -528,7 +528,7 @@ export default function AdminDashboard() {
     for (const f of getContentFields(activeTab, String(item.section ?? ''))) {
       const val = content[f.name]
       fd[`_c_${f.name}`] = Array.isArray(val)
-        ? (val as string[]).join('\n')
+        ? (val as string[]).join(activeTab === 'about' && item.section === 'story' && f.name === 'body' ? '\n\n' : '\n')
         : typeof val === 'string' ? val
         : typeof val === 'number' ? String(val)
         : ''
