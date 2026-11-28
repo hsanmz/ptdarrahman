@@ -10,6 +10,14 @@
  * 4. Custom domain atau domain resmi via subdomain reverse proxy (misal: youtsasf.xyz, ppdb.youtsasf.xyz, admin.youtsasf.xyz)
  */
 
+function getEnvVar(name: string): string | undefined {
+  try {
+    return (globalThis as Record<string, any>).process?.env?.[name]
+  } catch {
+    return undefined
+  }
+}
+
 export function isIpAddress(hostname: string): boolean {
   if (!hostname) return false
   // IPv4: 4 blok angka 0-255 dipisah titik
@@ -30,8 +38,9 @@ export function isLocalOrIp(hostname: string): boolean {
  */
 export function resolveCompanyProfileUrl(configured?: string): string {
   if (configured) return configured.replace(/\/+$/, '')
-  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_COMPANY_URL) {
-    return process.env.NEXT_PUBLIC_COMPANY_URL.replace(/\/+$/, '')
+  const envCompanyUrl = getEnvVar('NEXT_PUBLIC_COMPANY_URL')
+  if (envCompanyUrl) {
+    return envCompanyUrl.replace(/\/+$/, '')
   }
 
   if (typeof window !== 'undefined') {
@@ -51,7 +60,7 @@ export function resolveCompanyProfileUrl(configured?: string): string {
     return `${protocol}//${rootHost}${portPart}`
   }
 
-  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
+  if (getEnvVar('NODE_ENV') === 'production') {
     return 'https://ptd.arrahmanic.org'
   }
   return 'http://localhost:3000'
@@ -62,8 +71,9 @@ export function resolveCompanyProfileUrl(configured?: string): string {
  */
 export function resolvePortalUrl(configured?: string): string {
   if (configured) return configured.replace(/\/+$/, '')
-  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_PORTAL_URL) {
-    return process.env.NEXT_PUBLIC_PORTAL_URL.replace(/\/+$/, '')
+  const envPortalUrl = getEnvVar('NEXT_PUBLIC_PORTAL_URL')
+  if (envPortalUrl) {
+    return envPortalUrl.replace(/\/+$/, '')
   }
 
   if (typeof window !== 'undefined') {
@@ -86,7 +96,7 @@ export function resolvePortalUrl(configured?: string): string {
     return `${protocol}//ppdb.${rootHost}${portPart}`
   }
 
-  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
+  if (getEnvVar('NODE_ENV') === 'production') {
     return 'https://ppdbptd.arrahmanic.org'
   }
   return 'http://localhost:5174'
@@ -97,8 +107,9 @@ export function resolvePortalUrl(configured?: string): string {
  */
 export function resolveSuperadminUrl(configured?: string): string {
   if (configured) return configured.replace(/\/+$/, '')
-  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPERADMIN_URL) {
-    return process.env.NEXT_PUBLIC_SUPERADMIN_URL.replace(/\/+$/, '')
+  const envSuperadminUrl = getEnvVar('NEXT_PUBLIC_SUPERADMIN_URL')
+  if (envSuperadminUrl) {
+    return envSuperadminUrl.replace(/\/+$/, '')
   }
 
   if (typeof window !== 'undefined') {
@@ -121,7 +132,7 @@ export function resolveSuperadminUrl(configured?: string): string {
     return `${protocol}//admin.${rootHost}${portPart}`
   }
 
-  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
+  if (getEnvVar('NODE_ENV') === 'production') {
     return 'https://adminppdb.arrahmanic.org'
   }
   return 'http://localhost:5173'
